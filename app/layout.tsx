@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   title: "SVC MOTO - Alquiler y Servicios de Motos Eléctricas en Málaga",
   description:
     "Alquiler de motos y patinetes eléctricos en Málaga. Servicios de reparación y mantenimiento. Explora la ciudad de forma sostenible.",
-  generator: "v0.dev",
 }
 
 export default function RootLayout({
