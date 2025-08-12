@@ -137,24 +137,7 @@ svc-moto-landing/
 └── styles/               # Estilos adicionales
 ```
 
-## 🌍 Variables de Entorno
 
-Para el correcto funcionamiento, crear un archivo `.env.local`:
-
-```env
-# Stack Auth Configuration (ya configurado)
-NEXT_PUBLIC_STACK_PROJECT_ID=607e2e2f-dcc2-4c1b-a960-2bf63506cf78
-NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=pck_a64pr2zcpv78eg5yh0zg6h43h9saarp482c3q30f3z1d8
-STACK_SECRET_SERVER_KEY=ssk_rr16x28hggx2eb95v1cxhxbxsk7jmjbnz2ab366784fdr
-
-# Mapbox (ya configurado)
-NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1IjoiNDIwYnRjIiwiYSI6ImNtOTN3ejBhdzByNjgycHF6dnVmeHl2ZTUifQ.Utq_q5wN6DHwpkn6rcpZdw
-
-# EmailJS (próximamente)
-NEXT_PUBLIC_EMAILJS_SERVICE_ID=tu_service_id
-NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=tu_template_id
-NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=tu_public_key
-```
 
 ## 📞 Contacto
 
@@ -162,6 +145,11 @@ NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=tu_public_key
 - **WhatsApp**: 607 22 88 82
 - **Ubicación**: Cerca de Estación María Zambrano, Málaga
 - **GitHub**: [420btc/svcmoto](https://github.com/420btc/svcmoto)
+
+## 👨‍💻 Desarrollo
+
+- **Desarrollador**: Carlos Freire
+- **Web de desarrollo**: [Carlosfr.es](https://carlosfr.es)
 
 ## 📄 Licencia
 
