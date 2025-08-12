@@ -251,22 +251,22 @@ export default function Home() {
                   <Star key={i} className="w-5 h-5 fill-orange-500 text-orange-500" />
                 ))}
               </div>
-              <div className="text-lg font-semibold text-blue-900">5,0</div>
+              <div className="bangers-regular text-xl md:text-2xl text-blue-900">5,0</div>
               <div className="text-sm text-gray-600">SOBRE 12 RESEÑAS</div>
             </div>
             <div className="flex flex-col items-center">
               <Shield className="w-12 h-12 text-orange-500 mb-2" />
-              <div className="text-lg font-semibold text-blue-900">SEGURO</div>
+              <div className="bangers-regular text-xl md:text-2xl text-blue-900">SEGURO</div>
               <div className="text-sm text-gray-600">INCLUIDO</div>
             </div>
             <div className="flex flex-col items-center">
               <Zap className="w-12 h-12 text-orange-500 mb-2" />
-              <div className="text-lg font-semibold text-blue-900">100%</div>
+              <div className="bangers-regular text-xl md:text-2xl text-blue-900">100%</div>
               <div className="text-sm text-gray-600">ELÉCTRICO</div>
             </div>
             <div className="flex flex-col items-center">
               <Wrench className="w-12 h-12 text-orange-500 mb-2" />
-              <div className="text-lg font-semibold text-blue-900">SERVICIO</div>
+              <div className="bangers-regular text-xl md:text-2xl text-blue-900">SERVICIO</div>
               <div className="text-sm text-gray-600">COMPLETO</div>
             </div>
           </div>
@@ -289,8 +289,8 @@ export default function Home() {
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">1</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">REGÍSTRATE</h3>
-                <h4 className="text-lg font-semibold text-white mb-2">EN 1 MIN</h4>
+                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">REGÍSTRATE</h3>
+                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">EN 1 MIN</h4>
                 <p className="text-white/90 text-sm">
                   Regístrate en nuestra web y ten acceso inmediato a todos nuestros vehículos de nuestra tienda de Málaga. Completa tu perfil, gana puntos por cada alquiler y listo para rodar.
                 </p>
@@ -302,8 +302,8 @@ export default function Home() {
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">2</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">RESERVA,</h3>
-                <h4 className="text-lg font-semibold text-white mb-2">DESBLOQUEA Y DISFRUTA</h4>
+                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">RESERVA,</h3>
+                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">DESBLOQUEA Y DISFRUTA</h4>
                 <p className="text-white/90 text-sm">
                   Reserva tu vehículo favorito a través de nuestra web. Recoge tu moto o patinete eléctrico
                   en nuestra tienda física y comienza tu aventura por Málaga.
@@ -316,8 +316,8 @@ export default function Home() {
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">3</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">DEVOLVER Y</h3>
-                <h4 className="text-lg font-semibold text-white mb-2">GANAR PUNTOS</h4>
+                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">DEVOLVER Y</h3>
+                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">GANAR PUNTOS</h4>
                 <p className="text-white/90 text-sm">
                   Una vez que llegues a tu destino y tengas el viaje terminado, devuelve tu vehículo en nuestra tienda
                   física. Gana puntos por cada alquiler completado y disfruta de descuentos exclusivos.

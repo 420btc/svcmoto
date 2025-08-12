@@ -318,8 +318,8 @@ export default function AlquilerPage() {
       <section className="py-16 bg-blue-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">¿Cómo Funciona el Alquiler?</h2>
-            <p className="text-xl text-white/90">Proceso simple y rápido para empezar tu aventura</p>
+            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">¿Cómo Funciona el Alquiler?</h2>
+            <p className="bangers-regular text-2xl md:text-3xl text-white/90">Proceso simple y rápido para empezar tu aventura</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -327,7 +327,7 @@ export default function AlquilerPage() {
               <div className="bg-orange-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Elige tu Vehículo</h3>
+              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">Elige tu Vehículo</h3>
               <p className="text-white/90">Selecciona la moto o patinete que mejor se adapte a tus necesidades</p>
             </div>
 
@@ -335,7 +335,7 @@ export default function AlquilerPage() {
               <div className="bg-orange-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Reserva Online</h3>
+              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">Reserva Online</h3>
               <p className="text-white/90">Completa tu reserva online o llámanos directamente</p>
             </div>
 
@@ -343,7 +343,7 @@ export default function AlquilerPage() {
               <div className="bg-orange-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Recoge y Disfruta</h3>
+              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">Recoge y Disfruta</h3>
               <p className="text-white/90">Recoge tu vehículo en nuestro local y explora Málaga</p>
             </div>
           </div>
@@ -353,7 +353,7 @@ export default function AlquilerPage() {
       {/* CTA Section */}
       <section className="py-16 bg-orange-500">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">¿Listo para tu Aventura?</h2>
+          <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">¿Listo para tu Aventura?</h2>
           <p className="text-xl text-white/90 mb-8">
             Contacta con nosotros para reservar tu vehículo o resolver cualquier duda
           </p>
