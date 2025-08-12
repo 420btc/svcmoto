@@ -234,7 +234,7 @@ export default function Home() {
             Descubre, reserva y disfruta de motos electricas en Málaga sin volverte loco.
           </p>
           <Link href="/alquiler">
-              <Button size="lg" className="bangers-regular bg-orange-600 hover:bg-orange-700 text-white text-xl md:text-2xl px-8 py-4">
+              <Button size="lg" className="bangers-regular bg-orange-500 hover:bg-orange-600 text-white text-2xl md:text-3xl px-10 py-5">
                 RESERVAR AHORA
               </Button>
             </Link>
