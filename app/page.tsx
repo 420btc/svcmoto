@@ -13,6 +13,7 @@ export default function Home() {
   const [showIntro, setShowIntro] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
   
   const signIn = () => router.push('/handler/sign-in')
@@ -32,6 +33,13 @@ export default function Home() {
     if (savedUser) {
       setUser(JSON.parse(savedUser))
     }
+    
+    // Simular carga inicial para evitar flash
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 100)
+    
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
@@ -55,6 +63,14 @@ export default function Home() {
     sessionStorage.setItem("svc-intro-shown", "true")
   }
 
+  // Pantalla de carga inicial
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-black z-50">
+      </div>
+    )
+  }
+
   if (showIntro) {
     return (
       <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
@@ -71,7 +87,7 @@ export default function Home() {
           </video>
           <button
             onClick={handleSkipIntro}
-            className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded text-sm hover:bg-black/70 transition-colors"
+            className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded text-sm hover:bg-black/70 transition-colors"
           >
             Saltar
           </button>
@@ -284,7 +300,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="bg-white/10 backdrop-blur border-white/20">
+            <Card className="bg-white/20 border-white/30">
               <CardContent className="p-6 text-center">
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">1</span>
@@ -297,7 +313,7 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/10 backdrop-blur border-white/20">
+            <Card className="bg-white/20 border-white/30">
               <CardContent className="p-6 text-center">
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">2</span>
@@ -311,7 +327,7 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/10 backdrop-blur border-white/20">
+            <Card className="bg-white/20 border-white/30">
               <CardContent className="p-6 text-center">
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">3</span>

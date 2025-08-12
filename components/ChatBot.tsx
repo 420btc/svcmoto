@@ -24,6 +24,7 @@ export default function ChatBot() {
   ])
   const [inputMessage, setInputMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [showChat, setShowChat] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -40,6 +41,15 @@ export default function ChatBot() {
       inputRef.current.focus()
     }
   }, [isOpen])
+
+  useEffect(() => {
+    // Mostrar chat después de un delay para evitar que aparezca en la intro
+    const timer = setTimeout(() => {
+      setShowChat(true)
+    }, 5000)
+    
+    return () => clearTimeout(timer)
+  }, [])
 
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return
@@ -106,6 +116,11 @@ export default function ChatBot() {
       hour: '2-digit', 
       minute: '2-digit' 
     })
+  }
+
+  // No mostrar el chat si showChat es false
+  if (!showChat) {
+    return null
   }
 
   return (
