@@ -158,7 +158,7 @@ export default function AlquilerPage() {
         dia_completo: 35,
         semanal: "200€",
       },
-      caracteristicas: ["Casco incluido", "Plegable", "Luces LED", "Frenos de disco"],
+      caracteristicas: ["Casco incluido", "Plegable", "Luces LED", "Frenos de disco", "Seguro básico", "Soporte móvil"],
     },
   ]
 
@@ -359,15 +359,15 @@ export default function AlquilerPage() {
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-600">1 hora:</span>
-                        <span className="font-semibold text-orange-600">{moto.precios.hora}</span>
+                        <span className="font-semibold text-orange-600">{moto.precios.hora}€</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Medio día:</span>
-                        <span className="font-semibold text-orange-600">{moto.precios.medio_dia}</span>
+                        <span className="font-semibold text-orange-600">{moto.precios.medio_dia}€</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Día completo:</span>
-                        <span className="font-semibold text-orange-600">{moto.precios.dia_completo}</span>
+                        <span className="font-semibold text-orange-600">{moto.precios.dia_completo}€</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Semanal:</span>
