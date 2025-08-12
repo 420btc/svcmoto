@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Phone, MapPin, Clock, Mail, ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 
 export default function ContactoPage() {
@@ -109,8 +110,8 @@ export default function ContactoPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link href="/" className="bg-orange-500 text-white font-bold text-xl px-3 py-1 rounded-lg">
-                SVC MOTO
+              <Link href="/" className="flex items-center">
+                <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
               </Link>
             </div>
             <div className="hidden md:block">
