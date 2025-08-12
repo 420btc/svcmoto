@@ -39,8 +39,8 @@ export default function AlquilerPage() {
       nombre: "City Explorer",
       tipo: "Moto Eléctrica",
       imagen: "/ownis.png",
-      autonomia: "120 km",
-      velocidad: "50 km/h",
+      autonomia: "110 km",
+      velocidad: "95 km/h",
       capacidad: "2 personas",
       precios: {
         hora: "12€",
@@ -48,7 +48,7 @@ export default function AlquilerPage() {
         dia_completo: "85€",
         semanal: "500€",
       },
-      caracteristicas: ["2 cascos incluidos", "Seguro premium", "Baúl trasero", "Carga rápida"],
+      caracteristicas: ["2 cascos incluidos", "Seguro premium", "Batería 72V24AH", "Motor 9kW", "Frenos ABS"],
     },
     {
       id: 3,
