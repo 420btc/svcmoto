@@ -110,14 +110,15 @@ export default function Home() {
             {/* Desktop Navigation - Centered */}
              <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
                 <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  Alquiler Motos
-                </Link>
-                <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  Servicios
-                </Link>
-                <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  Contacto
-                </Link>
+                Alquiler Motos
+              </Link>
+
+              <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                Servicios
+              </Link>
+              <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                Contacto
+              </Link>
                 {user && (
                   <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
                     Mi Perfil

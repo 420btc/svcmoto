@@ -4,14 +4,34 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Clock, Users, Zap, Shield, ArrowLeft, Menu, X } from "lucide-react"
+import { Clock, Users, Zap, Shield, ArrowLeft, Menu, X, Calendar, CheckCircle } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
+interface Reserva {
+  id: string
+  motoId: number
+  motoNombre: string
+  fecha: string
+  horaInicio: string
+  horaFin: string
+  duracion: number
+  precio: number
+  estado: 'pendiente' | 'confirmada' | 'completada' | 'cancelada'
+  kmEstimados: number
+}
+
 export default function AlquilerPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
+  const [showReservaModal, setShowReservaModal] = useState(false)
+  const [selectedMoto, setSelectedMoto] = useState<any>(null)
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
+  const [selectedHora, setSelectedHora] = useState<string>('')
+  const [duracion, setDuracion] = useState<number>(1)
+  const [reservas, setReservas] = useState<Reserva[]>([])
+  const [showConfirmation, setShowConfirmation] = useState(false)
   const router = useRouter()
   
   const signIn = () => router.push('/handler/sign-in')
@@ -31,7 +51,81 @@ export default function AlquilerPage() {
     if (savedUser) {
       setUser(JSON.parse(savedUser))
     }
+    
+    // Cargar reservas existentes
+    const savedReservas = localStorage.getItem('reservas')
+    if (savedReservas) {
+      setReservas(JSON.parse(savedReservas))
+    }
   }, [])
+
+  const horarios = [
+    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00',
+    '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
+  ]
+
+  const calcularPrecio = () => {
+    if (!selectedMoto) return 0
+    const horas = duracion
+    if (horas <= 1) return selectedMoto.precios.hora
+    if (horas <= 4) return selectedMoto.precios.medio_dia
+    return selectedMoto.precios.dia_completo
+  }
+
+  const calcularKmEstimados = () => {
+    // Estimación: 15 km/hora promedio en ciudad
+    return duracion * 15
+  }
+
+  const isHorarioDisponible = (hora: string) => {
+    return !reservas.some(reserva => 
+      reserva.fecha === selectedDate && 
+      reserva.horaInicio === hora && 
+      reserva.motoId === selectedMoto?.id &&
+      reserva.estado !== 'cancelada'
+    )
+  }
+
+  const abrirModalReserva = (moto: any) => {
+    if (!user) {
+      alert('Debes iniciar sesión para realizar una reserva')
+      return
+    }
+    setSelectedMoto(moto)
+    setShowReservaModal(true)
+  }
+
+  const realizarReserva = () => {
+    if (!selectedMoto || !selectedHora) {
+      alert('Por favor selecciona un horario')
+      return
+    }
+
+    const nuevaReserva: Reserva = {
+      id: Date.now().toString(),
+      motoId: selectedMoto.id,
+      motoNombre: selectedMoto.nombre,
+      fecha: selectedDate,
+      horaInicio: selectedHora,
+      horaFin: `${parseInt(selectedHora.split(':')[0]) + duracion}:${selectedHora.split(':')[1]}`,
+      duracion: duracion,
+      precio: calcularPrecio(),
+      estado: 'confirmada',
+      kmEstimados: calcularKmEstimados()
+    }
+
+    const nuevasReservas = [...reservas, nuevaReserva]
+    setReservas(nuevasReservas)
+    localStorage.setItem('reservas', JSON.stringify(nuevasReservas))
+    
+    setShowReservaModal(false)
+    setShowConfirmation(true)
+    
+    // Reset form
+    setSelectedMoto(null)
+    setSelectedHora('')
+    setDuracion(1)
+  }
 
   const motos = [
     {
@@ -43,9 +137,9 @@ export default function AlquilerPage() {
       velocidad: "95 km/h",
       capacidad: "2 personas",
       precios: {
-        hora: "12€",
-        medio_dia: "50€",
-        dia_completo: "85€",
+        hora: 12,
+        medio_dia: 50,
+        dia_completo: 85,
         semanal: "500€",
       },
       caracteristicas: ["2 cascos incluidos", "Seguro premium", "Batería 72V24AH", "Motor 9kW", "Frenos ABS"],
@@ -59,9 +153,9 @@ export default function AlquilerPage() {
       velocidad: "25 km/h",
       capacidad: "1 persona",
       precios: {
-        hora: "5€",
-        medio_dia: "20€",
-        dia_completo: "35€",
+        hora: 5,
+        medio_dia: 20,
+        dia_completo: 35,
         semanal: "200€",
       },
       caracteristicas: ["Casco incluido", "Plegable", "Luces LED", "Frenos de disco"],
@@ -294,7 +388,10 @@ export default function AlquilerPage() {
                     </div>
                   </div>
 
-                  <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+                  <Button 
+                    onClick={() => abrirModalReserva(moto)}
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                  >
                     Reservar {moto.nombre}
                   </Button>
                 </CardContent>
@@ -361,6 +458,228 @@ export default function AlquilerPage() {
           </div>
         </div>
       </section>
+
+      {/* Modal de Reserva Rediseñado */}
+       {showReservaModal && (
+         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-2 md:p-4 md:items-center">
+           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto mt-2 md:mt-0">
+             {/* Header del Modal */}
+             <div className="bg-gradient-to-r from-blue-900 to-blue-800 px-4 py-4 md:px-8 md:py-6 sticky top-0 z-10">
+               <div className="flex items-center justify-between">
+                 <div className="flex items-center space-x-2 md:space-x-4">
+                   <div className="bg-orange-500 p-2 md:p-3 rounded-full">
+                     <Calendar className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                   </div>
+                   <div>
+                     <h2 className="bangers-regular text-xl md:text-3xl text-white">RESERVAR VEHÍCULO</h2>
+                     <p className="text-blue-200 text-sm md:text-base">{selectedMoto?.nombre} - {selectedMoto?.tipo}</p>
+                   </div>
+                 </div>
+                 <button 
+                   onClick={() => setShowReservaModal(false)}
+                   className="bg-white/20 hover:bg-white/30 p-2 rounded-full transition-colors"
+                 >
+                   <X className="w-6 h-6 text-white" />
+                 </button>
+               </div>
+             </div>
+
+             <div className="p-4 md:p-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
+                 
+                 {/* Columna 1: Información del Vehículo */}
+                 <div className="lg:col-span-1">
+                   <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 md:p-6 border border-orange-200">
+                     <div className="text-center mb-4 md:mb-6">
+                       <div className="w-16 h-16 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
+                         <Image
+                           src={selectedMoto?.imagen || '/placeholder.svg'}
+                           alt={selectedMoto?.nombre || ''}
+                           width={60}
+                           height={60}
+                           className="object-contain md:w-20 md:h-20"
+                         />
+                       </div>
+                       <h3 className="bangers-regular text-lg md:text-2xl text-blue-900 mb-1 md:mb-2">{selectedMoto?.nombre}</h3>
+                       <p className="text-orange-600 font-medium text-sm md:text-base">{selectedMoto?.tipo}</p>
+                     </div>
+                     
+                     <div className="space-y-2 md:space-y-3">
+                       <div className="flex items-center space-x-2 md:space-x-3">
+                         <Zap className="w-4 h-4 md:w-5 md:h-5 text-orange-500" />
+                         <span className="text-xs md:text-sm text-gray-700">Autonomía: {selectedMoto?.autonomia}</span>
+                       </div>
+                       <div className="flex items-center space-x-2 md:space-x-3">
+                         <Shield className="w-4 h-4 md:w-5 md:h-5 text-orange-500" />
+                         <span className="text-xs md:text-sm text-gray-700">Velocidad: {selectedMoto?.velocidad}</span>
+                       </div>
+                       <div className="flex items-center space-x-2 md:space-x-3">
+                         <Users className="w-4 h-4 md:w-5 md:h-5 text-orange-500" />
+                         <span className="text-xs md:text-sm text-gray-700">Capacidad: {selectedMoto?.capacidad}</span>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+
+                 {/* Columna 2: Selección de Fecha y Duración */}
+                 <div className="lg:col-span-1">
+                   <div className="space-y-4 md:space-y-6">
+                     {/* Fecha */}
+                     <div className="bg-blue-50 rounded-xl p-4 md:p-6 border border-blue-200">
+                       <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
+                         <Calendar className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">SELECCIONA FECHA</h4>
+                       </div>
+                       <input
+                         type="date"
+                         value={selectedDate}
+                         onChange={(e) => setSelectedDate(e.target.value)}
+                         min={new Date().toISOString().split('T')[0]}
+                         className="w-full p-3 md:p-4 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bangers-regular text-base md:text-lg"
+                       />
+                     </div>
+
+                     {/* Duración */}
+                     <div className="bg-orange-50 rounded-xl p-4 md:p-6 border border-orange-200">
+                       <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
+                         <Clock className="w-5 h-5 md:w-6 md:h-6 text-orange-600" />
+                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">DURACIÓN</h4>
+                       </div>
+                       <select
+                         value={duracion}
+                         onChange={(e) => setDuracion(parseInt(e.target.value))}
+                         className="w-full p-3 md:p-4 border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bangers-regular text-base md:text-lg bg-white"
+                       >
+                         <option value={1}>⏱️ 1 HORA</option>
+                         <option value={2}>⏱️ 2 HORAS</option>
+                         <option value={3}>⏱️ 3 HORAS</option>
+                         <option value={4}>⏱️ 4 HORAS</option>
+                         <option value={8}>🌅 DÍA COMPLETO (8H)</option>
+                       </select>
+                     </div>
+                   </div>
+                 </div>
+
+                 {/* Columna 3: Horarios */}
+                 <div className="lg:col-span-1">
+                   <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200">
+                     <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
+                       <Clock className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+                       <h4 className="bangers-regular text-lg md:text-xl text-blue-900">HORA DE INICIO</h4>
+                     </div>
+                     <div className="grid grid-cols-3 md:grid-cols-2 gap-2 md:gap-3 max-h-48 md:max-h-64 overflow-y-auto">
+                       {horarios.map((hora) => {
+                         const disponible = isHorarioDisponible(hora)
+                         return (
+                           <button
+                             key={hora}
+                             onClick={() => disponible && setSelectedHora(hora)}
+                             disabled={!disponible}
+                             className={`p-2 md:p-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 ${
+                               selectedHora === hora
+                                 ? 'bg-orange-500 text-white shadow-lg transform scale-105'
+                                 : disponible
+                                 ? 'bg-white hover:bg-orange-100 text-blue-900 border-2 border-orange-200 hover:border-orange-300'
+                                 : 'bg-gray-200 text-gray-400 cursor-not-allowed border-2 border-gray-300'
+                             }`}
+                           >
+                             {hora}
+                           </button>
+                         )
+                       })}
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+              {/* Resumen Horizontal */}
+               {selectedHora && (
+                 <div className="mt-4 md:mt-8 bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-4 md:p-6 text-white">
+                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 items-center">
+                     <div>
+                       <h4 className="bangers-regular text-lg md:text-2xl mb-3 md:mb-4 text-orange-300">🎯 RESUMEN DE TU RESERVA</h4>
+                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                         <div className="space-y-2">
+                           <div className="flex items-center space-x-2">
+                             <Zap className="w-4 h-4 text-orange-300" />
+                             <span className="text-xs md:text-sm text-blue-200">Vehículo:</span>
+                           </div>
+                           <p className="font-bold text-sm md:text-base">{selectedMoto?.nombre}</p>
+                           
+                           <div className="flex items-center space-x-2 mt-2 md:mt-3">
+                             <Calendar className="w-4 h-4 text-orange-300" />
+                             <span className="text-xs md:text-sm text-blue-200">Fecha:</span>
+                           </div>
+                           <p className="font-bold text-xs md:text-base">{new Date(selectedDate).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' })}</p>
+                         </div>
+                         
+                         <div className="space-y-2">
+                           <div className="flex items-center space-x-2">
+                             <Clock className="w-4 h-4 text-orange-300" />
+                             <span className="text-xs md:text-sm text-blue-200">Horario:</span>
+                           </div>
+                           <p className="font-bold text-sm md:text-base">{selectedHora} - {parseInt(selectedHora.split(':')[0]) + duracion}:{selectedHora.split(':')[1]}</p>
+                           
+                           <div className="flex items-center space-x-2 mt-2 md:mt-3">
+                             <Shield className="w-4 h-4 text-orange-300" />
+                             <span className="text-xs md:text-sm text-blue-200">Duración:</span>
+                           </div>
+                           <p className="font-bold text-sm md:text-base">{duracion} hora{duracion > 1 ? 's' : ''}</p>
+                         </div>
+                       </div>
+                       
+                       <div className="mt-3 md:mt-4 p-2 md:p-3 bg-white/10 rounded-lg">
+                         <div className="flex items-center justify-between">
+                           <span className="text-blue-200 text-xs md:text-sm">🛣️ Km estimados:</span>
+                           <span className="font-bold text-orange-300 text-sm md:text-base">{calcularKmEstimados()} km</span>
+                         </div>
+                       </div>
+                     </div>
+                     
+                     <div className="text-center lg:text-right">
+                       <div className="bg-white/10 rounded-2xl p-4 md:p-6 mb-3 md:mb-4">
+                         <p className="text-blue-200 text-xs md:text-sm mb-1 md:mb-2">💰 PRECIO TOTAL</p>
+                         <p className="bangers-regular text-2xl md:text-4xl text-orange-300">{calcularPrecio()}€</p>
+                         <p className="text-xs text-blue-300 mt-1">IVA incluido</p>
+                       </div>
+                       
+                       <Button 
+                         onClick={realizarReserva}
+                         className="w-full bg-orange-500 hover:bg-orange-600 text-white bangers-regular text-lg md:text-xl py-3 md:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                       >
+                         🚀 CONFIRMAR RESERVA
+                       </Button>
+                       
+                       <p className="text-xs text-blue-300 mt-2">✅ Confirmación instantánea</p>
+                     </div>
+                   </div>
+                 </div>
+               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Confirmación */}
+      {showConfirmation && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="w-96 mx-4">
+            <CardHeader className="text-center">
+              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+              <CardTitle className="text-2xl text-green-600">¡Reserva Confirmada!</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="mb-4">Tu reserva ha sido procesada exitosamente.</p>
+              <Button 
+                onClick={() => setShowConfirmation(false)}
+                className="bg-orange-500 hover:bg-orange-600 text-white"
+              >
+                Continuar
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }

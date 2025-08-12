@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { User, Star, Calendar, MapPin, Edit, Save, X, Trophy, Gift, Menu } from "lucide-react"
+import { User, Star, Calendar, MapPin, Edit, Save, X, Trophy, Gift, Menu, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -35,6 +35,40 @@ export default function PerfilPage() {
   const [editedInfo, setEditedInfo] = useState(userInfo)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
+
+  const calcularCO2Ahorrado = () => {
+    // Cálculo basado en reservas completadas
+    // Estimación: 0.15 kg CO2/km ahorrado vs coche convencional
+    const savedReservas = typeof window !== 'undefined' ? localStorage.getItem('reservas') : null
+    const reservas = savedReservas ? JSON.parse(savedReservas) : []
+    
+    const totalKm = reservas.reduce((total: number, reserva: any) => {
+      if (reserva.estado === 'completada') {
+        return total + (reserva.kmEstimados || 0)
+      }
+      return total
+    }, 0)
+    return (totalKm * 0.15).toFixed(1)
+  }
+
+  const calcularKmTotales = () => {
+    const savedReservas = typeof window !== 'undefined' ? localStorage.getItem('reservas') : null
+    const reservas = savedReservas ? JSON.parse(savedReservas) : []
+    
+    return reservas.reduce((total: number, reserva: any) => {
+      if (reserva.estado === 'completada') {
+        return total + (reserva.kmEstimados || 0)
+      }
+      return total
+    }, 0)
+  }
+
+  const calcularTotalAlquileres = () => {
+    const savedReservas = typeof window !== 'undefined' ? localStorage.getItem('reservas') : null
+    const reservas = savedReservas ? JSON.parse(savedReservas) : []
+    
+    return reservas.filter((reserva: any) => reserva.estado === 'completada').length
+  }
   
   const signIn = () => router.push('/handler/sign-in')
   const signOut = () => {
@@ -75,6 +109,8 @@ export default function PerfilPage() {
       setUserInfo(initialData)
       setEditedInfo(initialData)
     }
+    
+    // Las reservas se cargan directamente en las funciones de cálculo
   }, [router])
 
   // Obtener estadísticas desde localStorage
@@ -376,6 +412,12 @@ export default function PerfilPage() {
                       <div className="text-2xl font-bold text-blue-600">{stats.alquileresCompletados}</div>
                       <div className="text-sm text-gray-600">Alquileres</div>
                     </div>
+                    <div className="text-center p-4 bg-green-50 rounded-lg col-span-2">
+                      <Trophy className="w-8 h-8 text-green-500 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-green-600">{calcularCO2Ahorrado()} kg</div>
+                      <div className="text-sm text-gray-600">CO₂ Ahorrado</div>
+                      <div className="text-xs text-green-600 mt-1">🌱 Equivale a {Math.floor(parseFloat(calcularCO2Ahorrado()) / 18.3)} árboles</div>
+                    </div>
                   </div>
                   
                   <Separator className="my-4" />
@@ -463,6 +505,77 @@ export default function PerfilPage() {
                       </div>
                     </>
                   )}
+                </CardContent>
+              </Card>
+
+              {/* Logros y Achievements */}
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle className="bangers-regular text-xl text-blue-900">Logros y Achievements</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {/* Logros actualizados dinámicamente */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Logro 7: Velocista - Progreso dinámico */}
+                    <Card className={`border-2 ${calcularKmTotales() >= 500 ? 'border-yellow-300 bg-yellow-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-6 text-center">
+                        <div className={`text-4xl mb-3 ${calcularKmTotales() >= 500 ? '' : 'grayscale'}`}>🏎️</div>
+                        <h3 className={`font-bold text-lg mb-2 ${calcularKmTotales() >= 500 ? '' : 'text-gray-500'}`}>Velocista</h3>
+                        <p className={`text-sm mb-3 ${calcularKmTotales() >= 500 ? 'text-gray-600' : 'text-gray-500'}`}>Alcanza 500km recorridos</p>
+                        <Badge className={calcularKmTotales() >= 500 ? 'bg-yellow-500 text-white' : ''}>
+                          {calcularKmTotales() >= 500 ? 'Desbloqueado' : 'Bloqueado'}
+                        </Badge>
+                        {calcularKmTotales() < 500 && (
+                          <>
+                            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                              <div className="bg-orange-500 h-2 rounded-full" style={{width: `${Math.min((calcularKmTotales() / 500) * 100, 100)}%`}}></div>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">{calcularKmTotales()}/500 km</p>
+                          </>
+                        )}
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 8: Eco Master - Progreso dinámico */}
+                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-6 text-center">
+                        <div className={`text-4xl mb-3 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'grayscale'}`}>🌍</div>
+                        <h3 className={`font-bold text-lg mb-2 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'text-gray-500'}`}>Eco Master</h3>
+                        <p className={`text-sm mb-3 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 100kg de CO₂</p>
+                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 100 ? 'bg-green-500 text-white' : ''}>
+                          {parseFloat(calcularCO2Ahorrado()) >= 100 ? 'Desbloqueado' : 'Bloqueado'}
+                        </Badge>
+                        {parseFloat(calcularCO2Ahorrado()) < 100 && (
+                          <>
+                            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                              <div className="bg-green-500 h-2 rounded-full" style={{width: `${Math.min((parseFloat(calcularCO2Ahorrado()) / 100) * 100, 100)}%`}}></div>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">{calcularCO2Ahorrado()}/100 kg CO₂</p>
+                          </>
+                        )}
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 9: Maratonista - Progreso dinámico */}
+                    <Card className={`border-2 ${calcularTotalAlquileres() >= 50 ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-6 text-center">
+                        <div className={`text-4xl mb-3 ${calcularTotalAlquileres() >= 50 ? '' : 'grayscale'}`}>🏃</div>
+                        <h3 className={`font-bold text-lg mb-2 ${calcularTotalAlquileres() >= 50 ? '' : 'text-gray-500'}`}>Maratonista</h3>
+                        <p className={`text-sm mb-3 ${calcularTotalAlquileres() >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>Completa 50 alquileres</p>
+                        <Badge className={calcularTotalAlquileres() >= 50 ? 'bg-blue-500 text-white' : ''}>
+                          {calcularTotalAlquileres() >= 50 ? 'Desbloqueado' : 'Bloqueado'}
+                        </Badge>
+                        {calcularTotalAlquileres() < 50 && (
+                          <>
+                            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                              <div className="bg-blue-500 h-2 rounded-full" style={{width: `${Math.min((calcularTotalAlquileres() / 50) * 100, 100)}%`}}></div>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">{calcularTotalAlquileres()}/50 alquileres</p>
+                          </>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
                 </CardContent>
               </Card>
 
