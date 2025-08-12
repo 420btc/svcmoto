@@ -37,6 +37,9 @@ export default function PerfilPage() {
 
   // Verificar autenticación
   useEffect(() => {
+    // Verificar que estamos en el cliente
+    if (typeof window === 'undefined') return
+    
     const savedUser = localStorage.getItem('user')
     if (!savedUser) {
       router.push('/handler/sign-in')
@@ -66,6 +69,12 @@ export default function PerfilPage() {
 
   // Obtener estadísticas desde localStorage
   const getStats = () => {
+    if (typeof window === 'undefined') {
+      return {
+        puntosTotales: 0,
+        alquileresCompletados: 0
+      }
+    }
     const savedStats = localStorage.getItem('userStats')
     if (savedStats) {
       return JSON.parse(savedStats)
@@ -78,6 +87,9 @@ export default function PerfilPage() {
 
   // Obtener historial desde localStorage
   const getRentalHistory = () => {
+    if (typeof window === 'undefined') {
+      return []
+    }
     const savedHistory = localStorage.getItem('rentalHistory')
     if (savedHistory) {
       return JSON.parse(savedHistory)
@@ -94,7 +106,9 @@ export default function PerfilPage() {
     setUserInfo(editedInfo)
     setIsEditing(false)
     // Guardar datos del perfil en localStorage
-    localStorage.setItem('userProfile', JSON.stringify(editedInfo))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('userProfile', JSON.stringify(editedInfo))
+    }
   }
 
   const handleCancel = () => {

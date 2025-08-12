@@ -26,12 +26,14 @@ export default function AuthModal() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Guardar estado de autenticación en localStorage
-      localStorage.setItem('user', JSON.stringify({
-        email,
-        name: name || email.split('@')[0],
-        isAuthenticated: true,
-        provider: 'email'
-      }));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify({
+          email,
+          name: name || email.split('@')[0],
+          isAuthenticated: true,
+          provider: 'email'
+        }));
+      }
       
       // Redirigir a la página principal
       router.push('/');

@@ -17,12 +17,17 @@ export default function Home() {
   
   const signIn = () => router.push('/handler/sign-in')
   const signOut = () => {
-    localStorage.removeItem('user')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('user')
+    }
     setUser(null)
   }
   
   // Verificar autenticación desde localStorage
   useEffect(() => {
+    // Verificar que estamos en el cliente
+    if (typeof window === 'undefined') return
+    
     const savedUser = localStorage.getItem('user')
     if (savedUser) {
       setUser(JSON.parse(savedUser))
