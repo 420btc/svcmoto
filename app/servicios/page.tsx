@@ -4,14 +4,40 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Wrench, Battery, Shield, Clock, CheckCircle, ArrowLeft, Zap, Settings, Truck, Menu, X } from "lucide-react"
+import { Wrench, Battery, Shield, Clock, CheckCircle, ArrowLeft, Zap, Settings, Truck, Menu, X, Calendar, User, Phone, MapPin } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
+interface SolicitudServicio {
+  id: string
+  servicioId: number
+  servicioNombre: string
+  fecha: string
+  hora: string
+  nombre: string
+  telefono: string
+  direccion: string
+  descripcionProblema: string
+  urgente: boolean
+  estado: 'pendiente' | 'confirmada' | 'en_proceso' | 'completada' | 'cancelada'
+}
+
 export default function ServiciosPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
+  const [showServicioModal, setShowServicioModal] = useState(false)
+  const [selectedServicio, setSelectedServicio] = useState<any>(null)
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
+  const [selectedHora, setSelectedHora] = useState<string>('')
+  const [formData, setFormData] = useState({
+    nombre: '',
+    telefono: '',
+    direccion: '',
+    descripcionProblema: ''
+  })
+  const [solicitudes, setSolicitudes] = useState<SolicitudServicio[]>([])
+  const [showConfirmation, setShowConfirmation] = useState(false)
   const router = useRouter()
   
   const signIn = () => router.push('/handler/sign-in')
@@ -30,30 +56,78 @@ export default function ServiciosPage() {
     const savedUser = localStorage.getItem('user')
     if (savedUser) {
       setUser(JSON.parse(savedUser))
+      const userData = JSON.parse(savedUser)
+      setFormData(prev => ({
+        ...prev,
+        nombre: userData.name || '',
+        telefono: userData.phone || ''
+      }))
+    }
+    
+    // Cargar solicitudes existentes
+    const savedSolicitudes = localStorage.getItem('solicitudesServicio')
+    if (savedSolicitudes) {
+      setSolicitudes(JSON.parse(savedSolicitudes))
     }
   }, [])
+
+  const horarios = [
+    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00',
+    '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
+  ]
+
+  const abrirModalServicio = (servicio: any) => {
+    if (!user) {
+      alert('Debes iniciar sesión para solicitar un servicio')
+      return
+    }
+    setSelectedServicio(servicio)
+    setShowServicioModal(true)
+  }
+
+  const realizarSolicitud = () => {
+    if (!selectedServicio || !selectedHora || !formData.nombre || !formData.telefono) {
+      alert('Por favor completa todos los campos obligatorios')
+      return
+    }
+
+    const nuevaSolicitud: SolicitudServicio = {
+      id: Date.now().toString(),
+      servicioId: selectedServicio.id,
+      servicioNombre: selectedServicio.nombre,
+      fecha: selectedDate,
+      hora: selectedHora,
+      nombre: formData.nombre,
+      telefono: formData.telefono,
+      direccion: formData.direccion,
+      descripcionProblema: formData.descripcionProblema,
+      urgente: selectedServicio.urgente,
+      estado: 'pendiente'
+    }
+
+    const nuevasSolicitudes = [...solicitudes, nuevaSolicitud]
+    setSolicitudes(nuevasSolicitudes)
+    localStorage.setItem('solicitudesServicio', JSON.stringify(nuevasSolicitudes))
+    
+    setShowServicioModal(false)
+    setShowConfirmation(true)
+    
+    // Reset form
+    setSelectedServicio(null)
+    setSelectedHora('')
+    setFormData({
+      nombre: user?.name || '',
+      telefono: user?.phone || '',
+      direccion: '',
+      descripcionProblema: ''
+    })
+  }
 
   const servicios = [
     {
       id: 1,
-      nombre: "Reparación Integral",
-      descripcion: "Servicio completo de reparación para motos y patinetes eléctricos",
-      icono: Wrench,
-      precio: "Desde 25€",
-      tiempo: "1-3 días",
-      incluye: [
-        "Diagnóstico completo",
-        "Reparación de motor eléctrico",
-        "Ajuste de frenos",
-        "Revisión de sistema eléctrico",
-        "Garantía de 6 meses",
-      ],
-      urgente: true,
-    },
-    {
-      id: 2,
       nombre: "Cambio de Batería",
-      descripcion: "Sustitución y mantenimiento de baterías de litio",
+      descripcion: "Sustitución y mantenimiento de baterías",
       icono: Battery,
       precio: "Desde 150€",
       tiempo: "2-4 horas",
@@ -67,39 +141,7 @@ export default function ServiciosPage() {
       urgente: false,
     },
     {
-      id: 3,
-      nombre: "Mantenimiento Preventivo",
-      descripcion: "Revisión completa para mantener tu vehículo en perfecto estado",
-      icono: Settings,
-      precio: "Desde 35€",
-      tiempo: "1-2 horas",
-      incluye: [
-        "Revisión de 20 puntos",
-        "Limpieza profunda",
-        "Ajuste de componentes",
-        "Actualización de software",
-        "Informe detallado",
-      ],
-      urgente: false,
-    },
-    {
-      id: 4,
-      nombre: "Servicio Express",
-      descripción: "Reparaciones rápidas y urgentes",
-      icono: Zap,
-      precio: "Desde 40€",
-      tiempo: "30 min - 2 horas",
-      incluye: [
-        "Atención prioritaria",
-        "Reparaciones menores",
-        "Cambio de neumáticos",
-        "Ajustes básicos",
-        "Sin cita previa",
-      ],
-      urgente: true,
-    },
-    {
-      id: 5,
+      id: 2,
       nombre: "Recogida y Entrega",
       descripcion: "Servicio de recogida y entrega a domicilio",
       icono: Truck,
@@ -115,20 +157,20 @@ export default function ServiciosPage() {
       urgente: false,
     },
     {
-      id: 6,
-      nombre: "Garantía Extendida",
-      descripcion: "Protección adicional para tu inversión",
-      icono: Shield,
-      precio: "Desde 80€/año",
-      tiempo: "Inmediato",
+      id: 3,
+      nombre: "Servicio Express",
+      descripcion: "Reparaciones rápidas y urgentes",
+      icono: Zap,
+      precio: "Desde 55€",
+      tiempo: "30 min - 2 horas",
       incluye: [
-        "Cobertura total 24/7",
-        "Reparaciones gratuitas",
-        "Vehículo de sustitución",
-        "Asistencia en carretera",
-        "Sin franquicia",
+        "Atención prioritaria",
+        "Reparaciones menores",
+        "Cambio de neumáticos",
+        "Ajustes básicos",
+        "Sin cita previa",
       ],
-      urgente: false,
+      urgente: true,
     },
   ]
 
@@ -328,7 +370,10 @@ export default function ServiciosPage() {
                       </ul>
                     </div>
 
-                    <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+                    <Button 
+                      onClick={() => abrirModalServicio(servicio)}
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                    >
                       Solicitar {servicio.nombre}
                     </Button>
                   </CardContent>
@@ -446,6 +491,286 @@ export default function ServiciosPage() {
           </div>
         </div>
       </section>
+
+      {/* Modal de Solicitud de Servicio */}
+      {showServicioModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 p-2 md:p-4 md:items-center">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto mt-2 md:mt-0">
+            {/* Header del Modal */}
+            <div className="bg-gradient-to-r from-blue-900 to-blue-800 px-4 py-4 md:px-8 md:py-6 sticky top-0 z-10">
+               <div className="flex items-center justify-between">
+                 <div className="flex items-center space-x-2 md:space-x-4">
+                   <div className="bg-orange-500 p-2 md:p-3 rounded-full">
+                     {selectedServicio && <selectedServicio.icono className="w-6 h-6 md:w-8 md:h-8 text-white" />}
+                   </div>
+                   <div>
+                     <h2 className="bangers-regular text-xl md:text-3xl text-white">SOLICITAR SERVICIO</h2>
+                     <p className="text-blue-200 text-sm md:text-base">{selectedServicio?.nombre}</p>
+                   </div>
+                 </div>
+                 <div className="flex items-center space-x-3">
+                   {selectedServicio?.urgente && (
+                     <div className="bg-gradient-to-r from-red-500 to-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
+                       ⚡ URGENTE
+                     </div>
+                   )}
+                   <button 
+                     onClick={() => setShowServicioModal(false)}
+                     className="bg-white/20 hover:bg-white/30 p-2 rounded-full transition-colors"
+                   >
+                     <X className="w-6 h-6 text-white" />
+                   </button>
+                 </div>
+               </div>
+            </div>
+
+            <div className="p-4 md:p-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
+                
+                {/* Columna 1: Información del Servicio */}
+                 <div className="lg:col-span-1">
+                   <div className="space-y-4 md:space-y-6">
+                     <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 md:p-6 border border-orange-200">
+                       <div className="text-center mb-4 md:mb-6">
+                         <div className="w-16 h-16 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
+                           {selectedServicio && <selectedServicio.icono className="w-8 h-8 md:w-12 md:h-12 text-orange-500" />}
+                         </div>
+                         <h3 className="bangers-regular text-lg md:text-2xl text-blue-900 mb-1 md:mb-2">{selectedServicio?.nombre}</h3>
+                         <p className="text-orange-600 font-medium text-sm md:text-base">{selectedServicio?.descripcion}</p>
+                       </div>
+                       
+                       <div className="space-y-2 md:space-y-3">
+                         <div className="flex items-center justify-between p-2 md:p-3 bg-white rounded-lg">
+                           <span className="text-xs md:text-sm text-gray-600">Precio:</span>
+                           <span className="font-bold text-orange-600">{selectedServicio?.precio}</span>
+                         </div>
+                         <div className="flex items-center justify-between p-2 md:p-3 bg-white rounded-lg">
+                           <span className="text-xs md:text-sm text-gray-600">Tiempo:</span>
+                           <span className="font-bold text-blue-900 flex items-center">
+                             <Clock className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+                             {selectedServicio?.tiempo}
+                           </span>
+                         </div>
+
+                       </div>
+                     </div>
+
+                     {/* Incluye - Solo visible en desktop */}
+                     <div className="hidden lg:block bg-blue-50 rounded-xl p-2 md:p-6 border border-blue-200">
+                       <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
+                         <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">QUÉ INCLUYE</h4>
+                       </div>
+                       <ul className="space-y-1">
+                         {selectedServicio?.incluye?.map((item: string, index: number) => (
+                           <li key={index} className="flex items-start space-x-2 text-sm">
+                             <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                             <span className="text-gray-700">{item}</span>
+                           </li>
+                         ))}
+                       </ul>
+                     </div>
+                   </div>
+                 </div>
+
+                {/* Columna 2: Datos Personales y Fecha */}
+                 <div className="lg:col-span-1">
+                   <div className="space-y-4 md:space-y-6">
+                     {/* Datos del Cliente */}
+                     <div className="bg-blue-50 rounded-xl p-4 md:p-6 border border-blue-200">
+                       <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
+                         <User className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">DATOS PERSONALES</h4>
+                       </div>
+                       <div className="space-y-3 md:space-y-4">
+                         <div>
+                           <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Nombre completo *</label>
+                           <input
+                             type="text"
+                             value={formData.nombre}
+                             onChange={(e) => setFormData({...formData, nombre: e.target.value})}
+                             className="w-full p-2 md:p-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
+                             placeholder="Tu nombre completo"
+                           />
+                         </div>
+                         <div>
+                           <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Teléfono *</label>
+                           <input
+                             type="tel"
+                             value={formData.telefono}
+                             onChange={(e) => setFormData({...formData, telefono: e.target.value})}
+                             className="w-full p-2 md:p-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
+                             placeholder="Tu número de teléfono"
+                           />
+                         </div>
+                         <div>
+                           <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                           <input
+                             type="text"
+                             value={formData.direccion}
+                             onChange={(e) => setFormData({...formData, direccion: e.target.value})}
+                             className="w-full p-2 md:p-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
+                             placeholder="Dirección (opcional para recogida)"
+                           />
+                         </div>
+                       </div>
+                     </div>
+
+                     {/* Fecha */}
+                         <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200 flex-1">
+                           <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
+                             <Calendar className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+                             <h4 className="bangers-regular text-lg md:text-xl text-blue-900">FECHA PREFERIDA</h4>
+                           </div>
+                           <input
+                             type="date"
+                             value={selectedDate}
+                             onChange={(e) => setSelectedDate(e.target.value)}
+                             min={new Date().toISOString().split('T')[0]}
+                             className="w-full p-3 md:p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bangers-regular text-base md:text-lg"
+                           />
+                           <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                             <p className="text-sm text-blue-800 text-center">
+                               📅 Selecciona la fecha que mejor te convenga
+                             </p>
+                           </div>
+                         </div>
+                   </div>
+                 </div>
+
+                 {/* Columna 3: Descripción y Horarios */}
+                 <div className="lg:col-span-1">
+                   <div className="space-y-4 md:space-y-6">
+                     {/* Descripción del Problema */}
+                     <div className="bg-orange-50 rounded-xl p-4 md:p-6 border border-orange-200">
+                       <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
+                         <Settings className="w-5 h-5 md:w-6 md:h-6 text-orange-600" />
+                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">DESCRIPCIÓN DEL PROBLEMA</h4>
+                       </div>
+                       <textarea
+                         value={formData.descripcionProblema}
+                         onChange={(e) => setFormData({...formData, descripcionProblema: e.target.value})}
+                         rows={4}
+                         className="w-full p-3 md:p-4 border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm md:text-base resize-none"
+                         placeholder="Describe el problema o servicio que necesitas..."
+                       />
+                     </div>
+
+                     {/* Horarios */}
+                       <div className="bg-gray-50 rounded-xl p-4 md:p-8 border border-gray-200 flex-1">
+                         <div className="flex items-center justify-center space-x-3 md:space-x-4 mb-3 md:mb-12">
+                           <Clock className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
+                           <h4 className="bangers-regular text-xl md:text-2xl text-blue-900 ">HORA PREFERIDA</h4>
+                         </div>
+                         <div className="grid grid-cols-4 md:grid-cols-3 gap-2">
+                           {horarios.map((hora) => (
+                             <button
+                               key={hora}
+                               onClick={() => setSelectedHora(hora)}
+                               className={`p-2 md:p-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 ${
+                                 selectedHora === hora
+                                   ? 'bg-orange-500 text-white shadow-lg transform scale-105'
+                                   : 'bg-white hover:bg-orange-100 text-blue-900 border-2 border-orange-200 hover:border-orange-300'
+                               }`}
+                             >
+                               {hora}
+                             </button>
+                           ))}
+                         </div>
+                       </div>
+                   </div>
+                 </div>
+              </div>
+
+              {/* Resumen de Solicitud */}
+              {selectedHora && (
+                <div className="mt-4 md:mt-8 bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-4 md:p-6 text-white">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 items-center">
+                    <div>
+                      <h4 className="bangers-regular text-lg md:text-2xl mb-3 md:mb-4 text-orange-300">📋 RESUMEN DE SOLICITUD</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <Settings className="w-4 h-4 text-orange-300" />
+                            <span className="text-xs md:text-sm text-blue-200">Servicio:</span>
+                          </div>
+                          <p className="font-bold text-sm md:text-base">{selectedServicio?.nombre}</p>
+                          
+                          <div className="flex items-center space-x-2 mt-2 md:mt-3">
+                            <User className="w-4 h-4 text-orange-300" />
+                            <span className="text-xs md:text-sm text-blue-200">Cliente:</span>
+                          </div>
+                          <p className="font-bold text-xs md:text-base">{formData.nombre}</p>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <Calendar className="w-4 h-4 text-orange-300" />
+                            <span className="text-xs md:text-sm text-blue-200">Fecha:</span>
+                          </div>
+                          <p className="font-bold text-sm md:text-base">{new Date(selectedDate).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' })}</p>
+                          
+                          <div className="flex items-center space-x-2 mt-2 md:mt-3">
+                            <Clock className="w-4 h-4 text-orange-300" />
+                            <span className="text-xs md:text-sm text-blue-200">Hora:</span>
+                          </div>
+                          <p className="font-bold text-sm md:text-base">{selectedHora}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3 md:mt-4 p-2 md:p-3 bg-white/10 rounded-lg">
+                        <div className="flex items-center justify-between">
+                          <span className="text-blue-200 text-xs md:text-sm">📞 Teléfono:</span>
+                          <span className="font-bold text-orange-300 text-sm md:text-base">{formData.telefono}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="text-center lg:text-right">
+                      <div className="bg-white/10 rounded-2xl p-4 md:p-6 mb-3 md:mb-4">
+                        <p className="text-blue-200 text-xs md:text-sm mb-1 md:mb-2">💰 PRECIO ESTIMADO</p>
+                        <p className="bangers-regular text-2xl md:text-4xl text-orange-300">{selectedServicio?.precio}</p>
+                        <p className="text-xs text-blue-300 mt-1">Presupuesto final tras diagnóstico</p>
+                      </div>
+                      
+                      <Button 
+                        onClick={realizarSolicitud}
+                        className="w-full bg-orange-500 hover:bg-orange-600 text-white bangers-regular text-lg md:text-xl py-3 md:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                      >
+                        🔧 SOLICITAR SERVICIO
+                      </Button>
+                      
+                      <p className="text-xs text-blue-300 mt-2">✅ Te contactaremos en 24h</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Confirmación */}
+      {showConfirmation && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="w-96 mx-4">
+            <CardHeader className="text-center">
+              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+              <CardTitle className="text-2xl text-green-600">¡Solicitud Enviada!</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="mb-4">Tu solicitud de servicio ha sido procesada exitosamente.</p>
+              <p className="text-sm text-gray-600 mb-4">Te contactaremos en las próximas 24 horas para confirmar la cita.</p>
+              <Button 
+                onClick={() => setShowConfirmation(false)}
+                className="bg-orange-500 hover:bg-orange-600 text-white"
+              >
+                Continuar
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
