@@ -38,6 +38,7 @@ export default function AlquilerPage() {
       id: 1,
       nombre: "Urban Rider Pro",
       tipo: "Scooter Eléctrico",
+      imagen: "/placeholder.svg",
       autonomia: "80 km",
       velocidad: "45 km/h",
       capacidad: "2 personas",
@@ -53,6 +54,7 @@ export default function AlquilerPage() {
       id: 2,
       nombre: "City Explorer",
       tipo: "Moto Eléctrica",
+      imagen: "/ownis.png",
       autonomia: "120 km",
       velocidad: "50 km/h",
       capacidad: "2 personas",
@@ -68,6 +70,7 @@ export default function AlquilerPage() {
       id: 3,
       nombre: "Eco Cruiser",
       tipo: "Patinete Eléctrico",
+      imagen: "/placeholder.svg",
       autonomia: "35 km",
       velocidad: "25 km/h",
       capacidad: "1 persona",
@@ -239,12 +242,15 @@ export default function AlquilerPage() {
                     </div>
                   </div>
 
-                  {/* Placeholder para imagen */}
-                  <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                    <div className="text-center text-gray-500">
-                      <Zap className="w-12 h-12 mx-auto mb-2" />
-                      <p className="text-sm">Imagen próximamente</p>
-                    </div>
+                  {/* Imagen de la moto */}
+                  <div className="w-full h-48 bg-transparent rounded-lg overflow-hidden mb-4">
+                    <Image
+                      src={moto.imagen}
+                      alt={moto.nombre}
+                      width={400}
+                      height={200}
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 </CardHeader>
 

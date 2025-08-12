@@ -66,7 +66,12 @@ export default function ChatBot() {
       if (savedMessages) {
         try {
           const parsedMessages = JSON.parse(savedMessages)
-          setMessages(parsedMessages)
+          // Convertir timestamps de string a Date objects
+          const messagesWithDates = parsedMessages.map((msg: any) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp)
+          }))
+          setMessages(messagesWithDates)
         } catch (error) {
           console.error('Error parsing saved messages:', error)
         }
@@ -157,8 +162,16 @@ export default function ChatBot() {
     }
   }
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('es-ES', { 
+  const formatTime = (date: Date | string) => {
+    // Asegurar que tenemos un objeto Date válido
+    const dateObj = date instanceof Date ? date : new Date(date)
+    
+    // Verificar si la fecha es válida
+    if (isNaN(dateObj.getTime())) {
+      return '00:00'
+    }
+    
+    return dateObj.toLocaleTimeString('es-ES', { 
       hour: '2-digit', 
       minute: '2-digit' 
     })
