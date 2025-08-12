@@ -35,22 +35,6 @@ export default function AlquilerPage() {
 
   const motos = [
     {
-      id: 1,
-      nombre: "Urban Rider Pro",
-      tipo: "Scooter Eléctrico",
-      imagen: "/placeholder.svg",
-      autonomia: "80 km",
-      velocidad: "45 km/h",
-      capacidad: "2 personas",
-      precios: {
-        hora: "8€",
-        medio_dia: "35€",
-        dia_completo: "60€",
-        semanal: "350€",
-      },
-      caracteristicas: ["Casco incluido", "Seguro incluido", "GPS integrado", "Puerto USB"],
-    },
-    {
       id: 2,
       nombre: "City Explorer",
       tipo: "Moto Eléctrica",
@@ -229,7 +213,7 @@ export default function AlquilerPage() {
       {/* Motos Grid */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {motos.map((moto) => (
               <Card key={moto.id} className="border-2 border-gray-200 hover:border-orange-500 transition-colors">
                 <CardHeader>
