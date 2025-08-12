@@ -364,93 +364,92 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contacto" className="pt-16 pb-0 md:pb-16 bg-blue-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-0">
+      <section id="contacto" className="relative pt-16 pb-0 md:pb-16 bg-blue-900">
+        {/* Video de fondo solo para PC */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-contain hidden md:block"
+        >
+          <source src="/Video2.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Overlay para legibilidad en PC */}
+        <div className="absolute inset-0 bg-black/10 hidden md:block"></div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
-              <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8">Contacta con Nosotros</h2>
+              <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8 md:drop-shadow-lg" style={{textShadow: 'none'}} data-md-shadow="2px 2px 4px rgba(0,0,0,0.8)">Contacta con Nosotros</h2>
               <div className="space-y-6">
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20">
                   <MapPin className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Ubicación</h3>
-                    <p className="text-gray-300">C. Héroe de Sostoa, 37, Carretera de Cádiz</p>
-                    <p className="text-gray-300">29002 Málaga, España</p>
+                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">Ubicación</h3>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">C. Héroe de Sostoa, 37, Carretera de Cádiz</p>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">29002 Málaga, España</p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20">
                   <Phone className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Teléfono</h3>
-                    <p className="text-gray-300">607 22 88 82</p>
-                    <p className="text-sm text-orange-500">También disponible por WhatsApp</p>
+                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">Teléfono</h3>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">607 22 88 82</p>
+                    <p className="text-sm text-orange-500 md:text-orange-300 md:drop-shadow-sm">También disponible por WhatsApp</p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20">
                   <Clock className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Horario</h3>
-                    <p className="text-gray-300">Abre a las 10:00</p>
-                    <p className="text-gray-300">(Cerrado los sábados)</p>
+                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">Horario</h3>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">Abre a las 10:00</p>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">(Cerrado los sábados)</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-8">
                 <Link href="/contacto">
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white">Ir a Página de Contacto</Button>
+                  <Button className="bg-orange-500 hover:bg-orange-600 text-white md:shadow-lg md:border md:border-orange-400">Ir a Página de Contacto</Button>
                 </Link>
               </div>
             </div>
 
-            {/* En desktop: video como fondo de todo el contenido */}
-            <div className="relative hidden md:block">
-              {/* Video de fondo */}
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover rounded-lg"
-              >
-                <source src="/Video2.mp4" type="video/mp4" />
-              </video>
-              
-              {/* Contenido encima del video */}
-              <div className="relative z-10 p-6">
-                <h3 className="bangers-regular text-3xl md:text-4xl text-white mb-6 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Nuestros Servicios</h3>
-                <div className="space-y-4">
-                  <Link href="/alquiler" className="block">
-                    <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
-                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Motos Eléctricas</h4>
-                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Perfectas para explorar Málaga de forma sostenible</p>
-                    </div>
-                  </Link>
-                  <Link href="/alquiler" className="block">
-                    <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
-                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Patinetes Eléctricos</h4>
-                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Ideales para distancias cortas y turismo urbano</p>
-                    </div>
-                  </Link>
-                  <Link href="/servicios" className="block">
-                    <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
-                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Venta y Reparación</h4>
-                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Servicio completo para tu vehículo eléctrico</p>
-                    </div>
-                  </Link>
-                </div>
-
-                <div className="mt-8">
-                  <h4 className="text-lg font-semibold text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Métodos de Pago</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {["Visa", "MasterCard", "American Express", "Diners Club"].map((card) => (
-                      <span key={card} className="bg-orange-500 text-white px-3 py-1 rounded text-sm shadow-lg border border-orange-400">
-                        {card}
-                      </span>
-                    ))}
+            <div className="hidden md:block">
+              <h3 className="bangers-regular text-3xl md:text-4xl text-white mb-6 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Nuestros Servicios</h3>
+              <div className="space-y-4">
+                <Link href="/alquiler" className="block">
+                  <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                    <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Motos Eléctricas</h4>
+                    <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Perfectas para explorar Málaga de forma sostenible</p>
                   </div>
+                </Link>
+                <Link href="/alquiler" className="block">
+                  <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                    <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Patinetes Eléctricos</h4>
+                    <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Ideales para distancias cortas y turismo urbano</p>
+                  </div>
+                </Link>
+                <Link href="/servicios" className="block">
+                  <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                    <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Venta y Reparación</h4>
+                    <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Servicio completo para tu vehículo eléctrico</p>
+                  </div>
+                </Link>
+              </div>
+
+              <div className="mt-8">
+                <h4 className="text-lg font-semibold text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Métodos de Pago</h4>
+                <div className="flex flex-wrap gap-2">
+                  {["Visa", "MasterCard", "American Express", "Diners Club"].map((card) => (
+                    <span key={card} className="bg-orange-500 text-white px-3 py-1 rounded text-sm shadow-lg border border-orange-400">
+                      {card}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
