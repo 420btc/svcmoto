@@ -1,15 +1,33 @@
 "use client"
 
-import { useState, useEffect } from "react"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Phone, MapPin, Clock, Star, Zap, Shield, Wrench, Menu, X } from "lucide-react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 
 export default function Home() {
   const [showIntro, setShowIntro] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const router = useRouter()
+  
+  const signIn = () => router.push('/handler/sign-in')
+  const signOut = () => {
+    localStorage.removeItem('user')
+    setUser(null)
+  }
+  
+  // Verificar autenticación desde localStorage
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user')
+    if (savedUser) {
+      setUser(JSON.parse(savedUser))
+    }
+  }, [])
 
   useEffect(() => {
     // Check if intro has been shown in this session
@@ -88,7 +106,31 @@ export default function Home() {
                 >
                   Contacto
                 </Link>
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white">Reservar Ahora</Button>
+                <Link
+                  href="/perfil"
+                  className="text-blue-900 hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors"
+                >
+                  Mi Perfil
+                </Link>
+                {user ? (
+                   <div className="flex items-center space-x-4">
+                     <span className="text-sm text-blue-900">Hola, {user.name}</span>
+                     <Button 
+                       onClick={signOut}
+                       variant="outline" 
+                       className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                     >
+                       Cerrar Sesión
+                     </Button>
+                   </div>
+                 ) : (
+                   <Button 
+                     onClick={signIn}
+                     className="bg-orange-500 hover:bg-orange-600 text-white"
+                   >
+                     Iniciar Sesión
+                   </Button>
+                 )}
               </div>
             </div>
             <div className="md:hidden">
@@ -124,13 +166,39 @@ export default function Home() {
                 >
                   Contacto
                 </Link>
+                <Link
+                  href="/perfil"
+                  className="text-blue-900 hover:text-orange-500 block px-3 py-3 text-base font-medium transition-colors border-b border-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Mi Perfil
+                </Link>
                 <div className="px-3 py-3">
-                  <Button
-                    className="bg-orange-500 hover:bg-orange-600 text-white w-full"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Reservar Ahora
-                  </Button>
+                  {user ? (
+                    <div className="space-y-2">
+                      <p className="text-sm text-blue-900 text-center">Hola, {user.name}</p>
+                      <Button
+                        onClick={() => {
+                          signOut()
+                          setMobileMenuOpen(false)
+                        }}
+                        variant="outline"
+                        className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full"
+                      >
+                        Cerrar Sesión
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        signIn()
+                        setMobileMenuOpen(false)
+                      }}
+                      className="bg-orange-500 hover:bg-orange-600 text-white w-full"
+                    >
+                      Iniciar Sesión
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
@@ -150,9 +218,11 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-white mb-8 max-w-3xl mx-auto">
             Descubre, reserva y disfruta de motos y patinetes eléctricos por toda Málaga sin volverte loco.
           </p>
-          <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white text-lg px-8 py-4">
-            DESCARGA LA APP
-          </Button>
+          <Link href="/alquiler">
+            <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white text-lg px-8 py-4">
+              RESERVAR AHORA
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -161,13 +231,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div className="flex flex-col items-center">
-              <div className="flex items-center mb-2">
+              <div className="flex items-center justify-center mb-2 h-12">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 fill-orange-500 text-orange-500" />
                 ))}
               </div>
-              <div className="text-2xl font-bold text-blue-900">5,0</div>
-              <div className="text-sm text-gray-600">SOBRE 3 RESEÑAS</div>
+              <div className="text-lg font-semibold text-blue-900">5,0</div>
+              <div className="text-sm text-gray-600">SOBRE 12 RESEÑAS</div>
             </div>
             <div className="flex flex-col items-center">
               <Shield className="w-12 h-12 text-orange-500 mb-2" />
@@ -194,7 +264,7 @@ export default function Home() {
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">REGÍSTRATE Y VIAJA CON TOTAL COMODIDAD</h2>
             <p className="text-xl text-white">
-              Descarga la aplicación, selecciona tu vehículo y disfruta de la forma más cómoda
+              Crea tu cuenta online, selecciona tu vehículo y disfruta de la forma más cómoda
             </p>
           </div>
 
@@ -207,8 +277,8 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-white mb-2">REGÍSTRATE</h3>
                 <h4 className="text-lg font-semibold text-white mb-2">EN 1 MIN</h4>
                 <p className="text-white/90 text-sm">
-                  Descarga la aplicación y regístrate y ten acceso inmediato a todos nuestros vehículos de las zonas de
-                  Málaga. Descarga la app, completa tu perfil y listo para rodar.
+                  Regístrate en nuestra web y ten acceso inmediato a todos nuestros vehículos de las zonas de
+                  Málaga. Completa tu perfil, gana puntos por cada alquiler y listo para rodar.
                 </p>
               </CardContent>
             </Card>
@@ -221,8 +291,8 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-white mb-2">RESERVA,</h3>
                 <h4 className="text-lg font-semibold text-white mb-2">DESBLOQUEA Y DISFRUTA</h4>
                 <p className="text-white/90 text-sm">
-                  Reserva y busca tu vehículo más cercano a través de la app. Desbloquea tu moto o patinete eléctrico
-                  con un simple toque y comienza tu aventura por Málaga.
+                  Reserva tu vehículo favorito a través de nuestra web. Recoge tu moto o patinete eléctrico
+                  en nuestra tienda física y comienza tu aventura por Málaga.
                 </p>
               </CardContent>
             </Card>
@@ -232,11 +302,11 @@ export default function Home() {
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">3</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">APARCAR Y</h3>
-                <h4 className="text-lg font-semibold text-white mb-2">BLOQUEAR</h4>
+                <h3 className="text-xl font-bold text-white mb-2">DEVOLVER Y</h3>
+                <h4 className="text-lg font-semibold text-white mb-2">GANAR PUNTOS</h4>
                 <p className="text-white/90 text-sm">
-                  Una vez que llegues a tu destino y tengas el viaje terminado, aparca tu vehículo en una zona
-                  autorizada hasta que alguien más lo necesite. Bloquea y listo.
+                  Una vez que llegues a tu destino y tengas el viaje terminado, devuelve tu vehículo en nuestra tienda
+                  física. Gana puntos por cada alquiler completado y disfruta de descuentos exclusivos.
                 </p>
               </CardContent>
             </Card>

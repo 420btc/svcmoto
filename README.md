@@ -92,16 +92,16 @@ npm start
 - **Notificaciones automáticas** para consultas de alquiler
 - **Confirmaciones de reserva** por email
 
-### 📱 Funcionalidades Móviles
-- **App móvil nativa** para iOS y Android
-- **Sistema de reservas** en tiempo real
-- **Geolocalización** de vehículos disponibles
-- **Pagos integrados** (Stripe/PayPal)
+### 🔐 Sistema de Usuarios
+- **Autenticación con Stack Auth** - registro y login seguro
+- **Perfil de usuario** con información personal editable
+- **Sistema de puntos** por cada alquiler completado
+- **Historial de alquileres** local y gestión de reservas
 
 ### 🔐 Panel de Administración
 - **Dashboard** para gestión de flota
-- **Sistema de usuarios** y autenticación
 - **Gestión de reservas** y disponibilidad
+- **Sistema de recompensas** y descuentos por puntos
 - **Análisis y reportes** de uso
 
 ### 🌟 Mejoras UX/UI
@@ -124,6 +124,7 @@ svc-moto-landing/
 │   ├── alquiler/          # Página de alquiler
 │   ├── contacto/          # Página de contacto
 │   ├── servicios/         # Página de servicios
+│   ├── perfil/            # Página de perfil de usuario
 │   ├── globals.css        # Estilos globales
 │   ├── layout.tsx         # Layout principal
 │   └── page.tsx           # Página de inicio
@@ -141,6 +142,11 @@ svc-moto-landing/
 Para el correcto funcionamiento, crear un archivo `.env.local`:
 
 ```env
+# Stack Auth Configuration (ya configurado)
+NEXT_PUBLIC_STACK_PROJECT_ID=607e2e2f-dcc2-4c1b-a960-2bf63506cf78
+NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=pck_a64pr2zcpv78eg5yh0zg6h43h9saarp482c3q30f3z1d8
+STACK_SECRET_SERVER_KEY=ssk_rr16x28hggx2eb95v1cxhxbxsk7jmjbnz2ab366784fdr
+
 # Mapbox (ya configurado)
 NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1IjoiNDIwYnRjIiwiYSI6ImNtOTN3ejBhdzByNjgycHF6dnVmeHl2ZTUifQ.Utq_q5wN6DHwpkn6rcpZdw
 
