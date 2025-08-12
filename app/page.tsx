@@ -382,7 +382,7 @@ export default function Home() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
-              <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8 md:drop-shadow-lg" style={{textShadow: 'none'}} data-md-shadow="2px 2px 4px rgba(0,0,0,0.8)">Contacta con Nosotros</h2>
+              <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Contacta con Nosotros</h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20">
                   <MapPin className="w-6 h-6 text-orange-500 mt-1" />
@@ -420,24 +420,33 @@ export default function Home() {
             </div>
 
             <div className="hidden md:block">
-              <h3 className="bangers-regular text-3xl md:text-4xl text-white mb-6 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Nuestros Servicios</h3>
-              <div className="space-y-4">
+              <h3 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Nuestros Servicios</h3>
+              <div className="space-y-6">
                 <Link href="/alquiler" className="block">
-                  <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
-                    <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Motos Eléctricas</h4>
-                    <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Perfectas para explorar Málaga de forma sostenible</p>
+                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                    <Zap className="w-6 h-6 text-orange-500 mt-1" />
+                    <div>
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Motos Eléctricas</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Perfectas para explorar Málaga de forma sostenible</p>
+                    </div>
                   </div>
                 </Link>
                 <Link href="/alquiler" className="block">
-                  <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
-                    <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Patinetes Eléctricos</h4>
-                    <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Ideales para distancias cortas y turismo urbano</p>
+                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                    <Zap className="w-6 h-6 text-orange-500 mt-1" />
+                    <div>
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Patinetes Eléctricos</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Ideales para distancias cortas y turismo urbano</p>
+                    </div>
                   </div>
                 </Link>
                 <Link href="/servicios" className="block">
-                  <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
-                    <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Venta y Reparación</h4>
-                    <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Servicio completo para tu vehículo eléctrico</p>
+                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                    <Wrench className="w-6 h-6 text-orange-500 mt-1" />
+                    <div>
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Venta y Reparación</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Servicio completo para tu vehículo eléctrico</p>
+                    </div>
                   </div>
                 </Link>
               </div>
@@ -456,7 +465,7 @@ export default function Home() {
 
             {/* En móvil: contenido normal sin video de fondo */}
             <div className="block md:hidden">
-              <h3 className="bangers-regular text-3xl text-white mb-6">Nuestros Servicios</h3>
+              <h3 className="bangers-regular text-4xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Nuestros Servicios</h3>
               <div className="space-y-4">
                 <Link href="/alquiler" className="block">
                   <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
