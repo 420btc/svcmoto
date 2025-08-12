@@ -223,7 +223,7 @@ export default function Home() {
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="bangers-regular text-4xl md:text-6xl text-white mb-6">
+          <h1 className="bangers-regular text-5xl md:text-7xl text-white mb-6">
             EXPLORA MÁLAGA CON TOTAL
             <br />
             LIBERTAD Y ESTILO
@@ -277,8 +277,8 @@ export default function Home() {
       <section id="servicios" className="py-16 bg-orange-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">REGÍSTRATE Y VIAJA CON TOTAL COMODIDAD</h2>
-            <p className="text-xl text-white">
+            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">REGÍSTRATE Y VIAJA CON TOTAL COMODIDAD</h2>
+            <p className="bangers-regular text-2xl md:text-3xl text-white">
               Crea tu cuenta online, selecciona tu vehículo y disfruta de la forma más cómoda
             </p>
           </div>
@@ -292,8 +292,7 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-white mb-2">REGÍSTRATE</h3>
                 <h4 className="text-lg font-semibold text-white mb-2">EN 1 MIN</h4>
                 <p className="text-white/90 text-sm">
-                  Regístrate en nuestra web y ten acceso inmediato a todos nuestros vehículos de las zonas de
-                  Málaga. Completa tu perfil, gana puntos por cada alquiler y listo para rodar.
+                  Regístrate en nuestra web y ten acceso inmediato a todos nuestros vehículos de nuestra tienda de Málaga. Completa tu perfil, gana puntos por cada alquiler y listo para rodar.
                 </p>
               </CardContent>
             </Card>
@@ -353,7 +352,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
-              <h2 className="text-3xl font-bold text-white mb-8">Contacta con Nosotros</h2>
+              <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8">Contacta con Nosotros</h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <MapPin className="w-6 h-6 text-orange-500 mt-1" />
@@ -391,7 +390,7 @@ export default function Home() {
             </div>
 
             <div>
-              <h3 className="text-2xl font-bold text-white mb-6">Nuestros Servicios</h3>
+              <h3 className="bangers-regular text-3xl md:text-4xl text-white mb-6">Nuestros Servicios</h3>
               <div className="space-y-4">
                 <Link href="/alquiler" className="block">
                   <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
