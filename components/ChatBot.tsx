@@ -131,7 +131,7 @@ export default function ChatBot() {
           onClick={() => setIsOpen(true)}
           className="h-14 w-14 rounded-full bg-orange-500 hover:bg-orange-600 shadow-lg transition-all duration-300 hover:scale-110"
         >
-          <MessageCircle className="h-6 w-6 text-white" />
+          <MessageCircle className="h-8 w-8 text-white" />
         </Button>
       )}
 
