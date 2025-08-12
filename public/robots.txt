@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://svcmoto.com/sitemap.xml
+Sitemap: https://svcmoto.vercel.app/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow admin areas
+Disallow: /api/
+Disallow: /handler/
+Disallow: /_next/
+Disallow: /admin/
+
+# Allow important pages
+Allow: /
+Allow: /alquiler
+Allow: /servicios
+Allow: /contacto
+Allow: /perfil
+
+# Host
+Host: https://svcmoto.com

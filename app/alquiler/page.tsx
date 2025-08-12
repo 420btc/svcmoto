@@ -567,7 +567,7 @@ export default function AlquilerPage() {
                        <Clock className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
                        <h4 className="bangers-regular text-lg md:text-xl text-blue-900">HORA DE INICIO</h4>
                      </div>
-                     <div className="grid grid-cols-3 md:grid-cols-2 gap-2 md:gap-3 max-h-48 md:max-h-64 overflow-y-auto">
+                     <div className="grid grid-cols-3 md:grid-cols-2 gap-2 md:gap-3 max-h-48 md:max-h-64 overflow-y-auto scrollbar-hide">
                        {horarios.map((hora) => {
                          const disponible = isHorarioDisponible(hora)
                          return (
@@ -577,7 +577,7 @@ export default function AlquilerPage() {
                              disabled={!disponible}
                              className={`p-2 md:p-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 ${
                                selectedHora === hora
-                                 ? 'bg-orange-500 text-white shadow-lg transform scale-105'
+                                 ? 'bg-orange-500 text-white shadow-lg'
                                  : disponible
                                  ? 'bg-white hover:bg-orange-100 text-blue-900 border-2 border-orange-200 hover:border-orange-300'
                                  : 'bg-gray-200 text-gray-400 cursor-not-allowed border-2 border-gray-300'

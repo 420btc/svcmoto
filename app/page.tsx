@@ -248,14 +248,73 @@ export default function Home() {
             <span className="block text-center text-blue-900 mt-2 text-7xl md:text-8xl font-bold" style={{textShadow: '2px 2px 0 white, -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 0 2px 0 white, 0 -2px 0 white, 2px 0 0 white, -2px 0 0 white'}}>SVC MOTO</span>
           </h1>
           <p className="bangers-regular text-2xl md:text-3xl text-white/90 mb-8 max-w-3xl mx-auto">
-            Descubre, reserva y disfruta de motos electricas en Málaga sin volverte loco.
-          </p>
+             Descubre, reserva y disfruta de motos electricas en Málaga sin volverte loco.
+           </p>
           <Link href="/alquiler">
               <Button size="lg" className="bangers-regular bg-orange-500 hover:bg-orange-600 text-white text-2xl md:text-3xl px-10 py-5">
                 RESERVAR AHORA
               </Button>
             </Link>
         </div>
+        
+        {/* Schema.org JSON-LD */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "SVC MOTO",
+              "description": "Alquiler de motos y patinetes eléctricos en Málaga. Servicios de reparación y mantenimiento especializado.",
+              "url": "https://svcmoto.com",
+              "telephone": "+34607228882",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "C. Héroe de Sostoa, 37, Carretera de Cádiz",
+                "addressLocality": "Málaga",
+                "addressRegion": "Andalucía",
+                "postalCode": "29002",
+                "addressCountry": "ES"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "36.7213",
+                "longitude": "-4.4214"
+              },
+              "openingHours": "Mo-Fr 10:00-20:00",
+              "priceRange": "€€",
+              "serviceArea": {
+                "@type": "City",
+                "name": "Málaga"
+              },
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Servicios de Alquiler y Reparación",
+                "itemListElement": [
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Alquiler de Motos Eléctricas",
+                      "description": "Alquiler por horas, días o semanas de motos eléctricas en Málaga"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Servicios de Reparación",
+                      "description": "Reparación y mantenimiento de vehículos eléctricos"
+                    }
+                  }
+                ]
+              },
+              "sameAs": [
+                "https://svcmoto.vercel.app"
+              ]
+            })
+          }}
+        />
       </section>
 
       {/* Stats Section */}
