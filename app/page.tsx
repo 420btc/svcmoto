@@ -261,7 +261,7 @@ export default function Home() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center justify-center h-32">
               <div className="flex items-center justify-center mb-2 h-12">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 fill-orange-500 text-orange-500" />
@@ -270,17 +270,17 @@ export default function Home() {
               <div className="bangers-regular text-xl md:text-2xl text-blue-900">5,0</div>
               <div className="text-sm text-gray-600">SOBRE 12 RESEÑAS</div>
             </div>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center justify-center h-32">
               <Shield className="w-12 h-12 text-orange-500 mb-2" />
               <div className="bangers-regular text-xl md:text-2xl text-blue-900">SEGURO</div>
               <div className="text-sm text-gray-600">INCLUIDO</div>
             </div>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center justify-center h-32">
               <Zap className="w-12 h-12 text-orange-500 mb-2" />
               <div className="bangers-regular text-xl md:text-2xl text-blue-900">100%</div>
               <div className="text-sm text-gray-600">ELÉCTRICO</div>
             </div>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center justify-center h-32">
               <Wrench className="w-12 h-12 text-orange-500 mb-2" />
               <div className="bangers-regular text-xl md:text-2xl text-blue-900">SERVICIO</div>
               <div className="text-sm text-gray-600">COMPLETO</div>
@@ -300,8 +300,8 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="bg-white/20 border-white/30">
-              <CardContent className="p-6 text-center">
+            <Card className="bg-white/20 border-white/30 h-80">
+              <CardContent className="p-6 text-center h-full flex flex-col justify-center">
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">1</span>
                 </div>
@@ -313,8 +313,8 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/20 border-white/30">
-              <CardContent className="p-6 text-center">
+            <Card className="bg-white/20 border-white/30 h-80">
+              <CardContent className="p-6 text-center h-full flex flex-col justify-center">
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">2</span>
                 </div>
@@ -327,8 +327,8 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/20 border-white/30">
-              <CardContent className="p-6 text-center">
+            <Card className="bg-white/20 border-white/30 h-80">
+              <CardContent className="p-6 text-center h-full flex flex-col justify-center">
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">3</span>
                 </div>
@@ -384,7 +384,7 @@ export default function Home() {
             <div>
               <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Contacta con Nosotros</h2>
               <div className="space-y-6">
-                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20">
+                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
                   <MapPin className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
                     <h3 className="text-lg font-semibold text-white md:drop-shadow-md">Ubicación</h3>
@@ -393,7 +393,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20">
+                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
                   <Phone className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
                     <h3 className="text-lg font-semibold text-white md:drop-shadow-md">Teléfono</h3>
@@ -402,7 +402,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20">
+                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
                   <Clock className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
                     <h3 className="text-lg font-semibold text-white md:drop-shadow-md">Horario</h3>
@@ -423,7 +423,7 @@ export default function Home() {
               <h3 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Nuestros Servicios</h3>
               <div className="space-y-6">
                 <Link href="/alquiler" className="block">
-                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
                     <Zap className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
                       <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Motos Eléctricas</h4>
@@ -432,7 +432,7 @@ export default function Home() {
                   </div>
                 </Link>
                 <Link href="/alquiler" className="block">
-                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
                     <Zap className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
                       <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Patinetes Eléctricos</h4>
@@ -441,7 +441,7 @@ export default function Home() {
                   </div>
                 </Link>
                 <Link href="/servicios" className="block">
-                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
                     <Wrench className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
                       <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Venta y Reparación</h4>
