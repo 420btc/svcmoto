@@ -1,15 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { User, Star, Calendar, MapPin, Edit, Save, X } from "lucide-react"
+import { User, Star, Calendar, MapPin, Edit, Save, X, Trophy, Gift } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 interface Alquiler {
   id: string
@@ -23,51 +24,77 @@ interface Alquiler {
 
 export default function PerfilPage() {
   const [isEditing, setIsEditing] = useState(false)
+  const [user, setUser] = useState<any>(null)
   const [userInfo, setUserInfo] = useState({
-    nombre: "Juan Pérez",
-    email: "juan.perez@email.com",
-    telefono: "607 22 88 82",
-    fechaRegistro: "15 de Enero, 2024"
+    nombre: "",
+    email: "",
+    telefono: "",
+    fechaRegistro: ""
   })
   
   const [editedInfo, setEditedInfo] = useState(userInfo)
-  const [puntosTotales] = useState(245)
-  const [alquileresCompletados] = useState(12)
-  
-  const alquileres: Alquiler[] = [
-    {
-      id: "ALQ-001",
-      vehiculo: "Urban Rider Pro",
-      fecha: "10 Ene 2024",
-      duracion: "3 horas",
-      precio: "24€",
-      puntos: 25,
-      estado: "completado"
-    },
-    {
-      id: "ALQ-002",
-      vehiculo: "City Explorer",
-      fecha: "8 Ene 2024",
-      duracion: "Día completo",
-      precio: "85€",
-      puntos: 50,
-      estado: "completado"
-    },
-    {
-      id: "ALQ-003",
-      vehiculo: "Eco Cruiser",
-      fecha: "5 Ene 2024",
-      duracion: "2 horas",
-      precio: "10€",
-      puntos: 15,
-      estado: "completado"
+  const router = useRouter()
+
+  // Verificar autenticación
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user')
+    if (!savedUser) {
+      router.push('/handler/sign-in')
+      return
     }
-  ]
+    const userData = JSON.parse(savedUser)
+    setUser(userData)
+    
+    // Cargar datos del perfil desde localStorage
+    const savedProfile = localStorage.getItem('userProfile')
+    if (savedProfile) {
+      const profileData = JSON.parse(savedProfile)
+      setUserInfo(profileData)
+      setEditedInfo(profileData)
+    } else {
+      // Inicializar con datos del usuario autenticado
+      const initialData = {
+        nombre: userData.name || "",
+        email: userData.email || "",
+        telefono: "",
+        fechaRegistro: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+      }
+      setUserInfo(initialData)
+      setEditedInfo(initialData)
+    }
+  }, [router])
+
+  // Obtener estadísticas desde localStorage
+  const getStats = () => {
+    const savedStats = localStorage.getItem('userStats')
+    if (savedStats) {
+      return JSON.parse(savedStats)
+    }
+    return {
+      puntosTotales: 0,
+      alquileresCompletados: 0
+    }
+  }
+
+  // Obtener historial desde localStorage
+  const getRentalHistory = () => {
+    const savedHistory = localStorage.getItem('rentalHistory')
+    if (savedHistory) {
+      return JSON.parse(savedHistory)
+    }
+    return []
+  }
+
+  const stats = getStats()
+  const alquileres = getRentalHistory()
+  
+
 
   const handleSave = () => {
     setUserInfo(editedInfo)
     setIsEditing(false)
-    // Aquí se enviarían los datos al backend
+    // Guardar datos del perfil en localStorage
+    localStorage.setItem('userProfile', JSON.stringify(editedInfo))
   }
 
   const handleCancel = () => {
@@ -86,6 +113,17 @@ export default function PerfilPage() {
       default:
         return <Badge>Desconocido</Badge>
     }
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p className="text-blue-900 font-medium">Cargando perfil...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -239,12 +277,12 @@ export default function PerfilPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-4 bg-orange-50 rounded-lg">
                       <Star className="w-8 h-8 text-orange-500 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-orange-600">{puntosTotales}</div>
+                      <div className="text-2xl font-bold text-orange-600">{stats.puntosTotales}</div>
                       <div className="text-sm text-gray-600">Puntos Totales</div>
                     </div>
                     <div className="text-center p-4 bg-blue-50 rounded-lg">
                       <Calendar className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-blue-600">{alquileresCompletados}</div>
+                      <div className="text-2xl font-bold text-blue-600">{stats.alquileresCompletados}</div>
                       <div className="text-sm text-gray-600">Alquileres</div>
                     </div>
                   </div>
@@ -269,44 +307,59 @@ export default function PerfilPage() {
                   <CardTitle className="text-2xl text-blue-900">Historial de Alquileres</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {alquileres.map((alquiler) => (
-                      <div key={alquiler.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <h4 className="font-semibold text-blue-900">{alquiler.vehiculo}</h4>
-                            <p className="text-sm text-gray-600">ID: {alquiler.id}</p>
+                  {alquileres.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold text-gray-600 mb-2">No hay alquileres aún</h3>
+                      <p className="text-gray-500 mb-4">Cuando realices tu primer alquiler, aparecerá aquí</p>
+                      <Link href="/alquiler">
+                        <Button className="bg-orange-500 hover:bg-orange-600">
+                          Ver Vehículos Disponibles
+                        </Button>
+                      </Link>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-4">
+                        {alquileres.map((alquiler: any) => (
+                          <div key={alquiler.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                            <div className="flex justify-between items-start mb-2">
+                              <div>
+                                <h4 className="font-semibold text-blue-900">{alquiler.vehiculo}</h4>
+                                <p className="text-sm text-gray-600">ID: {alquiler.id}</p>
+                              </div>
+                              {getEstadoBadge(alquiler.estado)}
+                            </div>
+                            
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                              <div>
+                                <span className="text-gray-500">Fecha:</span>
+                                <p className="font-medium">{alquiler.fecha}</p>
+                              </div>
+                              <div>
+                                <span className="text-gray-500">Duración:</span>
+                                <p className="font-medium">{alquiler.duracion}</p>
+                              </div>
+                              <div>
+                                <span className="text-gray-500">Precio:</span>
+                                <p className="font-medium text-green-600">{alquiler.precio}</p>
+                              </div>
+                              <div>
+                                <span className="text-gray-500">Puntos:</span>
+                                <p className="font-medium text-orange-600">+{alquiler.puntos}</p>
+                              </div>
+                            </div>
                           </div>
-                          {getEstadoBadge(alquiler.estado)}
-                        </div>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                          <div>
-                            <span className="text-gray-500">Fecha:</span>
-                            <p className="font-medium">{alquiler.fecha}</p>
-                          </div>
-                          <div>
-                            <span className="text-gray-500">Duración:</span>
-                            <p className="font-medium">{alquiler.duracion}</p>
-                          </div>
-                          <div>
-                            <span className="text-gray-500">Precio:</span>
-                            <p className="font-medium text-green-600">{alquiler.precio}</p>
-                          </div>
-                          <div>
-                            <span className="text-gray-500">Puntos:</span>
-                            <p className="font-medium text-orange-600">+{alquiler.puntos}</p>
-                          </div>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  
-                  <div className="mt-6 text-center">
-                    <Button variant="outline" className="border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white">
-                      Ver Más Alquileres
-                    </Button>
-                  </div>
+                      
+                      <div className="mt-6 text-center">
+                        <Button variant="outline" className="border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white">
+                          Ver Más Alquileres
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
 
@@ -316,18 +369,54 @@ export default function PerfilPage() {
                   <CardTitle className="text-xl text-blue-900">Sistema de Puntos</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="text-center p-4 border rounded-lg">
-                      <div className="text-lg font-bold text-orange-600">10 puntos</div>
-                      <div className="text-sm text-gray-600">Por cada hora de alquiler</div>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                      <div>
+                        <div className="font-semibold text-blue-900">Descuento 5€</div>
+                        <div className="text-sm text-gray-600">En tu próximo alquiler</div>
+                      </div>
+                      <Badge variant="outline" className="border-orange-500 text-orange-600">
+                        1500 puntos
+                      </Badge>
                     </div>
-                    <div className="text-center p-4 border rounded-lg">
-                      <div className="text-lg font-bold text-orange-600">100 puntos</div>
-                      <div className="text-sm text-gray-600">Descuento 5%</div>
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                      <div>
+                        <div className="font-semibold text-blue-900">Descuento 10€</div>
+                        <div className="text-sm text-gray-600">En tu próximo alquiler</div>
+                      </div>
+                      <Badge variant="outline" className="border-orange-500 text-orange-600">
+                        2500 puntos
+                      </Badge>
                     </div>
-                    <div className="text-center p-4 border rounded-lg">
-                      <div className="text-lg font-bold text-orange-600">300 puntos</div>
-                      <div className="text-sm text-gray-600">Descuento 15%</div>
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                      <div>
+                        <div className="font-semibold text-blue-900">Alquiler Gratis</div>
+                        <div className="text-sm text-gray-600">1 hora de patinete</div>
+                      </div>
+                      <Badge variant="outline" className="border-orange-500 text-orange-600">
+                        4000 puntos
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                      <div>
+                        <div className="font-semibold text-blue-900">Alquiler Premium Gratis</div>
+                        <div className="text-sm text-gray-600">2 horas de moto eléctrica</div>
+                      </div>
+                      <Badge variant="outline" className="border-orange-500 text-orange-600">
+                        6000 puntos
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                    <div className="text-sm text-blue-800">
+                      <strong>¿Cómo ganar puntos?</strong>
+                      <ul className="mt-2 space-y-1">
+                        <li>• 15 puntos por cada euro gastado</li>
+                        <li>• 100 puntos extra por completar un alquiler</li>
+                        <li>• 200 puntos por reseña positiva</li>
+                        <li>• 500 puntos por referir a un amigo</li>
+                      </ul>
                     </div>
                   </div>
                 </CardContent>
