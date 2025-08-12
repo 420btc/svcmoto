@@ -38,7 +38,11 @@ export default function ChatBot() {
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
-      inputRef.current.focus()
+      // Solo hacer focus en desktop, no en móvil
+      const isMobile = window.innerWidth < 768
+      if (!isMobile) {
+        inputRef.current.focus()
+      }
     }
   }, [isOpen])
 
@@ -125,7 +129,7 @@ export default function ChatBot() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
-      {/* Chat Button */}
+      {/* Chat Toggle Button */}
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
@@ -137,7 +141,7 @@ export default function ChatBot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="w-80 h-96 shadow-2xl border border-gray-200 animate-in slide-in-from-bottom-5 duration-300 rounded-lg overflow-hidden bg-white">
+        <div className="w-80 h-96 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-8rem)] md:w-80 md:h-96 shadow-2xl border border-gray-200 animate-in slide-in-from-bottom-5 duration-300 rounded-lg overflow-hidden bg-white fixed bottom-20 right-4 md:bottom-4 md:right-4 left-4 md:left-auto">
           {/* Header */}
           <div className="bg-orange-500 text-white p-2 rounded-t-lg">
             <div className="flex items-center justify-between">
