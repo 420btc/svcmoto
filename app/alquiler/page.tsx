@@ -214,7 +214,7 @@ export default function AlquilerPage() {
             <Link href="/" className="text-white hover:text-orange-200 mr-4">
               <ArrowLeft className="w-6 h-6" />
             </Link>
-            <h1 className="text-4xl md:text-5xl font-bold text-white">Alquiler de Motos</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white">Alquiler de Motos</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
             Descubre nuestra flota de vehículos eléctricos. Perfectos para explorar Málaga de forma sostenible y
@@ -232,7 +232,7 @@ export default function AlquilerPage() {
                 <CardHeader>
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <CardTitle className="text-2xl text-blue-900">{moto.nombre}</CardTitle>
+                      <CardTitle className="bangers-regular text-3xl md:text-4xl text-blue-900">{moto.nombre}</CardTitle>
                       <Badge variant="secondary" className="mt-2 bg-orange-100 text-orange-800">
                         {moto.tipo}
                       </Badge>

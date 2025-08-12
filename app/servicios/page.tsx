@@ -263,7 +263,7 @@ export default function ServiciosPage() {
             <Link href="/" className="text-white hover:text-blue-200 mr-4">
               <ArrowLeft className="w-6 h-6" />
             </Link>
-            <h1 className="text-4xl md:text-5xl font-bold text-white">Servicios Técnicos</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white">Servicios Técnicos</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
             Mantenimiento, reparación y servicios especializados para tu vehículo eléctrico. Técnicos certificados y
@@ -293,7 +293,7 @@ export default function ServiciosPage() {
                         <IconComponent className="w-6 h-6 text-orange-600" />
                       </div>
                       <div>
-                        <CardTitle className="text-xl text-blue-900">{servicio.nombre}</CardTitle>
+                        <CardTitle className="bangers-regular text-xl text-blue-900">{servicio.nombre}</CardTitle>
                         <p className="text-sm text-gray-600 mt-1">{servicio.descripcion}</p>
                       </div>
                     </div>

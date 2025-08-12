@@ -256,7 +256,7 @@ export default function PerfilPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center mb-6">
             <User className="w-8 h-8 text-white mr-4" />
-            <h1 className="text-4xl md:text-5xl font-bold text-white">Mi Perfil</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white">Mi Perfil</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
             Gestiona tu información personal, revisa tu historial de alquileres y consulta tus puntos acumulados.
@@ -273,7 +273,7 @@ export default function PerfilPage() {
             <div className="lg:col-span-1">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="text-2xl text-blue-900">Información Personal</CardTitle>
+                  <CardTitle className="bangers-regular text-2xl text-blue-900">Información Personal</CardTitle>
                   {!isEditing ? (
                     <Button
                       variant="outline"
@@ -362,7 +362,7 @@ export default function PerfilPage() {
               {/* Estadísticas */}
               <Card className="mt-6">
                 <CardHeader>
-                  <CardTitle className="text-xl text-blue-900">Mis Estadísticas</CardTitle>
+                  <CardTitle className="bangers-regular text-xl text-blue-900">Mis Estadísticas</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
@@ -395,7 +395,7 @@ export default function PerfilPage() {
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl text-blue-900">Historial de Alquileres</CardTitle>
+                  <CardTitle className="bangers-regular text-2xl text-blue-900">Historial de Alquileres</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {alquileres.length === 0 ? (
@@ -457,7 +457,7 @@ export default function PerfilPage() {
               {/* Sistema de Puntos */}
               <Card className="mt-6">
                 <CardHeader>
-                  <CardTitle className="text-xl text-blue-900">Sistema de Puntos</CardTitle>
+                  <CardTitle className="bangers-regular text-xl text-blue-900">Sistema de Puntos</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">

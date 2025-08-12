@@ -257,7 +257,7 @@ export default function ContactoPage() {
             <Link href="/" className="text-white hover:text-orange-200 mr-4">
               <ArrowLeft className="w-6 h-6" />
             </Link>
-            <h1 className="text-4xl md:text-5xl font-bold text-white">Contacto</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white">Contacto</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
             Estamos aquí para ayudarte. Contáctanos para alquileres, servicios técnicos o cualquier consulta.
@@ -273,7 +273,7 @@ export default function ContactoPage() {
             <div>
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl text-blue-900">Envíanos un Mensaje</CardTitle>
+                  <CardTitle className="bangers-regular text-2xl text-blue-900">Envíanos un Mensaje</CardTitle>
                   <p className="text-gray-600">Completa el formulario y te responderemos lo antes posible</p>
                 </CardHeader>
                 <CardContent>
@@ -364,13 +364,13 @@ export default function ContactoPage() {
               {/* Contact Details */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl text-blue-900">Información de Contacto</CardTitle>
+                  <CardTitle className="bangers-regular text-2xl text-blue-900">Información de Contacto</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="flex items-start space-x-4">
                     <MapPin className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h3 className="text-lg font-semibold text-blue-900">Ubicación</h3>
+                      <h3 className="bangers-regular text-lg text-blue-900">Ubicación</h3>
                       <p className="text-gray-600">C. Héroe de Sostoa, 37</p>
                       <p className="text-gray-600">Carretera de Cádiz</p>
                       <p className="text-gray-600">29002 Málaga, España</p>
@@ -380,7 +380,7 @@ export default function ContactoPage() {
                   <div className="flex items-start space-x-4">
                     <Phone className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h3 className="text-lg font-semibold text-blue-900">Teléfono</h3>
+                      <h3 className="bangers-regular text-lg text-blue-900">Teléfono</h3>
                       <p className="text-gray-600">607 22 88 82</p>
                       <p className="text-sm text-orange-500">También disponible por WhatsApp</p>
                     </div>
@@ -434,7 +434,7 @@ export default function ContactoPage() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-blue-900 mb-4">Nuestra Ubicación</h2>
+            <h2 className="bangers-regular text-3xl text-blue-900 mb-4">Nuestra Ubicación</h2>
             <p className="text-xl text-gray-600">Encuéntranos en el corazón de Málaga</p>
           </div>
 
