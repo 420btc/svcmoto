@@ -83,60 +83,53 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-xl shadow-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Link href="/" className="flex items-center">
-                <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
+          <div className="flex items-center h-16">
+            {/* Logo */}
+            <Link href="/" className="flex items-center">
+              <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
+            </Link>
+            
+            {/* Desktop Navigation - Centered */}
+            <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
+              <Link href="/alquiler" className="text-blue-900 hover:text-orange-500 font-medium transition-colors">
+                Alquiler Motos
               </Link>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                <Link
-                  href="/alquiler"
-                  className="text-blue-900 hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors"
-                >
-                  Alquiler Motos
-                </Link>
-                <Link
-                  href="/servicios"
-                  className="text-blue-900 hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors"
-                >
-                  Servicios
-                </Link>
-                <Link
-                  href="/contacto"
-                  className="text-blue-900 hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors"
-                >
-                  Contacto
-                </Link>
-                <Link
-                  href="/perfil"
-                  className="text-blue-900 hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors"
-                >
+              <Link href="/servicios" className="text-blue-900 hover:text-orange-500 font-medium transition-colors">
+                Servicios
+              </Link>
+              <Link href="/contacto" className="text-blue-900 hover:text-orange-500 font-medium transition-colors">
+                Contacto
+              </Link>
+              {user && (
+                <Link href="/perfil" className="text-blue-900 hover:text-orange-500 font-medium transition-colors">
                   Mi Perfil
                 </Link>
-                {user ? (
-                   <div className="flex items-center space-x-4">
-                     <span className="text-sm text-blue-900">Hola, {user.name}</span>
-                     <Button 
-                       onClick={signOut}
-                       variant="outline" 
-                       className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
-                     >
-                       Cerrar Sesión
-                     </Button>
-                   </div>
-                 ) : (
+              )}
+            </div>
+            
+            {/* Authentication Section - Right */}
+            <div className="hidden md:flex items-center space-x-4">
+               {user ? (
+                 <div className="flex items-center space-x-4">
+                   <span className="text-sm text-blue-900">Hola, {user.name}</span>
                    <Button 
-                     onClick={signIn}
-                     className="bg-orange-500 hover:bg-orange-600 text-white"
+                     onClick={signOut}
+                     variant="outline" 
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
                    >
-                     Iniciar Sesión
+                     Cerrar Sesión
                    </Button>
-                 )}
-              </div>
+                 </div>
+               ) : (
+                 <Button 
+                   onClick={signIn}
+                   className="bg-orange-500 hover:bg-orange-600 text-white"
+                 >
+                   Iniciar Sesión
+                 </Button>
+               )}
             </div>
             <div className="md:hidden">
               <button
@@ -211,9 +204,24 @@ export default function Home() {
         </div>
       </nav>
 
+      {/* White separator under header */}
+      <div className="h-4 bg-white"></div>
+      
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 min-h-screen flex items-center">
-        <div className="absolute inset-0 bg-black/10"></div>
+      <section className="relative min-h-screen flex items-center pt-12 overflow-hidden">
+        {/* Background Video */}
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/herovideo.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             EXPLORA MÁLAGA CON TOTAL LIBERTAD Y ESTILO
