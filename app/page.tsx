@@ -230,14 +230,14 @@ export default function Home() {
             <br />
             <span className="block text-center text-blue-900 mt-2 text-5xl md:text-8xl font-bold">SVC MOTO</span>
           </h1>
-          <p className="bangers-regular text-2xl md:text-3xl text-white mb-8 max-w-3xl mx-auto">
-            Descubre, reserva y disfruta de motos y patinetes eléctricos por toda Málaga sin volverte loco.
+          <p className="bangers-regular text-2xl md:text-3xl text-white/90 mb-8 max-w-3xl mx-auto">
+            Descubre, reserva y disfruta de motos electricas en Málaga sin volverte loco.
           </p>
           <Link href="/alquiler">
-            <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white text-lg px-8 py-4">
-              RESERVAR AHORA
-            </Button>
-          </Link>
+              <Button size="lg" className="bangers-regular bg-orange-600 hover:bg-orange-700 text-white text-xl md:text-2xl px-8 py-4">
+                RESERVAR AHORA
+              </Button>
+            </Link>
         </div>
       </section>
 
