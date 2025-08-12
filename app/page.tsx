@@ -244,7 +244,7 @@ export default function Home() {
             <br />
             LIBERTAD Y ESTILO
             <br />
-            <span className="block text-center text-blue-900 mt-2 text-5xl md:text-8xl font-bold">SVC MOTO</span>
+            <span className="block text-center text-blue-900 mt-2 text-7xl md:text-8xl font-bold" style={{textShadow: '2px 2px 0 white, -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 0 2px 0 white, 0 -2px 0 white, 2px 0 0 white, -2px 0 0 white'}}>SVC MOTO</span>
           </h1>
           <p className="bangers-regular text-2xl md:text-3xl text-white/90 mb-8 max-w-3xl mx-auto">
             Descubre, reserva y disfruta de motos electricas en Málaga sin volverte loco.
