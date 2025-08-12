@@ -15,6 +15,7 @@ interface Message {
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isMinimized, setIsMinimized] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -54,6 +55,47 @@ export default function ChatBot() {
     
     return () => clearTimeout(timer)
   }, [])
+
+  // Cargar mensajes desde localStorage al montar el componente
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedMessages = localStorage.getItem('chatMessages')
+      const savedIsOpen = localStorage.getItem('chatIsOpen')
+      const savedIsMinimized = localStorage.getItem('chatIsMinimized')
+      
+      if (savedMessages) {
+        try {
+          const parsedMessages = JSON.parse(savedMessages)
+          setMessages(parsedMessages)
+        } catch (error) {
+          console.error('Error parsing saved messages:', error)
+        }
+      }
+      
+      if (savedIsOpen === 'true') {
+        setIsOpen(true)
+      }
+      
+      if (savedIsMinimized === 'true') {
+        setIsMinimized(true)
+      }
+    }
+  }, [])
+
+  // Guardar mensajes en localStorage cuando cambien
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('chatMessages', JSON.stringify(messages))
+    }
+  }, [messages])
+
+  // Guardar estado del chat en localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('chatIsOpen', isOpen.toString())
+      localStorage.setItem('chatIsMinimized', isMinimized.toString())
+    }
+  }, [isOpen, isMinimized])
 
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return
@@ -140,8 +182,8 @@ export default function ChatBot() {
       )}
 
       {/* Chat Window */}
-      {isOpen && (
-        <div className="w-80 h-96 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-8rem)] md:w-80 md:h-96 shadow-2xl border border-gray-200 animate-in slide-in-from-bottom-5 duration-300 rounded-lg overflow-hidden bg-white fixed bottom-20 right-4 md:bottom-4 md:right-4 left-4 md:left-auto">
+      {isOpen && !isMinimized && (
+        <div className="w-80 h-96 md:w-80 md:h-96 max-w-[calc(100vw-1rem)] max-h-[calc(100vh-6rem)] shadow-2xl border border-gray-200 animate-in slide-in-from-bottom-5 duration-300 rounded-lg overflow-hidden bg-white fixed bottom-4 right-2 md:bottom-4 md:right-4">
           {/* Header */}
           <div className="bg-orange-500 text-white p-2 rounded-t-lg">
             <div className="flex items-center justify-between">
@@ -166,14 +208,28 @@ export default function ChatBot() {
                 <Bot className="h-4 w-4" />
                 <span className="bangers-regular text-base md:text-lg">SVC Asistente</span>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsOpen(false)}
-                className="text-white hover:bg-white/20 h-6 w-6 p-0"
-              >
-                <X className="h-3 w-3" />
-              </Button>
+              <div className="flex items-center space-x-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsMinimized(true)}
+                  className="text-white hover:bg-white/20 h-6 w-6 p-0"
+                  title="Minimizar"
+                >
+                  <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                  </svg>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsOpen(false)}
+                  className="text-white hover:bg-white/20 h-6 w-6 p-0"
+                  title="Cerrar"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -259,6 +315,29 @@ export default function ChatBot() {
                 <Send className="h-3 w-3" />
               </Button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Minimized Chat */}
+      {isOpen && isMinimized && (
+        <div className="w-64 h-12 shadow-lg border border-gray-200 rounded-lg overflow-hidden bg-white fixed bottom-4 right-2 md:bottom-4 md:right-4">
+          <div className="bg-orange-500 text-white p-2 h-full flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Bot className="h-4 w-4" />
+              <span className="bangers-regular text-sm">SVC Asistente</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMinimized(false)}
+              className="text-white hover:bg-white/20 h-6 w-6 p-0"
+              title="Expandir"
+            >
+              <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              </svg>
+            </Button>
           </div>
         </div>
       )}
