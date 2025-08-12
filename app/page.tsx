@@ -92,22 +92,22 @@ export default function Home() {
             </Link>
             
             {/* Desktop Navigation - Centered */}
-            <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
-              <Link href="/alquiler" className="text-blue-900 hover:text-orange-500 font-medium transition-colors">
-                Alquiler Motos
-              </Link>
-              <Link href="/servicios" className="text-blue-900 hover:text-orange-500 font-medium transition-colors">
-                Servicios
-              </Link>
-              <Link href="/contacto" className="text-blue-900 hover:text-orange-500 font-medium transition-colors">
-                Contacto
-              </Link>
-              {user && (
-                <Link href="/perfil" className="text-blue-900 hover:text-orange-500 font-medium transition-colors">
-                  Mi Perfil
+             <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
+                <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  Alquiler Motos
                 </Link>
-              )}
-            </div>
+                <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  Servicios
+                </Link>
+                <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  Contacto
+                </Link>
+                {user && (
+                  <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                    Mi Perfil
+                  </Link>
+                )}
+              </div>
             
             {/* Authentication Section - Right */}
             <div className="hidden md:flex items-center space-x-4">
@@ -145,28 +145,28 @@ export default function Home() {
               <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
                 <Link
                   href="/alquiler"
-                  className="text-blue-900 hover:text-orange-500 block px-3 py-3 text-base font-medium transition-colors border-b border-gray-100"
+                  className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Alquiler Motos
                 </Link>
                 <Link
                   href="/servicios"
-                  className="text-blue-900 hover:text-orange-500 block px-3 py-3 text-base font-medium transition-colors border-b border-gray-100"
+                  className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Servicios
                 </Link>
                 <Link
                   href="/contacto"
-                  className="text-blue-900 hover:text-orange-500 block px-3 py-3 text-base font-medium transition-colors border-b border-gray-100"
+                  className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Contacto
                 </Link>
                 <Link
                   href="/perfil"
-                  className="text-blue-900 hover:text-orange-500 block px-3 py-3 text-base font-medium transition-colors border-b border-gray-100"
+                  className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Mi Perfil
@@ -174,7 +174,7 @@ export default function Home() {
                 <div className="px-3 py-3">
                   {user ? (
                     <div className="space-y-2">
-                      <p className="text-sm text-blue-900 text-center">Hola, {user.name}</p>
+                      <p className="bangers-regular text-sm text-blue-900 text-center">Hola, {user.name}</p>
                       <Button
                         onClick={() => {
                           signOut()
@@ -223,12 +223,14 @@ export default function Home() {
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            EXPLORA MÁLAGA CON TOTAL LIBERTAD Y ESTILO
+          <h1 className="bangers-regular text-4xl md:text-6xl text-white mb-6">
+            EXPLORA MÁLAGA CON TOTAL
             <br />
-            <span className="text-blue-900">CON SVC MOTO</span>
+            LIBERTAD Y ESTILO
+            <br />
+            <span className="block text-center text-blue-900 mt-2 text-5xl md:text-8xl font-bold">SVC MOTO</span>
           </h1>
-          <p className="text-xl md:text-2xl text-white mb-8 max-w-3xl mx-auto">
+          <p className="bangers-regular text-2xl md:text-3xl text-white mb-8 max-w-3xl mx-auto">
             Descubre, reserva y disfruta de motos y patinetes eléctricos por toda Málaga sin volverte loco.
           </p>
           <Link href="/alquiler">

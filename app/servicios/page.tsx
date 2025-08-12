@@ -1,11 +1,38 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Wrench, Battery, Shield, Clock, CheckCircle, ArrowLeft, Zap, Settings, Truck } from "lucide-react"
+import { Wrench, Battery, Shield, Clock, CheckCircle, ArrowLeft, Zap, Settings, Truck, Menu, X } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 export default function ServiciosPage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const router = useRouter()
+  
+  const signIn = () => router.push('/handler/sign-in')
+  const signOut = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('user')
+    }
+    setUser(null)
+  }
+  
+  // Verificar autenticación desde localStorage
+  useEffect(() => {
+    // Verificar que estamos en el cliente
+    if (typeof window === 'undefined') return
+    
+    const savedUser = localStorage.getItem('user')
+    if (savedUser) {
+      setUser(JSON.parse(savedUser))
+    }
+  }, [])
+
   const servicios = [
     {
       id: 1,
@@ -110,42 +137,122 @@ export default function ServiciosPage() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-xl shadow-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Link href="/" className="flex items-center">
-                <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
-              </Link>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                <Link
-                  href="/"
-                  className="text-blue-900 hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors"
-                >
-                  Inicio
+          <div className="flex items-center h-16">
+            {/* Logo */}
+            <Link href="/" className="flex items-center">
+              <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
+            </Link>
+            
+            {/* Desktop Navigation - Centered */}
+             <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
+                <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  Alquiler Motos
                 </Link>
+                <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-orange-500 border-b-2 border-orange-500 transition-colors">
+                  Servicios
+                </Link>
+                <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  Contacto
+                </Link>
+                {user && (
+                  <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                    Mi Perfil
+                  </Link>
+                )}
+              </div>
+            
+            {/* Authentication Section - Right */}
+            <div className="hidden md:flex items-center space-x-4">
+               {user ? (
+                 <div className="flex items-center space-x-4">
+                   <span className="text-sm text-blue-900">Hola, {user.name}</span>
+                   <Button 
+                     onClick={signOut}
+                     variant="outline" 
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                   >
+                     Cerrar Sesión
+                   </Button>
+                 </div>
+               ) : (
+                 <Button 
+                   onClick={signIn}
+                   className="bg-orange-500 hover:bg-orange-600 text-white"
+                 >
+                   Iniciar Sesión
+                 </Button>
+               )}
+            </div>
+            <div className="md:hidden">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="text-blue-900 hover:text-orange-500 p-2"
+              >
+                {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+              </button>
+            </div>
+          </div>
+          {mobileMenuOpen && (
+            <div className="md:hidden">
+              <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
                 <Link
                   href="/alquiler"
-                  className="text-blue-900 hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors"
+                  className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Alquiler Motos
                 </Link>
                 <Link
                   href="/servicios"
-                  className="text-orange-500 px-3 py-2 text-sm font-medium border-b-2 border-orange-500"
+                  className="bangers-regular text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100 border-b-2 border-orange-500"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Servicios
                 </Link>
                 <Link
                   href="/contacto"
-                  className="text-blue-900 hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors"
+                  className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Contacto
                 </Link>
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white">Reservar Ahora</Button>
+                <Link
+                  href="/perfil"
+                  className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Mi Perfil
+                </Link>
+                <div className="px-3 py-3">
+                  {user ? (
+                    <div className="space-y-2">
+                      <p className="bangers-regular text-sm text-blue-900 text-center">Hola, {user.name}</p>
+                      <Button
+                        onClick={() => {
+                          signOut()
+                          setMobileMenuOpen(false)
+                        }}
+                        variant="outline"
+                        className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full"
+                      >
+                        Cerrar Sesión
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        signIn()
+                        setMobileMenuOpen(false)
+                      }}
+                      className="bg-orange-500 hover:bg-orange-600 text-white w-full"
+                    >
+                      Iniciar Sesión
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </nav>
 
