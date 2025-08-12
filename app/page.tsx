@@ -453,12 +453,42 @@ export default function Home() {
 
               <div className="mt-8">
                 <h4 className="text-lg font-semibold text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Métodos de Pago</h4>
-                <div className="flex flex-wrap gap-2">
-                  {["Visa", "MasterCard", "American Express", "Diners Club"].map((card) => (
-                    <span key={card} className="bg-orange-500 text-white px-3 py-1 rounded text-sm shadow-lg border border-orange-400">
-                      {card}
-                    </span>
-                  ))}
+                <div className="flex flex-wrap gap-3">
+                  {/* Visa */}
+                   <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
+                     <svg viewBox="0 0 48 32" className="w-12 h-8">
+                       <rect width="48" height="32" fill="#1A1F71"/>
+                       <text x="24" y="20" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold" fontFamily="Arial, sans-serif" fontStyle="italic">VISA</text>
+                     </svg>
+                   </div>
+                  
+                  {/* MasterCard */}
+                  <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
+                    <svg viewBox="0 0 48 32" className="w-12 h-8">
+                      <rect width="48" height="32" fill="white"/>
+                      <circle cx="18" cy="16" r="10" fill="#EB001B"/>
+                      <circle cx="30" cy="16" r="10" fill="#F79E1B"/>
+                      <path d="M24 8c-2.2 1.7-3.6 4.4-3.6 7.5s1.4 5.8 3.6 7.5c2.2-1.7 3.6-4.4 3.6-7.5S26.2 9.7 24 8z" fill="#FF5F00"/>
+                    </svg>
+                  </div>
+                  
+                  {/* American Express */}
+                   <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
+                     <svg viewBox="0 0 48 32" className="w-12 h-8">
+                       <rect width="48" height="32" fill="#006FCF"/>
+                       <text x="24" y="20" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold" fontFamily="Arial, sans-serif" fontStyle="italic">AMEX</text>
+                     </svg>
+                   </div>
+                  
+                  {/* Diners Club */}
+                  <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
+                    <svg viewBox="0 0 48 32" className="w-12 h-8">
+                      <rect width="48" height="32" fill="white"/>
+                      <circle cx="16" cy="16" r="12" fill="none" stroke="#0079BE" strokeWidth="2"/>
+                      <circle cx="32" cy="16" r="12" fill="none" stroke="#0079BE" strokeWidth="2"/>
+                      <text x="24" y="20" textAnchor="middle" fill="#0079BE" fontSize="8" fontWeight="bold">DC</text>
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
@@ -489,12 +519,42 @@ export default function Home() {
 
               <div className="mt-8">
                 <h4 className="text-lg font-semibold text-white mb-4">Métodos de Pago</h4>
-                <div className="flex flex-wrap gap-2">
-                  {["Visa", "MasterCard", "American Express", "Diners Club"].map((card) => (
-                    <span key={card} className="bg-orange-500 text-white px-3 py-1 rounded text-sm">
-                      {card}
-                    </span>
-                  ))}
+                <div className="flex flex-wrap gap-3">
+                  {/* Visa */}
+                   <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
+                     <svg viewBox="0 0 48 32" className="w-12 h-8">
+                       <rect width="48" height="32" fill="#1A1F71"/>
+                       <text x="24" y="20" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold" fontFamily="Arial, sans-serif" fontStyle="italic">VISA</text>
+                     </svg>
+                   </div>
+                  
+                  {/* MasterCard */}
+                  <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
+                    <svg viewBox="0 0 48 32" className="w-12 h-8">
+                      <rect width="48" height="32" fill="white"/>
+                      <circle cx="18" cy="16" r="10" fill="#EB001B"/>
+                      <circle cx="30" cy="16" r="10" fill="#F79E1B"/>
+                      <path d="M24 8c-2.2 1.7-3.6 4.4-3.6 7.5s1.4 5.8 3.6 7.5c2.2-1.7 3.6-4.4 3.6-7.5S26.2 9.7 24 8z" fill="#FF5F00"/>
+                    </svg>
+                  </div>
+                  
+                  {/* American Express */}
+                   <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
+                     <svg viewBox="0 0 48 32" className="w-12 h-8">
+                       <rect width="48" height="32" fill="#006FCF"/>
+                       <text x="24" y="20" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold" fontFamily="Arial, sans-serif" fontStyle="italic">AMEX</text>
+                     </svg>
+                   </div>
+                  
+                  {/* Diners Club */}
+                  <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
+                    <svg viewBox="0 0 48 32" className="w-12 h-8">
+                      <rect width="48" height="32" fill="white"/>
+                      <circle cx="16" cy="16" r="12" fill="none" stroke="#0079BE" strokeWidth="2"/>
+                      <circle cx="32" cy="16" r="12" fill="none" stroke="#0079BE" strokeWidth="2"/>
+                      <text x="24" y="20" textAnchor="middle" fill="#0079BE" fontSize="8" fontWeight="bold">DC</text>
+                    </svg>
+                  </div>
                 </div>
               </div>
 
