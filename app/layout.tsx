@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
+import { Analytics } from '@vercel/analytics/react'
 import ChatBot from "@/components/ChatBot"
 
 import "./globals.css"
@@ -9,7 +10,7 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "SVC MOTO - Alquiler y Servicios de Motos Eléctricas en Málaga",
   description:
-    "Alquiler de motos y patinetes eléctricos en Málaga. Servicios de reparación y mantenimiento. Explora la ciudad de forma sostenible.",
+    "Alquiler de motos eléctricas en Málaga. Servicios de reparación y mantenimiento. Explora la ciudad de Málaga de forma sostenible.",
   icons: {
     icon: '/logo-svcmoto.jpeg',
     shortcut: '/logo-svcmoto.jpeg',
@@ -45,6 +46,7 @@ html {
       <body>
         {children}
         <ChatBot />
+        <Analytics />
       </body>
     </html>
   )
