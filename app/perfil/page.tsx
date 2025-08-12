@@ -383,9 +383,21 @@ export default function PerfilPage() {
                   <div className="text-center">
                     <h4 className="font-semibold text-blue-900 mb-2">Próxima Recompensa</h4>
                     <div className="bg-gray-200 rounded-full h-2 mb-2">
-                      <div className="bg-orange-500 h-2 rounded-full" style={{width: '75%'}}></div>
+                      <div className="bg-orange-500 h-2 rounded-full" style={{
+                        width: `${stats.puntosTotales >= 6000 ? 100 :
+                                 stats.puntosTotales >= 4000 ? (stats.puntosTotales / 6000) * 100 :
+                                 stats.puntosTotales >= 2500 ? (stats.puntosTotales / 4000) * 100 :
+                                 stats.puntosTotales >= 1500 ? (stats.puntosTotales / 2500) * 100 :
+                                 (stats.puntosTotales / 1500) * 100}%`
+                      }}></div>
                     </div>
-                    <p className="text-sm text-gray-600">55 puntos más para descuento del 15%</p>
+                    <p className="text-sm text-gray-600">
+                      {stats.puntosTotales >= 6000 ? "¡Todas las recompensas desbloqueadas!" :
+                       stats.puntosTotales >= 4000 ? `${6000 - stats.puntosTotales} puntos más para Alquiler Premium Gratis` :
+                       stats.puntosTotales >= 2500 ? `${4000 - stats.puntosTotales} puntos más para Alquiler Gratis` :
+                       stats.puntosTotales >= 1500 ? `${2500 - stats.puntosTotales} puntos más para Descuento 10€` :
+                       `${1500 - stats.puntosTotales} puntos más para Descuento 5€`}
+                    </p>
                   </div>
                 </CardContent>
               </Card>
