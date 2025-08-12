@@ -57,7 +57,7 @@ Tu objetivo es ayudar a los usuarios con:
 - Proceso de reserva
 - Responder preguntas generales sobre movilidad eléctrica en Málaga
 
-Sé amigable, profesional y útil. Siempre responde en español o ingles segun como te hablen en el primer mensaje ( ESPAÑOL, INGLES, CHINO, FRANCES, PORTUGUES ETC ) y mantén un tono cercano pero profesional.`
+Sé amigable, profesional y útil. IMPORTANTE: Detecta automáticamente el idioma del primer mensaje del usuario y responde SIEMPRE en ese mismo idioma durante toda la conversación. Si el usuario escribe en español, responde en español. Si escribe en inglés, responde en inglés. Si escribe en francés, responde en francés, etc. Mantén un tono cercano pero profesional.`
     }
 
     const completion = await openai.chat.completions.create({
