@@ -364,8 +364,8 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contacto" className="py-16 bg-blue-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="contacto" className="pt-16 pb-0 md:pb-16 bg-blue-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8">Contacta con Nosotros</h2>
@@ -405,8 +405,59 @@ export default function Home() {
               </div>
             </div>
 
-            <div>
-              <h3 className="bangers-regular text-3xl md:text-4xl text-white mb-6">Nuestros Servicios</h3>
+            {/* En desktop: video como fondo de todo el contenido */}
+            <div className="relative hidden md:block">
+              {/* Video de fondo */}
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover rounded-lg"
+              >
+                <source src="/Video2.mp4" type="video/mp4" />
+              </video>
+              
+              {/* Contenido encima del video */}
+              <div className="relative z-10 p-6">
+                <h3 className="bangers-regular text-3xl md:text-4xl text-white mb-6 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Nuestros Servicios</h3>
+                <div className="space-y-4">
+                  <Link href="/alquiler" className="block">
+                    <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Motos Eléctricas</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Perfectas para explorar Málaga de forma sostenible</p>
+                    </div>
+                  </Link>
+                  <Link href="/alquiler" className="block">
+                    <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Patinetes Eléctricos</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Ideales para distancias cortas y turismo urbano</p>
+                    </div>
+                  </Link>
+                  <Link href="/servicios" className="block">
+                    <div className="bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20">
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Venta y Reparación</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Servicio completo para tu vehículo eléctrico</p>
+                    </div>
+                  </Link>
+                </div>
+
+                <div className="mt-8">
+                  <h4 className="text-lg font-semibold text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Métodos de Pago</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {["Visa", "MasterCard", "American Express", "Diners Club"].map((card) => (
+                      <span key={card} className="bg-orange-500 text-white px-3 py-1 rounded text-sm shadow-lg border border-orange-400">
+                        {card}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* En móvil: contenido normal sin video de fondo */}
+            <div className="block md:hidden">
+              <h3 className="bangers-regular text-3xl text-white mb-6">Nuestros Servicios</h3>
               <div className="space-y-4">
                 <Link href="/alquiler" className="block">
                   <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
@@ -437,6 +488,20 @@ export default function Home() {
                     </span>
                   ))}
                 </div>
+              </div>
+
+              {/* Video solo en móvil, debajo de métodos de pago */}
+              <div className="-mx-4 -ml-6 mt-8 -mb-4">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-64 object-contain block"
+                >
+                  <source src="/Video2.mp4" type="video/mp4" />
+                  Tu navegador no soporta videos HTML5.
+                </video>
               </div>
             </div>
           </div>
