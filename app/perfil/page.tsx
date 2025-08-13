@@ -305,10 +305,10 @@ export default function PerfilPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center mb-6">
             <User className="w-8 h-8 text-white mr-4" />
-            <h1 className="bangers-regular text-5xl md:text-6xl text-white">Mi Perfil</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white">{t('profile.title')}</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
-            Gestiona tu información personal, revisa tu historial de alquileres y consulta tus puntos acumulados.
+            {t('profile.subtitle')}
           </p>
         </div>
       </section>
@@ -322,7 +322,7 @@ export default function PerfilPage() {
             <div className="lg:col-span-1">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="bangers-regular text-2xl text-blue-900">Información Personal</CardTitle>
+                  <CardTitle className="bangers-regular text-2xl text-blue-900">{t('profile.personalInfo')}</CardTitle>
                   {!isEditing ? (
                     <Button
                       variant="outline"
@@ -331,7 +331,7 @@ export default function PerfilPage() {
                       className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
                     >
                       <Edit className="w-4 h-4 mr-2" />
-                      Editar
+                      {t('profile.edit')}
                     </Button>
                   ) : (
                     <div className="flex gap-2">
@@ -342,7 +342,7 @@ export default function PerfilPage() {
                         className="border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
                       >
                         <Save className="w-4 h-4 mr-2" />
-                        Guardar
+                        {t('profile.save')}
                       </Button>
                       <Button
                         variant="outline"
@@ -351,14 +351,14 @@ export default function PerfilPage() {
                         className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
                       >
                         <X className="w-4 h-4 mr-2" />
-                        Cancelar
+                        {t('profile.cancel')}
                       </Button>
                     </div>
                   )}
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="nombre">Nombre completo</Label>
+                    <Label htmlFor="nombre">{t('profile.fullName')}</Label>
                     {isEditing ? (
                       <Input
                         id="nombre"
@@ -372,7 +372,7 @@ export default function PerfilPage() {
                   </div>
                   
                   <div>
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">{t('profile.email')}</Label>
                     {isEditing ? (
                       <Input
                         id="email"
@@ -387,7 +387,7 @@ export default function PerfilPage() {
                   </div>
                   
                   <div>
-                    <Label htmlFor="telefono">Teléfono</Label>
+                    <Label htmlFor="telefono">{t('profile.phone')}</Label>
                     {isEditing ? (
                       <Input
                         id="telefono"
@@ -402,7 +402,7 @@ export default function PerfilPage() {
                   </div>
                   
                   <div>
-                    <Label>Miembro desde</Label>
+                    <Label>{t('profile.memberSince')}</Label>
                     <p className="mt-1 text-gray-900">{userInfo.fechaRegistro}</p>
                   </div>
                 </CardContent>
@@ -411,32 +411,32 @@ export default function PerfilPage() {
               {/* Estadísticas */}
               <Card className="mt-6">
                 <CardHeader>
-                  <CardTitle className="bangers-regular text-xl text-blue-900">Mis Estadísticas</CardTitle>
+                  <CardTitle className="bangers-regular text-xl text-blue-900">{t('profile.myStats')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-4 bg-orange-50 rounded-lg">
                       <Star className="w-8 h-8 text-orange-500 mx-auto mb-2" />
                       <div className="text-2xl font-bold text-orange-600">{stats.puntosTotales}</div>
-                      <div className="text-sm text-gray-600">Puntos Totales</div>
+                      <div className="text-sm text-gray-600">{t('profile.totalPoints')}</div>
                     </div>
                     <div className="text-center p-4 bg-blue-50 rounded-lg">
                       <Calendar className="w-8 h-8 text-blue-500 mx-auto mb-2" />
                       <div className="text-2xl font-bold text-blue-600">{stats.alquileresCompletados}</div>
-                      <div className="text-sm text-gray-600">Alquileres</div>
+                      <div className="text-sm text-gray-600">{t('profile.rentals')}</div>
                     </div>
                     <div className="text-center p-4 bg-green-50 rounded-lg col-span-2">
                       <Trophy className="w-8 h-8 text-green-500 mx-auto mb-2" />
                       <div className="text-2xl font-bold text-green-600">{calcularCO2Ahorrado()} kg</div>
-                      <div className="text-sm text-gray-600">CO₂ Ahorrado</div>
-                      <div className="text-xs text-green-600 mt-1">🌱 Equivale a {Math.floor(parseFloat(calcularCO2Ahorrado()) / 18.3)} árboles</div>
+                      <div className="text-sm text-gray-600">{t('profile.co2Saved')}</div>
+                      <div className="text-xs text-green-600 mt-1">🌱 {t('profile.treesEquivalent').replace('{count}', Math.floor(parseFloat(calcularCO2Ahorrado()) / 18.3).toString())}</div>
                     </div>
                   </div>
                   
                   <Separator className="my-4" />
                   
                   <div className="text-center">
-                    <h4 className="font-semibold text-blue-900 mb-2">Próxima Recompensa</h4>
+                    <h4 className="font-semibold text-blue-900 mb-2">{t('profile.nextReward')}</h4>
                     <div className="bg-gray-200 rounded-full h-2 mb-2">
                       <div className="bg-orange-500 h-2 rounded-full" style={{
                         width: `${stats.puntosTotales >= 6000 ? 100 :
@@ -447,11 +447,11 @@ export default function PerfilPage() {
                       }}></div>
                     </div>
                     <p className="text-sm text-gray-600">
-                      {stats.puntosTotales >= 6000 ? "¡Todas las recompensas desbloqueadas!" :
-                       stats.puntosTotales >= 4000 ? `${6000 - stats.puntosTotales} puntos más para Alquiler Premium Gratis` :
-                       stats.puntosTotales >= 2500 ? `${4000 - stats.puntosTotales} puntos más para Alquiler Gratis` :
-                       stats.puntosTotales >= 1500 ? `${2500 - stats.puntosTotales} puntos más para Descuento 10€` :
-                       `${1500 - stats.puntosTotales} puntos más para Descuento 5€`}
+                      {stats.puntosTotales >= 6000 ? t('profile.allRewardsUnlocked') :
+                       stats.puntosTotales >= 4000 ? t('profile.pointsForPremiumFree').replace('{points}', (6000 - stats.puntosTotales).toString()) :
+                       stats.puntosTotales >= 2500 ? t('profile.pointsForFree').replace('{points}', (4000 - stats.puntosTotales).toString()) :
+                       stats.puntosTotales >= 1500 ? t('profile.pointsFor10Discount').replace('{points}', (2500 - stats.puntosTotales).toString()) :
+                       t('profile.pointsFor5Discount').replace('{points}', (1500 - stats.puntosTotales).toString())}
                     </p>
                   </div>
                 </CardContent>
@@ -462,14 +462,14 @@ export default function PerfilPage() {
             <div className="lg:col-span-1">
               <Card className="h-full">
                 <CardHeader>
-                  <CardTitle className="bangers-regular text-xl text-blue-900">Sistema de Puntos</CardTitle>
+                  <CardTitle className="bangers-regular text-xl text-blue-900">{t('profile.pointsSystem')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
                       <div>
-                        <div className="font-semibold text-blue-900">Descuento 5€</div>
-                        <div className="text-sm text-gray-600">En tu próximo alquiler</div>
+                        <div className="font-semibold text-blue-900">{t('profile.discount5')}</div>
+                        <div className="text-sm text-gray-600">{t('profile.nextRentalDiscount')}</div>
                       </div>
                       <Badge className="bg-orange-500 text-white">
                         1500 puntos
@@ -477,8 +477,8 @@ export default function PerfilPage() {
                     </div>
                     <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
                       <div>
-                        <div className="font-semibold text-blue-900">Descuento 10€</div>
-                        <div className="text-sm text-gray-600">En tu próximo alquiler</div>
+                        <div className="font-semibold text-blue-900">{t('profile.discount10')}</div>
+                        <div className="text-sm text-gray-600">{t('profile.nextRentalDiscount')}</div>
                       </div>
                       <Badge className="bg-orange-500 text-white">
                         2500 puntos
@@ -486,8 +486,8 @@ export default function PerfilPage() {
                     </div>
                     <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
                       <div>
-                        <div className="font-semibold text-blue-900">Alquiler Gratis</div>
-                        <div className="text-sm text-gray-600">1 hora de patinete</div>
+                        <div className="font-semibold text-blue-900">{t('profile.freeRental')}</div>
+                        <div className="text-sm text-gray-600">{t('profile.oneHourScooter')}</div>
                       </div>
                       <Badge className="bg-orange-500 text-white">
                         4000 puntos
@@ -495,8 +495,8 @@ export default function PerfilPage() {
                     </div>
                     <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
                       <div>
-                        <div className="font-semibold text-blue-900">Alquiler Premium Gratis</div>
-                        <div className="text-sm text-gray-600">2 horas de moto eléctrica</div>
+                        <div className="font-semibold text-blue-900">{t('profile.premiumFreeRental')}</div>
+                        <div className="text-sm text-gray-600">{t('profile.twoHoursBike')}</div>
                       </div>
                       <Badge className="bg-orange-500 text-white">
                         6000 puntos
@@ -506,12 +506,12 @@ export default function PerfilPage() {
                   
                   <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                     <div className="text-sm text-blue-800">
-                      <strong>¿Cómo ganar puntos?</strong>
+                      <strong>{t('profile.howToEarnPoints')}</strong>
                       <ul className="mt-2 space-y-1">
-                        <li>• 15 puntos por cada euro gastado</li>
-                        <li>• 100 puntos extra por completar un alquiler</li>
-                        <li>• 200 puntos por reseña positiva</li>
-                        <li>• 500 puntos por referir a un amigo</li>
+                        <li>• {t('profile.pointsPerEuro')}</li>
+                        <li>• {t('profile.pointsPerRental')}</li>
+                        <li>• {t('profile.pointsPerReview')}</li>
+                        <li>• {t('profile.pointsPerReferral')}</li>
                       </ul>
                     </div>
                   </div>
@@ -523,17 +523,17 @@ export default function PerfilPage() {
             <div className="lg:col-span-1">
               <Card className="h-full">
                 <CardHeader>
-                  <CardTitle className="bangers-regular text-xl text-blue-900">Historial de Alquileres</CardTitle>
+                  <CardTitle className="bangers-regular text-xl text-blue-900">{t('profile.rentalHistory')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {alquileres.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-center">
                       <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold text-gray-600 mb-2">No hay alquileres aún</h3>
-                      <p className="text-gray-500 mb-4">Cuando realices tu primer alquiler, aparecerá aquí</p>
+                      <h3 className="text-lg font-semibold text-gray-600 mb-2">{t('profile.noRentalsYet')}</h3>
+                      <p className="text-gray-500 mb-4">{t('profile.firstRentalMessage')}</p>
                       <Link href="/alquiler">
                         <Button className="bg-orange-500 hover:bg-orange-600">
-                          Ver Vehículos Disponibles
+                          {t('profile.viewAvailableVehicles')}
                         </Button>
                       </Link>
                     </div>
@@ -552,19 +552,19 @@ export default function PerfilPage() {
                             
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div>
-                                <span className="text-gray-500">Fecha:</span>
+                                <span className="text-gray-500">{t('profile.date')}</span>
                                 <p className="font-medium">{alquiler.fecha}</p>
                               </div>
                               <div>
-                                <span className="text-gray-500">Duración:</span>
+                                <span className="text-gray-500">{t('profile.duration')}</span>
                                 <p className="font-medium">{alquiler.duracion}</p>
                               </div>
                               <div>
-                                <span className="text-gray-500">Precio:</span>
+                                <span className="text-gray-500">{t('profile.price')}</span>
                                 <p className="font-medium text-green-600">{alquiler.precio}</p>
                               </div>
                               <div>
-                                <span className="text-gray-500">Puntos:</span>
+                                <span className="text-gray-500">{t('profile.points')}</span>
                                 <p className="font-medium text-orange-600">+{alquiler.puntos}</p>
                               </div>
                             </div>
@@ -574,7 +574,7 @@ export default function PerfilPage() {
                       
                       <div className="mt-6 text-center">
                         <Button variant="outline" className="border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white">
-                          Ver Más Alquileres
+                          {t('profile.viewMoreRentals')}
                         </Button>
                       </div>
                     </>
@@ -587,7 +587,7 @@ export default function PerfilPage() {
             <div className="lg:col-span-1">
               <Card className="h-full">
                 <CardHeader>
-                  <CardTitle className="bangers-regular text-xl text-blue-900">Tus Logros</CardTitle>
+                  <CardTitle className="bangers-regular text-xl text-blue-900">{t('profile.achievements')}</CardTitle>
                 </CardHeader>
                 <CardContent className="pb-2">
                   <div className="max-h-[740px] overflow-y-auto scrollbar-hide space-y-2">
@@ -596,8 +596,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 1 ? '' : 'grayscale'}`}>🚀</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 1 ? '' : 'text-gray-500'}`}>Primer Viaje</h3>
-                          <p className={`text-xs ${calcularTotalAlquileres() >= 1 ? 'text-gray-600' : 'text-gray-500'}`}>Completa tu primer alquiler</p>
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 1 ? '' : 'text-gray-500'}`}>{t('profile.firstTrip')}</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 1 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.firstTripDesc')}</p>
                         </div>
                         <Badge className={calcularTotalAlquileres() >= 1 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
                           {calcularTotalAlquileres() >= 1 ? '✓' : '○'}
@@ -610,8 +610,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 10 ? '' : 'grayscale'}`}>🗺️</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 10 ? '' : 'text-gray-500'}`}>Explorador</h3>
-                          <p className={`text-xs ${calcularKmTotales() >= 10 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 10km</p>
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 10 ? '' : 'text-gray-500'}`}>{t('profile.explorer')}</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 10 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.explorerDesc')}</p>
                         </div>
                         <Badge className={calcularKmTotales() >= 10 ? 'bg-blue-500 text-white text-xs' : 'text-xs'}>
                           {calcularKmTotales() >= 10 ? '✓' : '○'}
@@ -624,8 +624,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 1 ? '' : 'grayscale'}`}>🌱</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 1 ? '' : 'text-gray-500'}`}>Eco Principiante</h3>
-                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 1 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 1kg CO₂</p>
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 1 ? '' : 'text-gray-500'}`}>{t('profile.ecoBeginner')}</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 1 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.ecoBeginnerDesc')}</p>
                         </div>
                         <Badge className={parseFloat(calcularCO2Ahorrado()) >= 1 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
                           {parseFloat(calcularCO2Ahorrado()) >= 1 ? '✓' : '○'}
@@ -638,8 +638,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 5 ? '' : 'grayscale'}`}>🔄</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 5 ? '' : 'text-gray-500'}`}>Frecuente</h3>
-                          <p className={`text-xs ${calcularTotalAlquileres() >= 5 ? 'text-gray-600' : 'text-gray-500'}`}>5 alquileres completados</p>
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 5 ? '' : 'text-gray-500'}`}>{t('profile.frequent')}</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 5 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.frequentDesc')}</p>
                         </div>
                         <Badge className={calcularTotalAlquileres() >= 5 ? 'bg-purple-500 text-white text-xs' : 'text-xs'}>
                           {calcularTotalAlquileres() >= 5 ? '✓' : '○'}
@@ -652,8 +652,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 50 ? '' : 'grayscale'}`}>🏔️</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 50 ? '' : 'text-gray-500'}`}>Aventurero</h3>
-                          <p className={`text-xs ${calcularKmTotales() >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 50km</p>
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 50 ? '' : 'text-gray-500'}`}>{t('profile.adventurer')}</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.adventurerDesc')}</p>
                         </div>
                         <Badge className={calcularKmTotales() >= 50 ? 'bg-orange-500 text-white text-xs' : 'text-xs'}>
                           {calcularKmTotales() >= 50 ? '✓' : '○'}
@@ -666,8 +666,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 10 ? '' : 'grayscale'}`}>♻️</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 10 ? '' : 'text-gray-500'}`}>Eco Consciente</h3>
-                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 10 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 10kg CO₂</p>
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 10 ? '' : 'text-gray-500'}`}>{t('profile.ecoConscious')}</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 10 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.ecoConsciousDesc')}</p>
                         </div>
                         <Badge className={parseFloat(calcularCO2Ahorrado()) >= 10 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
                           {parseFloat(calcularCO2Ahorrado()) >= 10 ? '✓' : '○'}
@@ -680,8 +680,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 10 ? '' : 'grayscale'}`}>📅</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 10 ? '' : 'text-gray-500'}`}>Habitual</h3>
-                          <p className={`text-xs ${calcularTotalAlquileres() >= 10 ? 'text-gray-600' : 'text-gray-500'}`}>10 alquileres completados</p>
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 10 ? '' : 'text-gray-500'}`}>{t('profile.habitual')}</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 10 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.habitualDesc')}</p>
                         </div>
                         <Badge className={calcularTotalAlquileres() >= 10 ? 'bg-indigo-500 text-white text-xs' : 'text-xs'}>
                           {calcularTotalAlquileres() >= 10 ? '✓' : '○'}
@@ -694,8 +694,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 100 ? '' : 'grayscale'}`}>🧳</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 100 ? '' : 'text-gray-500'}`}>Viajero</h3>
-                          <p className={`text-xs ${calcularKmTotales() >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 100km</p>
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 100 ? '' : 'text-gray-500'}`}>{t('profile.traveler')}</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.travelerDesc')}</p>
                         </div>
                         <Badge className={calcularKmTotales() >= 100 ? 'bg-cyan-500 text-white text-xs' : 'text-xs'}>
                           {calcularKmTotales() >= 100 ? '✓' : '○'}
@@ -708,8 +708,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 25 ? '' : 'grayscale'}`}>🛡️</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 25 ? '' : 'text-gray-500'}`}>Eco Defensor</h3>
-                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 25 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 25kg CO₂</p>
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 25 ? '' : 'text-gray-500'}`}>{t('profile.ecoDefender')}</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 25 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.ecoDefenderDesc')}</p>
                         </div>
                         <Badge className={parseFloat(calcularCO2Ahorrado()) >= 25 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
                           {parseFloat(calcularCO2Ahorrado()) >= 25 ? '✓' : '○'}
@@ -722,8 +722,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 20 ? '' : 'grayscale'}`}>🎖️</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 20 ? '' : 'text-gray-500'}`}>Veterano</h3>
-                          <p className={`text-xs ${calcularTotalAlquileres() >= 20 ? 'text-gray-600' : 'text-gray-500'}`}>20 alquileres completados</p>
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 20 ? '' : 'text-gray-500'}`}>{t('profile.veteran')}</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 20 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.veteranDesc')}</p>
                         </div>
                         <Badge className={calcularTotalAlquileres() >= 20 ? 'bg-amber-500 text-white text-xs' : 'text-xs'}>
                           {calcularTotalAlquileres() >= 20 ? '✓' : '○'}
@@ -736,8 +736,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 200 ? '' : 'grayscale'}`}>🏕️</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 200 ? '' : 'text-gray-500'}`}>Nómada</h3>
-                          <p className={`text-xs ${calcularKmTotales() >= 200 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 200km</p>
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 200 ? '' : 'text-gray-500'}`}>{t('profile.nomad')}</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 200 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.nomadDesc')}</p>
                         </div>
                         <Badge className={calcularKmTotales() >= 200 ? 'bg-teal-500 text-white text-xs' : 'text-xs'}>
                           {calcularKmTotales() >= 200 ? '✓' : '○'}
@@ -750,8 +750,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 50 ? '' : 'grayscale'}`}>🦸</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 50 ? '' : 'text-gray-500'}`}>Eco Héroe</h3>
-                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 50kg CO₂</p>
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 50 ? '' : 'text-gray-500'}`}>{t('profile.ecoHero')}</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.ecoHeroDesc')}</p>
                         </div>
                         <Badge className={parseFloat(calcularCO2Ahorrado()) >= 50 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
                           {parseFloat(calcularCO2Ahorrado()) >= 50 ? '✓' : '○'}
@@ -764,8 +764,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 30 ? '' : 'grayscale'}`}>🎯</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 30 ? '' : 'text-gray-500'}`}>Experto</h3>
-                          <p className={`text-xs ${calcularTotalAlquileres() >= 30 ? 'text-gray-600' : 'text-gray-500'}`}>30 alquileres completados</p>
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 30 ? '' : 'text-gray-500'}`}>{t('profile.expert')}</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 30 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.expertDesc')}</p>
                         </div>
                         <Badge className={calcularTotalAlquileres() >= 30 ? 'bg-violet-500 text-white text-xs' : 'text-xs'}>
                           {calcularTotalAlquileres() >= 30 ? '✓' : '○'}
@@ -778,8 +778,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 300 ? '' : 'grayscale'}`}>🏙️</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 300 ? '' : 'text-gray-500'}`}>Explorador Urbano</h3>
-                          <p className={`text-xs ${calcularKmTotales() >= 300 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 300km</p>
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 300 ? '' : 'text-gray-500'}`}>{t('profile.urbanExplorer')}</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 300 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.urbanExplorerDesc')}</p>
                         </div>
                         <Badge className={calcularKmTotales() >= 300 ? 'bg-slate-500 text-white text-xs' : 'text-xs'}>
                           {calcularKmTotales() >= 300 ? '✓' : '○'}
@@ -792,8 +792,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'grayscale'}`}>⚔️</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'text-gray-500'}`}>Eco Warrior</h3>
-                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 100kg CO₂</p>
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'text-gray-500'}`}>{t('profile.ecoWarrior')}</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.ecoWarriorDesc')}</p>
                         </div>
                         <Badge className={parseFloat(calcularCO2Ahorrado()) >= 100 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
                           {parseFloat(calcularCO2Ahorrado()) >= 100 ? '✓' : '○'}
@@ -806,8 +806,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 40 ? '' : 'grayscale'}`}>🧙</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 40 ? '' : 'text-gray-500'}`}>Maestro</h3>
-                          <p className={`text-xs ${calcularTotalAlquileres() >= 40 ? 'text-gray-600' : 'text-gray-500'}`}>40 alquileres completados</p>
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 40 ? '' : 'text-gray-500'}`}>{t('profile.master')}</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 40 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.masterDesc')}</p>
                         </div>
                         <Badge className={calcularTotalAlquileres() >= 40 ? 'bg-emerald-500 text-white text-xs' : 'text-xs'}>
                           {calcularTotalAlquileres() >= 40 ? '✓' : '○'}
@@ -820,8 +820,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 500 ? '' : 'grayscale'}`}>🏎️</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 500 ? '' : 'text-gray-500'}`}>Velocista</h3>
-                          <p className={`text-xs ${calcularKmTotales() >= 500 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 500km</p>
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 500 ? '' : 'text-gray-500'}`}>{t('profile.speedster')}</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 500 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.speedsterDesc')}</p>
                         </div>
                         <Badge className={calcularKmTotales() >= 500 ? 'bg-yellow-500 text-white text-xs' : 'text-xs'}>
                           {calcularKmTotales() >= 500 ? '✓' : '○'}
@@ -834,8 +834,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 50 ? '' : 'grayscale'}`}>🏃</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 50 ? '' : 'text-gray-500'}`}>Maratonista</h3>
-                          <p className={`text-xs ${calcularTotalAlquileres() >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>50 alquileres completados</p>
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 50 ? '' : 'text-gray-500'}`}>{t('profile.marathoner')}</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.marathonerDesc')}</p>
                         </div>
                         <Badge className={calcularTotalAlquileres() >= 50 ? 'bg-blue-500 text-white text-xs' : 'text-xs'}>
                           {calcularTotalAlquileres() >= 50 ? '✓' : '○'}
@@ -848,8 +848,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 200 ? '' : 'grayscale'}`}>👑</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 200 ? '' : 'text-gray-500'}`}>Eco Leyenda</h3>
-                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 200 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 200kg CO₂</p>
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 200 ? '' : 'text-gray-500'}`}>{t('profile.ecoLegend')}</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 200 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.ecoLegendDesc')}</p>
                         </div>
                         <Badge className={parseFloat(calcularCO2Ahorrado()) >= 200 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
                           {parseFloat(calcularCO2Ahorrado()) >= 200 ? '✓' : '○'}
@@ -862,8 +862,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 1000 ? '' : 'grayscale'}`}>🚁</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 1000 ? '' : 'text-gray-500'}`}>Súper Viajero</h3>
-                          <p className={`text-xs ${calcularKmTotales() >= 1000 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 1000km</p>
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 1000 ? '' : 'text-gray-500'}`}>{t('profile.superTraveler')}</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 1000 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.superTravelerDesc')}</p>
                         </div>
                         <Badge className={calcularKmTotales() >= 1000 ? 'bg-red-500 text-white text-xs' : 'text-xs'}>
                           {calcularKmTotales() >= 1000 ? '✓' : '○'}
@@ -876,8 +876,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 100 ? '' : 'grayscale'}`}>🏛️</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 100 ? '' : 'text-gray-500'}`}>Centurión</h3>
-                          <p className={`text-xs ${calcularTotalAlquileres() >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>100 alquileres completados</p>
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 100 ? '' : 'text-gray-500'}`}>{t('profile.centurion')}</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.centurionDesc')}</p>
                         </div>
                         <Badge className={calcularTotalAlquileres() >= 100 ? 'bg-yellow-500 text-white text-xs' : 'text-xs'}>
                           {calcularTotalAlquileres() >= 100 ? '✓' : '○'}
@@ -890,8 +890,8 @@ export default function PerfilPage() {
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 500 ? '' : 'grayscale'}`}>🌍</div>
                         <div className="flex-1">
-                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 500 ? '' : 'text-gray-500'}`}>Eco Dios</h3>
-                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 500 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 500kg CO₂</p>
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 500 ? '' : 'text-gray-500'}`}>{t('profile.ecoGod')}</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 500 ? 'text-gray-600' : 'text-gray-500'}`}>{t('profile.ecoGodDesc')}</p>
                         </div>
                         <Badge className={parseFloat(calcularCO2Ahorrado()) >= 500 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
                           {parseFloat(calcularCO2Ahorrado()) >= 500 ? '✓' : '○'}
