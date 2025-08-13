@@ -60,16 +60,22 @@ export default function ContactoPage() {
         mapboxgl.default.accessToken = mapboxToken
       }
 
-      map.current = new mapboxgl.default.Map({
-        container: mapContainer.current!,
-        style: "mapbox://styles/mapbox/satellite-streets-v12",
-        center: [0, 0], // Start from world view
-        zoom: 1,
-        pitch: 30, // Vista más vertical y aérea
-        bearing: 0,
-      })
+      try {
+        map.current = new mapboxgl.default.Map({
+          container: mapContainer.current!,
+          style: "mapbox://styles/mapbox/satellite-streets-v12",
+          center: [0, 0], // Start from world view
+          zoom: 1,
+          pitch: 30, // Vista más vertical y aérea
+          bearing: 0,
+        })
+      } catch (error) {
+        // Silently handle WebGL initialization errors on mobile
+        console.warn('Mapbox WebGL initialization failed:', error)
+        return
+      }
 
-      map.current.on("load", () => {
+      map.current?.on("load", () => {
         // Add custom marker with motorcycle emoji
         const markerElement = document.createElement("div")
         markerElement.className = "custom-marker"
@@ -93,7 +99,7 @@ export default function ContactoPage() {
 
         // Animate flight to location
         setTimeout(() => {
-          map.current.flyTo({
+          map.current?.flyTo({
             center: [lng, lat],
             zoom: zoom,
             pitch: 30, // Vista más vertical y aérea
@@ -104,10 +110,14 @@ export default function ContactoPage() {
 
           // Add marker after flight animation
           setTimeout(() => {
-            marker.addTo(map.current)
+            if (map.current) {
+              marker.addTo(map.current)
+            }
           }, 2000)
         }, 1000)
       })
+    }).catch((error) => {
+      console.warn("Error loading mapbox-gl:", error)
     })
   }, [lng, lat, zoom])
 

@@ -8,6 +8,8 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
+import { useTranslation } from "@/contexts/TranslationContext"
+import { LanguageToggle } from "@/components/LanguageToggle"
 
 export default function Home() {
   const [showIntro, setShowIntro] = useState(false)
@@ -15,6 +17,7 @@ export default function Home() {
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+  const { t } = useTranslation()
   
   const signIn = () => router.push('/handler/sign-in')
   const signOut = () => {
@@ -103,40 +106,42 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center">
-              <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
-            </Link>
+            <div className="flex items-center w-1/4">
+              <Link href="/" className="flex items-center">
+                <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
+              </Link>
+            </div>
             
             {/* Desktop Navigation - Centered */}
-             <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
-                <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                Alquiler Motos
+            <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
+              <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                {t('nav.rental')}
               </Link>
-
               <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                Servicios
+                {t('nav.services')}
               </Link>
               <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                Contacto
+                {t('nav.contact')}
               </Link>
-                {user && (
-                  <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                    Mi Perfil
-                  </Link>
-                )}
-              </div>
+              {user && (
+                <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  {t('nav.profile')}
+                </Link>
+              )}
+            </div>
             
             {/* Authentication Section - Right */}
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden md:flex items-center justify-end space-x-4 w-1/4">
+               <LanguageToggle />
                {user ? (
                  <div className="flex items-center space-x-4">
-                   <span className="text-sm text-blue-900">Hola, {user.name}</span>
+                   <span className="text-sm text-blue-900">{t('nav.hello')} {user.name}</span>
                    <Button 
                      onClick={signOut}
                      variant="outline" 
                      className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
                    >
-                     Cerrar Sesión
+                     {t('nav.signOut')}
                    </Button>
                  </div>
                ) : (
@@ -144,11 +149,11 @@ export default function Home() {
                    onClick={signIn}
                    className="bg-orange-500 hover:bg-orange-600 text-white"
                  >
-                   Iniciar Sesión
+                   {t('nav.signIn')}
                  </Button>
                )}
             </div>
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center justify-between w-full">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="text-blue-900 hover:text-orange-500 p-2 flex items-center space-x-1"
@@ -156,6 +161,7 @@ export default function Home() {
                 <HomeIcon className="w-6 h-6" />
                 {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
               </button>
+              <LanguageToggle className="p-1" />
             </div>
           </div>
           {mobileMenuOpen && (
@@ -242,18 +248,21 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="bangers-regular text-5xl md:text-7xl text-white mb-6">
-            EXPLORA MÁLAGA CON TOTAL
-            <br />
-            LIBERTAD Y ESTILO
+            {t('hero.title').split('\n').map((line, index) => (
+              <span key={index}>
+                {line}
+                {index < t('hero.title').split('\n').length - 1 && <br />}
+              </span>
+            ))}
             <br />
             <span className="block text-center text-blue-900 mt-2 text-7xl md:text-8xl font-bold" style={{textShadow: '2px 2px 0 white, -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 0 2px 0 white, 0 -2px 0 white, 2px 0 0 white, -2px 0 0 white'}}>SVC MOTO</span>
           </h1>
           <p className="bangers-regular text-2xl md:text-3xl text-white/90 mb-8 max-w-3xl mx-auto">
-             Descubre, reserva y disfruta de motos electricas en Málaga sin volverte loco.
+             {t('hero.subtitle')}
            </p>
           <Link href="/alquiler">
               <Button size="lg" className="bangers-regular bg-orange-500 hover:bg-orange-600 text-white text-2xl md:text-3xl px-10 py-5">
-                RESERVAR AHORA
+                {t('hero.cta')}
               </Button>
             </Link>
         </div>

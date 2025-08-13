@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Analytics } from '@vercel/analytics/react'
 import ChatBot from "@/components/ChatBot"
+import { TranslationProvider } from "@/contexts/TranslationContext"
 
 import "./globals.css"
 
@@ -91,8 +92,10 @@ html {
         `}</style>
       </head>
       <body>
-        {children}
-        <ChatBot />
+        <TranslationProvider>
+          {children}
+          <ChatBot />
+        </TranslationProvider>
         <Analytics />
       </body>
     </html>
