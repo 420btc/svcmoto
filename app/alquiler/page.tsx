@@ -145,7 +145,7 @@ export default function AlquilerPage() {
         dia_completo: 85,
         semanal: "500€",
       },
-      caracteristicas: ["2 cascos incluidos", "Seguro premium", "Batería 72V24AH", "Motor 9kW", "Frenos ABS"],
+      caracteristicas: [t('features.helmetsIncluded'), t('features.premiumInsurance'), t('features.battery72V'), t('features.motor9kW'), t('features.absBrakes')],
     },
     {
       id: 3,
@@ -161,7 +161,7 @@ export default function AlquilerPage() {
         dia_completo: 35,
         semanal: "200€",
       },
-      caracteristicas: ["Casco incluido", "Plegable", "Luces LED", "Frenos de disco", "Seguro básico", "Soporte móvil"],
+      caracteristicas: [t('features.helmetIncluded'), t('features.foldable'), t('features.ledLights'), t('features.discBrakes'), t('features.basicInsurance'), t('features.phoneSupport')],
     },
   ]
 
@@ -349,15 +349,15 @@ export default function AlquilerPage() {
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className="flex items-center space-x-2">
                       <Zap className="w-4 h-4 text-orange-500" />
-                      <span className="text-sm text-gray-600">Autonomía: {moto.autonomia}</span>
+                      <span className="text-sm text-gray-600">{t('rental.autonomy')} {moto.autonomia}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Clock className="w-4 h-4 text-orange-500" />
-                      <span className="text-sm text-gray-600">Máx: {moto.velocidad}</span>
+                      <span className="text-sm text-gray-600">{t('rental.maxSpeed')} {moto.velocidad}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Users className="w-4 h-4 text-orange-500" />
-                      <span className="text-sm text-gray-600">{moto.capacidad}</span>
+                      <span className="text-sm text-gray-600">{t('rental.capacity')} {moto.capacidad}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Shield className="w-4 h-4 text-orange-500" />

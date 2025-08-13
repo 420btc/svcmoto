@@ -221,7 +221,25 @@ const translations = {
     'serviceModal.requestSent': '¡Solicitud Enviada!',
     'serviceModal.requestProcessed': 'Tu solicitud de servicio ha sido procesada exitosamente.',
     'serviceModal.contactSoon': 'Te contactaremos en las próximas 24 horas para confirmar la cita.',
-    'serviceModal.continue': 'Continuar'
+    'serviceModal.continue': 'Continuar',
+    
+    // Rental Vehicle Specs
+    'rental.autonomy': 'Autonomía:',
+    'rental.maxSpeed': 'Máx:',
+    'rental.capacity': 'Capacidad:',
+    
+    // Vehicle Features
+    'features.helmetsIncluded': '2 cascos incluidos',
+    'features.premiumInsurance': 'Seguro premium',
+    'features.battery72V': 'Batería 72V24AH',
+    'features.motor9kW': 'Motor 9kW',
+    'features.absBrakes': 'Frenos ABS',
+    'features.helmetIncluded': 'Casco incluido',
+    'features.foldable': 'Plegable',
+    'features.ledLights': 'Luces LED',
+    'features.discBrakes': 'Frenos de disco',
+    'features.basicInsurance': 'Seguro básico',
+    'features.phoneSupport': 'Soporte móvil'
   },
   en: {
     // Intro
@@ -430,7 +448,25 @@ const translations = {
     'serviceModal.requestSent': 'Request Sent!',
     'serviceModal.requestProcessed': 'Your service request has been processed successfully.',
     'serviceModal.contactSoon': 'We will contact you within the next 24 hours to confirm the appointment.',
-    'serviceModal.continue': 'Continue'
+    'serviceModal.continue': 'Continue',
+    
+    // Rental Vehicle Specs
+    'rental.autonomy': 'Range:',
+    'rental.maxSpeed': 'Max:',
+    'rental.capacity': 'Capacity:',
+    
+    // Vehicle Features
+    'features.helmetsIncluded': '2 helmets included',
+    'features.premiumInsurance': 'Premium insurance',
+    'features.battery72V': '72V24AH Battery',
+    'features.motor9kW': '9kW Motor',
+    'features.absBrakes': 'ABS Brakes',
+    'features.helmetIncluded': 'Helmet included',
+    'features.foldable': 'Foldable',
+    'features.ledLights': 'LED Lights',
+    'features.discBrakes': 'Disc brakes',
+    'features.basicInsurance': 'Basic insurance',
+    'features.phoneSupport': 'Phone support'
   }
 }
 
