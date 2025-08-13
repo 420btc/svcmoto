@@ -145,56 +145,59 @@ export default function ContactoPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-xl shadow-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16">
-            {/* Logo and Mobile Menu */}
-            <div className="flex items-center justify-between w-full">
+            {/* Logo - Left Column */}
+            <div className="flex items-center w-1/4">
               <Link href="/" className="flex items-center">
                 <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
               </Link>
-              
-              {/* Desktop Navigation - Centered */}
-              <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
-                <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  {t('nav.rental')}
+            </div>
+            
+            {/* Desktop Navigation - Center Column */}
+            <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
+              <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                {t('nav.rental')}
+              </Link>
+              <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                {t('nav.services')}
+              </Link>
+              <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-orange-500 border-b-2 border-orange-500 transition-colors">
+                {t('nav.contact')}
+              </Link>
+              {user && (
+                <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  {t('nav.profile')}
                 </Link>
-                <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  {t('nav.services')}
-                </Link>
-                <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-orange-500 border-b-2 border-orange-500 transition-colors">
-                  {t('nav.contact')}
-                </Link>
-                {user && (
-                  <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                    {t('nav.profile')}
-                  </Link>
-                )}
-              </div>
-              
-              {/* Authentication Section - Right */}
-              <div className="hidden md:flex items-center space-x-4">
-                 <LanguageToggle />
-                 {user ? (
-                   <div className="flex items-center space-x-4">
-                     <span className="text-sm text-blue-900">{t('nav.hello')} {user.name}</span>
-                     <Button 
-                       onClick={signOut}
-                       variant="outline" 
-                       className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
-                     >
-                       {t('nav.signOut')}
-                     </Button>
-                   </div>
-                 ) : (
+              )}
+            </div>
+            
+            {/* Authentication Section - Right Column */}
+            <div className="hidden md:flex items-center justify-end space-x-4 w-1/4">
+               <LanguageToggle />
+               {user ? (
+                 <div className="flex items-center space-x-4">
+                   <span className="text-sm text-blue-900">{t('nav.hello')} {user.name}</span>
                    <Button 
-                     onClick={signIn}
-                     className="bg-orange-500 hover:bg-orange-600 text-white"
+                     onClick={signOut}
+                     variant="outline" 
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
                    >
-                     {t('nav.signIn')}
+                     {t('nav.signOut')}
                    </Button>
-                 )}
-              </div>
-              
-              {/* Mobile Menu Button */}
-              <div className="md:hidden flex items-center space-x-2">
+                 </div>
+               ) : (
+                 <Button 
+                   onClick={signIn}
+                   className="bg-orange-500 hover:bg-orange-600 text-white"
+                 >
+                   {t('nav.signIn')}
+                 </Button>
+               )}
+            </div>
+            
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex items-center justify-between w-full">
+              <div></div>
+              <div className="flex items-center space-x-2">
                 <LanguageToggle className="p-1" />
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
