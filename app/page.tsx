@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Phone, MapPin, Clock, Star, Zap, Shield, Wrench, Menu, X } from "lucide-react"
+import { Phone, MapPin, Clock, Star, Zap, Shield, Wrench, Menu, X, ArrowLeft, Home as HomeIcon } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -151,8 +151,9 @@ export default function Home() {
             <div className="md:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-blue-900 hover:text-orange-500 p-2"
+                className="text-blue-900 hover:text-orange-500 p-2 flex items-center space-x-1"
               >
+                <HomeIcon className="w-6 h-6" />
                 {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
               </button>
             </div>

@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Phone, MapPin, Clock, Mail, ArrowLeft, Menu, X } from "lucide-react"
+import { Phone, MapPin, Clock, Mail, ArrowLeft, Menu, X, Home } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
@@ -180,8 +180,9 @@ export default function ContactoPage() {
             <div className="md:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-blue-900 hover:text-orange-500 p-2"
+                className="text-blue-900 hover:text-orange-500 p-2 flex items-center space-x-1"
               >
+                <Home className="w-6 h-6" />
                 {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
               </button>
             </div>

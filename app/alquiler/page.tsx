@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Clock, Users, Zap, Shield, ArrowLeft, Menu, X, Calendar, CheckCircle } from "lucide-react"
+import { Clock, Users, Zap, Shield, ArrowLeft, Menu, X, Calendar, CheckCircle, Home } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -216,8 +216,9 @@ export default function AlquilerPage() {
             <div className="md:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-blue-900 hover:text-orange-500 p-2"
+                className="text-blue-900 hover:text-orange-500 p-2 flex items-center space-x-1"
               >
+                <Home className="w-6 h-6" />
                 {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
               </button>
             </div>
