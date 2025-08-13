@@ -28,8 +28,9 @@ export default function AuthModal() {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-lg relative">
+    <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+      <div className="w-full flex justify-center py-2 sm:py-4 min-h-full">
+        <Card className="w-full max-w-lg relative max-h-[95vh] sm:max-h-[90vh] overflow-y-auto my-auto">
         <button
           onClick={handleClose}
           className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 z-10"
@@ -37,7 +38,7 @@ export default function AuthModal() {
           <X className="w-5 h-5" />
         </button>
         
-        <CardHeader className="text-center pb-6">
+        <CardHeader className="text-center pb-4 sm:pb-6 px-4 sm:px-6 pt-4 sm:pt-6">
           <CardTitle className="bangers-regular text-3xl text-blue-900 mb-2">
             ¡Únete a SVC MOTO!
           </CardTitle>
@@ -46,7 +47,7 @@ export default function AuthModal() {
           </p>
         </CardHeader>
         
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
           {/* Google Auth Button - Más grande */}
           <Button
             type="button"
@@ -73,7 +74,7 @@ export default function AuthModal() {
           </Button>
           
           {/* Beneficios de registrarse */}
-          <div className="bg-orange-50 rounded-lg p-6 mt-6">
+          <div className="bg-orange-50 rounded-lg p-4 sm:p-6 mt-4 sm:mt-6">
             <h3 className="bangers-regular text-xl text-blue-900 mb-4 text-center">
               ¿Por qué registrarte?
             </h3>
@@ -127,7 +128,8 @@ export default function AuthModal() {
             </p>
           </div>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }
