@@ -92,7 +92,7 @@ export default function Home() {
             onClick={handleSkipIntro}
             className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded text-sm hover:bg-black/70 transition-colors"
           >
-            Saltar
+            {t('intro.skip')}
           </button>
         </div>
       </div>
@@ -105,63 +105,65 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16">
-            {/* Logo */}
-            <div className="flex items-center w-1/4">
+            {/* Logo and Mobile Menu */}
+            <div className="flex items-center justify-between w-full">
               <Link href="/" className="flex items-center">
                 <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
               </Link>
-            </div>
-            
-            {/* Desktop Navigation - Centered */}
-            <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
-              <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                {t('nav.rental')}
-              </Link>
-              <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                {t('nav.services')}
-              </Link>
-              <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                {t('nav.contact')}
-              </Link>
-              {user && (
-                <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  {t('nav.profile')}
+              
+              {/* Desktop Navigation - Centered */}
+              <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
+                <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  {t('nav.rental')}
                 </Link>
-              )}
-            </div>
-            
-            {/* Authentication Section - Right */}
-            <div className="hidden md:flex items-center justify-end space-x-4 w-1/4">
-               <LanguageToggle />
-               {user ? (
-                 <div className="flex items-center space-x-4">
-                   <span className="text-sm text-blue-900">{t('nav.hello')} {user.name}</span>
+                <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  {t('nav.services')}
+                </Link>
+                <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  {t('nav.contact')}
+                </Link>
+                {user && (
+                  <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                    Mi Perfil
+                  </Link>
+                )}
+              </div>
+              
+              {/* Authentication Section - Right */}
+              <div className="hidden md:flex items-center space-x-4">
+                 <LanguageToggle />
+                 {user ? (
+                   <div className="flex items-center space-x-4">
+                     <span className="text-sm text-blue-900">{t('nav.hello')} {user.name}</span>
+                     <Button 
+                       onClick={signOut}
+                       variant="outline" 
+                       className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                     >
+                       {t('nav.signOut')}
+                     </Button>
+                   </div>
+                 ) : (
                    <Button 
-                     onClick={signOut}
-                     variant="outline" 
-                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                     onClick={signIn}
+                     className="bg-orange-500 hover:bg-orange-600 text-white"
                    >
-                     {t('nav.signOut')}
+                     {t('nav.signIn')}
                    </Button>
-                 </div>
-               ) : (
-                 <Button 
-                   onClick={signIn}
-                   className="bg-orange-500 hover:bg-orange-600 text-white"
-                 >
-                   {t('nav.signIn')}
-                 </Button>
-               )}
-            </div>
-            <div className="md:hidden flex items-center justify-between w-full">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-blue-900 hover:text-orange-500 p-2 flex items-center space-x-1"
-              >
-                <HomeIcon className="w-6 h-6" />
-                {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
-              </button>
-              <LanguageToggle className="p-1" />
+                 )}
+              </div>
+              
+              {/* Mobile Menu Button */}
+              <div className="md:hidden flex items-center space-x-2">
+                <LanguageToggle className="p-1" />
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="text-blue-900 hover:text-orange-500 p-2 flex items-center space-x-1"
+                >
+                  <HomeIcon className="w-6 h-6" />
+                  {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+                </button>
+              </div>
             </div>
           </div>
           {mobileMenuOpen && (
@@ -172,33 +174,35 @@ export default function Home() {
                   className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Alquiler Motos
+                  {t('nav.rental')}
                 </Link>
                 <Link
                   href="/servicios"
                   className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Servicios
+                  {t('nav.services')}
                 </Link>
                 <Link
                   href="/contacto"
                   className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Contacto
+                  {t('nav.contact')}
                 </Link>
-                <Link
-                  href="/perfil"
-                  className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Mi Perfil
-                </Link>
+                {user && (
+                  <Link
+                    href="/perfil"
+                    className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {t('nav.profile')}
+                  </Link>
+                )}
                 <div className="px-3 py-3">
                   {user ? (
                     <div className="space-y-2">
-                      <p className="bangers-regular text-sm text-blue-900 text-center">Hola, {user.name}</p>
+                      <p className="bangers-regular text-sm text-blue-900 text-center">{t('nav.hello')} {user.name}</p>
                       <Button
                         onClick={() => {
                           signOut()
@@ -207,7 +211,7 @@ export default function Home() {
                         variant="outline"
                         className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full"
                       >
-                        Cerrar Sesión
+                        {t('nav.signOut')}
                       </Button>
                     </div>
                   ) : (
@@ -218,7 +222,7 @@ export default function Home() {
                       }}
                       className="bg-orange-500 hover:bg-orange-600 text-white w-full"
                     >
-                      Iniciar Sesión
+                      {t('nav.signIn')}
                     </Button>
                   )}
                 </div>
@@ -338,22 +342,22 @@ export default function Home() {
                 ))}
               </div>
               <div className="bangers-regular text-xl md:text-2xl text-blue-900">5,0</div>
-              <div className="text-sm text-gray-600">SOBRE 12 RESEÑAS</div>
+              <div className="text-sm text-gray-600">{t('stats.reviews')}</div>
             </div>
             <div className="flex flex-col items-center justify-center h-32">
               <Shield className="w-12 h-12 text-orange-500 mb-2" />
-              <div className="bangers-regular text-xl md:text-2xl text-blue-900">SEGURO</div>
-              <div className="text-sm text-gray-600">INCLUIDO</div>
+              <div className="bangers-regular text-xl md:text-2xl text-blue-900">{t('stats.insurance')}</div>
+              <div className="text-sm text-gray-600">{t('stats.included')}</div>
             </div>
             <div className="flex flex-col items-center justify-center h-32">
               <Zap className="w-12 h-12 text-orange-500 mb-2" />
-              <div className="bangers-regular text-xl md:text-2xl text-blue-900">100%</div>
-              <div className="text-sm text-gray-600">ELÉCTRICO</div>
+              <div className="bangers-regular text-xl md:text-2xl text-blue-900">{t('stats.electric')}</div>
+              <div className="text-sm text-gray-600">{t('stats.electricLabel')}</div>
             </div>
             <div className="flex flex-col items-center justify-center h-32">
               <Wrench className="w-12 h-12 text-orange-500 mb-2" />
-              <div className="bangers-regular text-xl md:text-2xl text-blue-900">SERVICIO</div>
-              <div className="text-sm text-gray-600">COMPLETO</div>
+              <div className="bangers-regular text-xl md:text-2xl text-blue-900">{t('stats.service')}</div>
+              <div className="text-sm text-gray-600">{t('stats.complete')}</div>
             </div>
           </div>
         </div>
@@ -363,9 +367,9 @@ export default function Home() {
       <section id="servicios" className="py-16 bg-orange-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">REGÍSTRATE Y VIAJA CON TOTAL COMODIDAD</h2>
+            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">{t('services.title')}</h2>
             <p className="bangers-regular text-2xl md:text-3xl text-white">
-              Crea tu cuenta online, selecciona tu vehículo y disfruta de la forma más cómoda
+              {t('services.subtitle')}
             </p>
           </div>
 
@@ -375,10 +379,10 @@ export default function Home() {
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">1</span>
                 </div>
-                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">REGÍSTRATE</h3>
-                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">EN 1 MIN</h4>
+                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('services.step1.title')}</h3>
+                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">{t('services.step1.subtitle')}</h4>
                 <p className="text-white/90 text-sm">
-                  Regístrate en nuestra web y ten acceso inmediato a todos nuestros vehículos de nuestra tienda de Málaga. Completa tu perfil, gana puntos por cada alquiler y listo para rodar.
+                  {t('services.step1.description')}
                 </p>
               </CardContent>
             </Card>
@@ -388,11 +392,10 @@ export default function Home() {
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">2</span>
                 </div>
-                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">RESERVA,</h3>
-                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">DESBLOQUEA Y DISFRUTA</h4>
+                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('services.step2.title')}</h3>
+                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">{t('services.step2.subtitle')}</h4>
                 <p className="text-white/90 text-sm">
-                  Reserva tu vehículo favorito a través de nuestra web. Recoge tu moto o patinete eléctrico
-                  en nuestra tienda física y comienza tu aventura por Málaga.
+                  {t('services.step2.description')}
                 </p>
               </CardContent>
             </Card>
@@ -402,11 +405,10 @@ export default function Home() {
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">3</span>
                 </div>
-                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">DEVOLVER Y</h3>
-                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">GANAR PUNTOS</h4>
+                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('services.step3.title')}</h3>
+                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">{t('services.step3.subtitle')}</h4>
                 <p className="text-white/90 text-sm">
-                  Una vez que llegues a tu destino y tengas el viaje terminado, devuelve tu vehículo en nuestra tienda
-                  física. Gana puntos por cada alquiler completado y disfruta de descuentos exclusivos.
+                  {t('services.step3.description')}
                 </p>
               </CardContent>
             </Card>
@@ -416,7 +418,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/alquiler">
                 <Button size="lg" className="bg-blue-900 hover:bg-blue-800 text-white">
-                  Ver Nuestras Motos
+                  {t('services.cta1')}
                 </Button>
               </Link>
               <Link href="/servicios">
@@ -425,7 +427,7 @@ export default function Home() {
                   variant="outline"
                   className="border-white text-white hover:bg-white hover:text-orange-500 bg-transparent"
                 >
-                  Conocer Servicios
+                  {t('services.cta2')}
                 </Button>
               </Link>
             </div>
@@ -452,52 +454,52 @@ export default function Home() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
-              <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Contacta con Nosotros</h2>
+              <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contact.title')}</h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
                   <MapPin className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">Ubicación</h3>
-                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">C. Héroe de Sostoa, 37, Carretera de Cádiz</p>
-                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">29002 Málaga, España</p>
+                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contact.location')}</h3>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contact.address1')}</p>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contact.address2')}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
                   <Phone className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">Teléfono</h3>
-                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">607 22 88 82</p>
-                    <p className="text-sm text-orange-500 md:text-orange-300 md:drop-shadow-sm">También disponible por WhatsApp</p>
+                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contact.phone')}</h3>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contact.phoneNumber')}</p>
+                    <p className="text-sm text-orange-500 md:text-orange-300 md:drop-shadow-sm">{t('contact.whatsapp')}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
                   <Clock className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">Horario</h3>
-                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">Abre a las 10:00</p>
-                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">(Cerrado los sábados)</p>
+                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contact.schedule')}</h3>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contact.opens')}</p>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contact.closed')}</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-8">
                 <Link href="/contacto">
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white md:shadow-lg md:border md:border-orange-400">Ir a Página de Contacto</Button>
+                  <Button className="bg-orange-500 hover:bg-orange-600 text-white md:shadow-lg md:border md:border-orange-400">{t('contact.cta')}</Button>
                 </Link>
               </div>
             </div>
 
             <div className="hidden md:block">
-              <h3 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Nuestros Servicios</h3>
+              <h3 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contact.servicesTitle')}</h3>
               <div className="space-y-6">
                 <Link href="/alquiler" className="block">
                   <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
                     <Zap className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Motos Eléctricas</h4>
-                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Perfectas para explorar Málaga de forma sostenible</p>
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contact.service1.title')}</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contact.service1.description')}</p>
                     </div>
                   </div>
                 </Link>
@@ -505,8 +507,8 @@ export default function Home() {
                   <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
                     <Zap className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Alquiler de Patinetes Eléctricos</h4>
-                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Ideales para distancias cortas y turismo urbano</p>
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contact.service2.title')}</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contact.service2.description')}</p>
                     </div>
                   </div>
                 </Link>
@@ -514,15 +516,15 @@ export default function Home() {
                   <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
                     <Wrench className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>Venta y Reparación</h4>
-                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>Servicio completo para tu vehículo eléctrico</p>
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contact.service3.title')}</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contact.service3.description')}</p>
                     </div>
                   </div>
                 </Link>
               </div>
 
               <div className="mt-8">
-                <h4 className="text-lg font-semibold text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Métodos de Pago</h4>
+                <h4 className="text-lg font-semibold text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contact.paymentMethods')}</h4>
                 <div className="flex flex-wrap gap-3">
                   {/* Visa */}
                    <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
@@ -565,30 +567,30 @@ export default function Home() {
 
             {/* En móvil: contenido normal sin video de fondo */}
             <div className="block md:hidden">
-              <h3 className="bangers-regular text-4xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>Nuestros Servicios</h3>
+              <h3 className="bangers-regular text-4xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contact.servicesTitle')}</h3>
               <div className="space-y-4">
                 <Link href="/alquiler" className="block">
                   <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
-                    <h4 className="text-lg font-semibold text-white mb-2">Alquiler de Motos Eléctricas</h4>
-                    <p className="text-gray-300 text-sm">Perfectas para explorar Málaga de forma sostenible</p>
+                    <h4 className="text-lg font-semibold text-white mb-2">{t('contact.service1.title')}</h4>
+                    <p className="text-gray-300 text-sm">{t('contact.service1.description')}</p>
                   </div>
                 </Link>
                 <Link href="/alquiler" className="block">
                   <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
-                    <h4 className="text-lg font-semibold text-white mb-2">Alquiler de Patinetes Eléctricos</h4>
-                    <p className="text-gray-300 text-sm">Ideales para distancias cortas y turismo urbano</p>
+                    <h4 className="text-lg font-semibold text-white mb-2">{t('contact.service2.title')}</h4>
+                    <p className="text-gray-300 text-sm">{t('contact.service2.description')}</p>
                   </div>
                 </Link>
                 <Link href="/servicios" className="block">
                   <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
-                    <h4 className="text-lg font-semibold text-white mb-2">Venta y Reparación</h4>
-                    <p className="text-gray-300 text-sm">Servicio completo para tu vehículo eléctrico</p>
+                    <h4 className="text-lg font-semibold text-white mb-2">{t('contact.service3.title')}</h4>
+                    <p className="text-gray-300 text-sm">{t('contact.service3.description')}</p>
                   </div>
                 </Link>
               </div>
 
               <div className="mt-8">
-                <h4 className="text-lg font-semibold text-white mb-4">Métodos de Pago</h4>
+                <h4 className="text-lg font-semibold text-white mb-4">{t('contact.paymentMethods')}</h4>
                 <div className="flex flex-wrap gap-3">
                   {/* Visa */}
                    <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
@@ -657,7 +659,7 @@ export default function Home() {
               <span className="text-gray-600">svcmoto.com</span>
             </div>
             <div className="text-gray-600 text-sm text-center md:text-right">
-              <p>Cerca de Estación María Zambrano (456m) • Calle Larios (1,68km)</p>
+              <p>{t('footer.nearStation')}</p>
               <div className="flex items-center justify-center md:justify-end mt-2 space-x-3">
                 <a
                   href="https://wa.me/34607228882"
@@ -671,7 +673,7 @@ export default function Home() {
                   </svg>
                 </a>
                 <p>
-                  Web made by:{" "}
+                  {t('footer.madeBy')}{" "}
                   <a
                     href="https://www.carlosfr.es"
                     target="_blank"

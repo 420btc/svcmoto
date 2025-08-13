@@ -8,6 +8,8 @@ import { Clock, Users, Zap, Shield, ArrowLeft, Menu, X, Calendar, CheckCircle, H
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import { useTranslation } from "@/contexts/TranslationContext"
+import { LanguageToggle } from "@/components/LanguageToggle"
 
 interface Reserva {
   id: string
@@ -33,6 +35,7 @@ export default function AlquilerPage() {
   const [reservas, setReservas] = useState<Reserva[]>([])
   const [showConfirmation, setShowConfirmation] = useState(false)
   const router = useRouter()
+  const { t } = useTranslation()
   
   const signIn = () => router.push('/handler/sign-in')
   const signOut = () => {
@@ -88,7 +91,7 @@ export default function AlquilerPage() {
 
   const abrirModalReserva = (moto: any) => {
     if (!user) {
-      alert('Debes iniciar sesión para realizar una reserva')
+      alert(t('rental.loginRequired'))
       return
     }
     setSelectedMoto(moto)
@@ -97,7 +100,7 @@ export default function AlquilerPage() {
 
   const realizarReserva = () => {
     if (!selectedMoto || !selectedHora) {
-      alert('Por favor selecciona un horario')
+      alert(t('rental.selectTime'))
       return
     }
 
@@ -168,59 +171,65 @@ export default function AlquilerPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-xl shadow-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16">
-            {/* Logo */}
-            <Link href="/" className="flex items-center">
-              <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
-            </Link>
-            
-            {/* Desktop Navigation - Centered */}
-             <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
+            {/* Logo and Mobile Menu */}
+            <div className="flex items-center justify-between w-full">
+              <Link href="/" className="flex items-center">
+                <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
+              </Link>
+              
+              {/* Desktop Navigation - Centered */}
+              <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
                 <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-orange-500 border-b-2 border-orange-500 transition-colors">
-                  Alquiler Motos
+                  {t('nav.rental')}
                 </Link>
                 <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  Servicios
+                  {t('nav.services')}
                 </Link>
                 <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  Contacto
+                  {t('nav.contact')}
                 </Link>
                 {user && (
                   <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                    Mi Perfil
+                    {t('nav.profile')}
                   </Link>
                 )}
               </div>
-            
-            {/* Authentication Section - Right */}
-            <div className="hidden md:flex items-center space-x-4">
-               {user ? (
-                 <div className="flex items-center space-x-4">
-                   <span className="text-sm text-blue-900">Hola, {user.name}</span>
+              
+              {/* Authentication Section - Right */}
+              <div className="hidden md:flex items-center space-x-4">
+                 <LanguageToggle />
+                 {user ? (
+                   <div className="flex items-center space-x-4">
+                     <span className="text-sm text-blue-900">{t('nav.hello')} {user.name}</span>
+                     <Button 
+                       onClick={signOut}
+                       variant="outline" 
+                       className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                     >
+                       {t('nav.signOut')}
+                     </Button>
+                   </div>
+                 ) : (
                    <Button 
-                     onClick={signOut}
-                     variant="outline" 
-                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                     onClick={signIn}
+                     className="bg-orange-500 hover:bg-orange-600 text-white"
                    >
-                     Cerrar Sesión
+                     {t('nav.signIn')}
                    </Button>
-                 </div>
-               ) : (
-                 <Button 
-                   onClick={signIn}
-                   className="bg-orange-500 hover:bg-orange-600 text-white"
-                 >
-                   Iniciar Sesión
-                 </Button>
-               )}
-            </div>
-            <div className="md:hidden">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-blue-900 hover:text-orange-500 p-2 flex items-center space-x-1"
-              >
-                <Home className="w-6 h-6" />
-                {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
-              </button>
+                 )}
+              </div>
+              
+              {/* Mobile Menu Button */}
+              <div className="md:hidden flex items-center space-x-2">
+                <LanguageToggle className="p-1" />
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="text-blue-900 hover:text-orange-500 p-2 flex items-center space-x-1"
+                >
+                  <Home className="w-6 h-6" />
+                  {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+                </button>
+              </div>
             </div>
           </div>
           {mobileMenuOpen && (
@@ -231,21 +240,21 @@ export default function AlquilerPage() {
                   className="bangers-regular text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100 border-b-2 border-orange-500"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Alquiler Motos
+                  {t('nav.rental')}
                 </Link>
                 <Link
                   href="/servicios"
                   className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Servicios
+                  {t('nav.services')}
                 </Link>
                 <Link
                   href="/contacto"
                   className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Contacto
+                  {t('nav.contact')}
                 </Link>
                 {user && (
                   <Link
@@ -253,13 +262,13 @@ export default function AlquilerPage() {
                     className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Mi Perfil
+                    {t('nav.profile')}
                   </Link>
                 )}
                 <div className="px-3 py-3">
                   {user ? (
                     <div className="space-y-2">
-                      <p className="bangers-regular text-sm text-blue-900 text-center">Hola, {user.name}</p>
+                      <p className="bangers-regular text-sm text-blue-900 text-center">{t('nav.hello')} {user.name}</p>
                       <Button
                         onClick={() => {
                           signOut()
@@ -268,7 +277,7 @@ export default function AlquilerPage() {
                         variant="outline"
                         className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full"
                       >
-                        Cerrar Sesión
+                        {t('nav.signOut')}
                       </Button>
                     </div>
                   ) : (
@@ -279,7 +288,7 @@ export default function AlquilerPage() {
                       }}
                       className="bg-orange-500 hover:bg-orange-600 text-white w-full"
                     >
-                      Iniciar Sesión
+                      {t('nav.signIn')}
                     </Button>
                   )}
                 </div>
@@ -296,11 +305,10 @@ export default function AlquilerPage() {
             <Link href="/" className="text-white hover:text-orange-200 mr-4">
               <ArrowLeft className="w-6 h-6" />
             </Link>
-            <h1 className="bangers-regular text-5xl md:text-6xl text-white">Alquiler de Motos</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white">{t('rental.title')}</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
-            Descubre nuestra flota de vehículos eléctricos. Perfectos para explorar Málaga de forma sostenible y
-            divertida.
+            {t('rental.subtitle')}
           </p>
         </div>
       </section>
@@ -350,28 +358,28 @@ export default function AlquilerPage() {
                     </div>
                     <div className="flex items-center space-x-2">
                       <Shield className="w-4 h-4 text-orange-500" />
-                      <span className="text-sm text-gray-600">Seguro incluido</span>
+                      <span className="text-sm text-gray-600">{t('rental.insurance')}</span>
                     </div>
                   </div>
 
                   {/* Precios */}
                   <div className="mb-6">
-                    <h4 className="font-semibold text-blue-900 mb-3">Precios de Alquiler</h4>
+                    <h4 className="font-semibold text-blue-900 mb-3">{t('rental.prices')}</h4>
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">1 hora:</span>
+                        <span className="text-gray-600">{t('rental.hour')}</span>
                         <span className="font-semibold text-orange-600">{moto.precios.hora}€</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Medio día:</span>
+                        <span className="text-gray-600">{t('rental.halfDay')}</span>
                         <span className="font-semibold text-orange-600">{moto.precios.medio_dia}€</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Día completo:</span>
+                        <span className="text-gray-600">{t('rental.fullDay')}</span>
                         <span className="font-semibold text-orange-600">{moto.precios.dia_completo}€</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Semanal:</span>
+                        <span className="text-gray-600">{t('rental.weekly')}</span>
                         <span className="font-semibold text-orange-600">{moto.precios.semanal}</span>
                       </div>
                     </div>
@@ -379,7 +387,7 @@ export default function AlquilerPage() {
 
                   {/* Características */}
                   <div className="mb-6">
-                    <h4 className="font-semibold text-blue-900 mb-3">Incluye</h4>
+                    <h4 className="font-semibold text-blue-900 mb-3">{t('rental.includes')}</h4>
                     <div className="flex flex-wrap gap-2">
                       {moto.caracteristicas.map((caracteristica, index) => (
                         <Badge key={index} variant="outline" className="text-xs">
@@ -393,7 +401,7 @@ export default function AlquilerPage() {
                     onClick={() => abrirModalReserva(moto)}
                     className="w-full bg-orange-500 hover:bg-orange-600 text-white"
                   >
-                    Reservar {moto.nombre}
+                    {t('rental.reserve')} {moto.nombre}
                   </Button>
                 </CardContent>
               </Card>
@@ -406,8 +414,8 @@ export default function AlquilerPage() {
       <section className="py-16 bg-blue-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">¿Cómo Funciona el Alquiler?</h2>
-            <p className="bangers-regular text-2xl md:text-3xl text-white/90">Proceso simple y rápido para empezar tu aventura</p>
+            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">{t('rental.howItWorks')}</h2>
+            <p className="bangers-regular text-2xl md:text-3xl text-white/90">{t('rental.howItWorksSubtitle')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -415,24 +423,24 @@ export default function AlquilerPage() {
               <div className="bg-orange-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
-              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">Elige tu Vehículo</h3>
-              <p className="text-white/90">Selecciona la moto o patinete que mejor se adapte a tus necesidades</p>
+              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('rental.step1Title')}</h3>
+              <p className="text-white/90">{t('rental.step1Description')}</p>
             </div>
 
             <div className="text-center">
               <div className="bg-orange-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
-              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">Reserva Online</h3>
-              <p className="text-white/90">Completa tu reserva online o llámanos directamente</p>
+              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('rental.step2Title')}</h3>
+              <p className="text-white/90">{t('rental.step2Description')}</p>
             </div>
 
             <div className="text-center">
               <div className="bg-orange-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
-              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">Recoge y Disfruta</h3>
-              <p className="text-white/90">Recoge tu vehículo en nuestro local y explora Málaga</p>
+              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('rental.step3Title')}</h3>
+              <p className="text-white/90">{t('rental.step3Description')}</p>
             </div>
           </div>
         </div>
@@ -441,20 +449,20 @@ export default function AlquilerPage() {
       {/* CTA Section */}
       <section className="py-16 bg-orange-500">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">¿Listo para tu Aventura?</h2>
+          <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">{t('rental.readyTitle')}</h2>
           <p className="text-xl text-white/90 mb-8">
-            Contacta con nosotros para reservar tu vehículo o resolver cualquier duda
+            {t('rental.readySubtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-blue-900 hover:bg-blue-800 text-white">
-              Llamar: 607 22 88 82
+              {t('rental.call')}
             </Button>
             <Button
               size="lg"
               variant="outline"
               className="border-white text-white hover:bg-white hover:text-orange-500 bg-transparent"
             >
-              WhatsApp
+              {t('rental.whatsapp')}
             </Button>
           </div>
         </div>
@@ -472,7 +480,7 @@ export default function AlquilerPage() {
                      <Calendar className="w-6 h-6 md:w-8 md:h-8 text-white" />
                    </div>
                    <div>
-                     <h2 className="bangers-regular text-xl md:text-3xl text-white">RESERVAR VEHÍCULO</h2>
+                     <h2 className="bangers-regular text-xl md:text-3xl text-white">{t('rental.reserveVehicle')}</h2>
                      <p className="text-blue-200 text-sm md:text-base">{selectedMoto?.nombre} - {selectedMoto?.tipo}</p>
                    </div>
                  </div>
@@ -529,7 +537,7 @@ export default function AlquilerPage() {
                      <div className="bg-blue-50 rounded-xl p-4 md:p-6 border border-blue-200">
                        <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
                          <Calendar className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
-                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">SELECCIONA FECHA</h4>
+                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">{t('rental.selectDate')}</h4>
                        </div>
                        <input
                          type="date"
@@ -544,18 +552,18 @@ export default function AlquilerPage() {
                      <div className="bg-orange-50 rounded-xl p-4 md:p-6 border border-orange-200">
                        <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
                          <Clock className="w-5 h-5 md:w-6 md:h-6 text-orange-600" />
-                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">DURACIÓN</h4>
+                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">{t('rental.duration')}</h4>
                        </div>
                        <select
                          value={duracion}
                          onChange={(e) => setDuracion(parseInt(e.target.value))}
                          className="w-full p-3 md:p-4 border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bangers-regular text-base md:text-lg bg-white"
                        >
-                         <option value={1}>⏱️ 1 HORA</option>
-                         <option value={2}>⏱️ 2 HORAS</option>
-                         <option value={3}>⏱️ 3 HORAS</option>
-                         <option value={4}>⏱️ 4 HORAS</option>
-                         <option value={8}>🌅 DÍA COMPLETO (8H)</option>
+                         <option value={1}>{t('rental.hour1')}</option>
+                         <option value={2}>{t('rental.hour2')}</option>
+                         <option value={3}>{t('rental.hour3')}</option>
+                         <option value={4}>{t('rental.hour4')}</option>
+                         <option value={8}>{t('rental.fullDay8h')}</option>
                        </select>
                      </div>
                    </div>
@@ -566,7 +574,7 @@ export default function AlquilerPage() {
                    <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200">
                      <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
                        <Clock className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
-                       <h4 className="bangers-regular text-lg md:text-xl text-blue-900">HORA DE INICIO</h4>
+                       <h4 className="bangers-regular text-lg md:text-xl text-blue-900">{t('rental.startTime')}</h4>
                      </div>
                      <div className="grid grid-cols-3 md:grid-cols-2 gap-2 md:gap-3 max-h-48 md:max-h-64 overflow-y-auto scrollbar-hide">
                        {horarios.map((hora) => {
@@ -598,18 +606,18 @@ export default function AlquilerPage() {
                  <div className="mt-4 md:mt-8 bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-4 md:p-6 text-white">
                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 items-center">
                      <div>
-                       <h4 className="bangers-regular text-lg md:text-2xl mb-3 md:mb-4 text-orange-300">🎯 RESUMEN DE TU RESERVA</h4>
+                       <h4 className="bangers-regular text-lg md:text-2xl mb-3 md:mb-4 text-orange-300">{t('rental.summary')}</h4>
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                          <div className="space-y-2">
                            <div className="flex items-center space-x-2">
                              <Zap className="w-4 h-4 text-orange-300" />
-                             <span className="text-xs md:text-sm text-blue-200">Vehículo:</span>
+                             <span className="text-xs md:text-sm text-blue-200">{t('rental.vehicle')}</span>
                            </div>
                            <p className="font-bold text-sm md:text-base">{selectedMoto?.nombre}</p>
                            
                            <div className="flex items-center space-x-2 mt-2 md:mt-3">
                              <Calendar className="w-4 h-4 text-orange-300" />
-                             <span className="text-xs md:text-sm text-blue-200">Fecha:</span>
+                             <span className="text-xs md:text-sm text-blue-200">{t('rental.date')}</span>
                            </div>
                            <p className="font-bold text-xs md:text-base">{new Date(selectedDate).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' })}</p>
                          </div>
@@ -617,13 +625,13 @@ export default function AlquilerPage() {
                          <div className="space-y-2">
                            <div className="flex items-center space-x-2">
                              <Clock className="w-4 h-4 text-orange-300" />
-                             <span className="text-xs md:text-sm text-blue-200">Horario:</span>
+                             <span className="text-xs md:text-sm text-blue-200">{t('rental.schedule')}</span>
                            </div>
                            <p className="font-bold text-sm md:text-base">{selectedHora} - {parseInt(selectedHora.split(':')[0]) + duracion}:{selectedHora.split(':')[1]}</p>
                            
                            <div className="flex items-center space-x-2 mt-2 md:mt-3">
                              <Shield className="w-4 h-4 text-orange-300" />
-                             <span className="text-xs md:text-sm text-blue-200">Duración:</span>
+                             <span className="text-xs md:text-sm text-blue-200">{t('rental.duration')}</span>
                            </div>
                            <p className="font-bold text-sm md:text-base">{duracion} hora{duracion > 1 ? 's' : ''}</p>
                          </div>
@@ -631,7 +639,7 @@ export default function AlquilerPage() {
                        
                        <div className="mt-3 md:mt-4 p-2 md:p-3 bg-white/10 rounded-lg">
                          <div className="flex items-center justify-between">
-                           <span className="text-blue-200 text-xs md:text-sm">🛣️ Km estimados:</span>
+                           <span className="text-blue-200 text-xs md:text-sm">{t('rental.estimatedKm')}</span>
                            <span className="font-bold text-orange-300 text-sm md:text-base">{calcularKmEstimados()} km</span>
                          </div>
                        </div>
@@ -639,19 +647,19 @@ export default function AlquilerPage() {
                      
                      <div className="text-center lg:text-right">
                        <div className="bg-white/10 rounded-2xl p-4 md:p-6 mb-3 md:mb-4">
-                         <p className="text-blue-200 text-xs md:text-sm mb-1 md:mb-2">💰 PRECIO TOTAL</p>
+                         <p className="text-blue-200 text-xs md:text-sm mb-1 md:mb-2">{t('rental.totalPrice')}</p>
                          <p className="bangers-regular text-2xl md:text-4xl text-orange-300">{calcularPrecio()}€</p>
-                         <p className="text-xs text-blue-300 mt-1">IVA incluido</p>
+                         <p className="text-xs text-blue-300 mt-1">{t('rental.vatIncluded')}</p>
                        </div>
                        
                        <Button 
                          onClick={realizarReserva}
                          className="w-full bg-orange-500 hover:bg-orange-600 text-white bangers-regular text-lg md:text-xl py-3 md:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
                        >
-                         🚀 CONFIRMAR RESERVA
+                         {t('rental.confirmReservation')}
                        </Button>
                        
-                       <p className="text-xs text-blue-300 mt-2">✅ Confirmación instantánea</p>
+                       <p className="text-xs text-blue-300 mt-2">{t('rental.instantConfirmation')}</p>
                      </div>
                    </div>
                  </div>
@@ -667,15 +675,15 @@ export default function AlquilerPage() {
           <Card className="w-96 mx-4">
             <CardHeader className="text-center">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <CardTitle className="text-2xl text-green-600">¡Reserva Confirmada!</CardTitle>
+              <CardTitle className="text-2xl text-green-600">{t('rental.reservationConfirmed')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="mb-4">Tu reserva ha sido procesada exitosamente.</p>
+              <p className="mb-4">{t('rental.reservationSuccess')}</p>
               <Button 
                 onClick={() => setShowConfirmation(false)}
                 className="bg-orange-500 hover:bg-orange-600 text-white"
               >
-                Continuar
+                {t('rental.continue')}
               </Button>
             </CardContent>
           </Card>

@@ -11,6 +11,8 @@ import { User, Star, Calendar, MapPin, Edit, Save, X, Trophy, Gift, Menu, ArrowL
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import { useTranslation } from "@/contexts/TranslationContext"
+import { LanguageToggle } from "@/components/LanguageToggle"
 
 interface Alquiler {
   id: string
@@ -35,6 +37,7 @@ export default function PerfilPage() {
   const [editedInfo, setEditedInfo] = useState(userInfo)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
+  const { t } = useTranslation()
 
   const calcularCO2Ahorrado = () => {
     // Cálculo basado en reservas completadas
@@ -192,48 +195,54 @@ export default function PerfilPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-xl shadow-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16">
-            {/* Logo */}
-            <Link href="/" className="flex items-center">
-              <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
-            </Link>
-            
-            {/* Desktop Navigation - Centered */}
-             <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
+            {/* Logo and Mobile Menu */}
+            <div className="flex items-center justify-between w-full">
+              <Link href="/" className="flex items-center">
+                <Image src="/logo-svcmoto.jpeg" alt="SVC MOTO Logo" width={50} height={50} className="rounded-lg" />
+              </Link>
+              
+              {/* Desktop Navigation - Centered */}
+              <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
                 <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  Alquiler Motos
+                  {t('nav.rental')}
                 </Link>
                 <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  Servicios
+                  {t('nav.services')}
                 </Link>
                 <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
-                  Contacto
+                  {t('nav.contact')}
                 </Link>
                 <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-orange-500 border-b-2 border-orange-500 transition-colors">
-                  Mi Perfil
+                  {t('nav.profile')}
                 </Link>
               </div>
-            
-            {/* Authentication Section - Right */}
-            <div className="hidden md:flex items-center space-x-4">
-               <div className="flex items-center space-x-4">
-                 <span className="text-sm text-blue-900">Hola, {user?.name}</span>
-                 <Button 
-                   onClick={signOut}
-                   variant="outline" 
-                   className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
-                 >
-                   Cerrar Sesión
-                 </Button>
-               </div>
-            </div>
-            <div className="md:hidden">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-blue-900 hover:text-orange-500 p-2 flex items-center space-x-1"
-              >
-                <Home className="w-6 h-6" />
-                {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
-              </button>
+              
+              {/* Authentication Section - Right */}
+              <div className="hidden md:flex items-center space-x-4">
+                 <LanguageToggle />
+                 <div className="flex items-center space-x-4">
+                   <span className="text-sm text-blue-900">{t('nav.hello')} {user?.name}</span>
+                   <Button 
+                     onClick={signOut}
+                     variant="outline" 
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                   >
+                     {t('nav.signOut')}
+                   </Button>
+                 </div>
+              </div>
+              
+              {/* Mobile Menu Button */}
+              <div className="md:hidden flex items-center space-x-2">
+                <LanguageToggle className="p-1" />
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="text-blue-900 hover:text-orange-500 p-2 flex items-center space-x-1"
+                >
+                  <Home className="w-6 h-6" />
+                  {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+                </button>
+              </div>
             </div>
           </div>
           {mobileMenuOpen && (
@@ -244,32 +253,32 @@ export default function PerfilPage() {
                   className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Alquiler Motos
+                  {t('nav.rental')}
                 </Link>
                 <Link
                   href="/servicios"
                   className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Servicios
+                  {t('nav.services')}
                 </Link>
                 <Link
                   href="/contacto"
                   className="bangers-regular text-blue-900 hover:text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Contacto
+                  {t('nav.contact')}
                 </Link>
                 <Link
                   href="/perfil"
                   className="bangers-regular text-orange-500 block px-3 py-3 text-base transition-colors border-b border-gray-100 border-b-2 border-orange-500"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Mi Perfil
+                  {t('nav.profile')}
                 </Link>
                 <div className="px-3 py-3">
                   <div className="space-y-2">
-                    <p className="bangers-regular text-sm text-blue-900 text-center">Hola, {user?.name}</p>
+                    <p className="bangers-regular text-sm text-blue-900 text-center">{t('nav.hello')} {user?.name}</p>
                     <Button
                       onClick={() => {
                         signOut()
@@ -278,7 +287,7 @@ export default function PerfilPage() {
                       variant="outline"
                       className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full"
                     >
-                      Cerrar Sesión
+                      {t('nav.signOut')}
                     </Button>
                   </div>
                 </div>
