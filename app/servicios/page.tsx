@@ -349,7 +349,7 @@ export default function ServiciosPage() {
                         <IconComponent className="w-6 h-6 text-orange-600" />
                       </div>
                       <div>
-                        <CardTitle className="bangers-regular text-xl text-blue-900">{servicio.nombre}</CardTitle>
+                        <CardTitle className="bangers-regular text-2xl sm:text-3xl text-blue-900">{servicio.nombre}</CardTitle>
                         <p className="text-sm text-gray-600 mt-1">{servicio.descripcion}</p>
                       </div>
                     </div>
@@ -549,7 +549,7 @@ export default function ServiciosPage() {
                          <div className="w-16 h-16 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
                            {selectedServicio && <selectedServicio.icono className="w-8 h-8 md:w-12 md:h-12 text-orange-500" />}
                          </div>
-                         <h3 className="bangers-regular text-lg md:text-2xl text-blue-900 mb-1 md:mb-2">{selectedServicio?.nombre}</h3>
+                         <h3 className="bangers-regular text-2xl md:text-3xl text-blue-900 mb-1 md:mb-2">{selectedServicio?.nombre}</h3>
                          <p className="text-orange-600 font-medium text-sm md:text-base">{selectedServicio?.descripcion}</p>
                        </div>
                        
