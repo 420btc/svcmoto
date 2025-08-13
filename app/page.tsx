@@ -16,6 +16,7 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [showConnectedModal, setShowConnectedModal] = useState(false)
   const router = useRouter()
   const { t } = useTranslation()
   
@@ -35,6 +36,18 @@ export default function Home() {
     const savedUser = localStorage.getItem('user')
     if (savedUser) {
       setUser(JSON.parse(savedUser))
+    }
+    
+    // Verificar si el usuario acaba de conectarse
+    const justConnected = localStorage.getItem('justConnected')
+    if (justConnected === 'true') {
+      setShowConnectedModal(true)
+      localStorage.removeItem('justConnected')
+      
+      // Ocultar el modal después de 3 segundos
+      setTimeout(() => {
+        setShowConnectedModal(false)
+      }, 3000)
     }
     
     // Simular carga inicial para evitar flash
@@ -691,6 +704,20 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Modal de Conexión Exitosa */}
+      {showConnectedModal && (
+        <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-2 duration-300">
+          <div className="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3">
+            <div className="bg-white rounded-full p-1">
+              <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <span className="bangers-regular text-lg">¡Conectado!</span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

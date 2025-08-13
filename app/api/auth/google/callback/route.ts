@@ -66,6 +66,9 @@ export async function GET(request: NextRequest) {
               provider: 'google'
             }));
             
+            // Marcar que el usuario acaba de conectarse
+            localStorage.setItem('justConnected', 'true');
+            
             // Redirigir a la página principal
             window.location.href = '/';
           </script>
