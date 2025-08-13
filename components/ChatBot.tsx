@@ -206,7 +206,7 @@ export default function ChatBot() {
                 onClick={() => {
                   setMessages([{
                     role: 'assistant',
-                    content: 'Soy Li tu Asistente, ¿en qué puedo ayudarte hoy?',
+                    content: '¡Hola! 😊 Soy Li tu Asistente 🤖✨ ¿en qué puedo ayudarte hoy? 😄',
                     timestamp: new Date()
                   }])
                 }}
@@ -271,7 +271,10 @@ export default function ChatBot() {
                         : 'bg-white border border-gray-200 text-gray-800'
                     )}
                   >
-                    <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                    <div 
+                      className="whitespace-pre-wrap leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: message.content }}
+                    />
                     <p className={cn(
                       "text-xs mt-1 opacity-70",
                       message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
