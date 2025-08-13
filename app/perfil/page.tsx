@@ -303,7 +303,7 @@ export default function PerfilPage() {
       {/* Profile Content */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             
             {/* Información Personal */}
             <div className="lg:col-span-1">
@@ -445,15 +445,76 @@ export default function PerfilPage() {
               </Card>
             </div>
 
-            {/* Historial de Alquileres */}
-            <div className="lg:col-span-2">
-              <Card>
+            {/* Sistema de Puntos */}
+            <div className="lg:col-span-1">
+              <Card className="h-full">
                 <CardHeader>
-                  <CardTitle className="bangers-regular text-2xl text-blue-900">Historial de Alquileres</CardTitle>
+                  <CardTitle className="bangers-regular text-xl text-blue-900">Sistema de Puntos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                      <div>
+                        <div className="font-semibold text-blue-900">Descuento 5€</div>
+                        <div className="text-sm text-gray-600">En tu próximo alquiler</div>
+                      </div>
+                      <Badge className="bg-orange-500 text-white">
+                        1500 puntos
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                      <div>
+                        <div className="font-semibold text-blue-900">Descuento 10€</div>
+                        <div className="text-sm text-gray-600">En tu próximo alquiler</div>
+                      </div>
+                      <Badge className="bg-orange-500 text-white">
+                        2500 puntos
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                      <div>
+                        <div className="font-semibold text-blue-900">Alquiler Gratis</div>
+                        <div className="text-sm text-gray-600">1 hora de patinete</div>
+                      </div>
+                      <Badge className="bg-orange-500 text-white">
+                        4000 puntos
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                      <div>
+                        <div className="font-semibold text-blue-900">Alquiler Premium Gratis</div>
+                        <div className="text-sm text-gray-600">2 horas de moto eléctrica</div>
+                      </div>
+                      <Badge className="bg-orange-500 text-white">
+                        6000 puntos
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                    <div className="text-sm text-blue-800">
+                      <strong>¿Cómo ganar puntos?</strong>
+                      <ul className="mt-2 space-y-1">
+                        <li>• 15 puntos por cada euro gastado</li>
+                        <li>• 100 puntos extra por completar un alquiler</li>
+                        <li>• 200 puntos por reseña positiva</li>
+                        <li>• 500 puntos por referir a un amigo</li>
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Historial de Alquileres */}
+            <div className="lg:col-span-1">
+              <Card className="h-full">
+                <CardHeader>
+                  <CardTitle className="bangers-regular text-xl text-blue-900">Historial de Alquileres</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {alquileres.length === 0 ? (
-                    <div className="text-center py-8">
+                    <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-center">
                       <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                       <h3 className="text-lg font-semibold text-gray-600 mb-2">No hay alquileres aún</h3>
                       <p className="text-gray-500 mb-4">Cuando realices tu primer alquiler, aparecerá aquí</p>
@@ -476,7 +537,7 @@ export default function PerfilPage() {
                               {getEstadoBadge(alquiler.estado)}
                             </div>
                             
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                            <div className="grid grid-cols-2 gap-4 text-sm">
                               <div>
                                 <span className="text-gray-500">Fecha:</span>
                                 <p className="font-medium">{alquiler.fecha}</p>
@@ -507,28 +568,29 @@ export default function PerfilPage() {
                   )}
                 </CardContent>
               </Card>
+            </div>
 
-              {/* Logros y Achievements */}
-              <Card className="mt-6">
+            {/* Logros y Achievements */}
+            <div className="lg:col-span-1">
+              <Card className="h-full">
                 <CardHeader>
-                  <CardTitle className="bangers-regular text-xl text-blue-900">Logros y Achievements</CardTitle>
+                  <CardTitle className="bangers-regular text-xl text-blue-900">Tus Logros</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  {/* Logros actualizados dinámicamente */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Logro 7: Velocista - Progreso dinámico */}
+                <CardContent className="pb-6">
+                  <div className="space-y-4">
+                    {/* Logro 1: Velocista */}
                     <Card className={`border-2 ${calcularKmTotales() >= 500 ? 'border-yellow-300 bg-yellow-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
-                      <CardContent className="p-6 text-center">
-                        <div className={`text-4xl mb-3 ${calcularKmTotales() >= 500 ? '' : 'grayscale'}`}>🏎️</div>
-                        <h3 className={`font-bold text-lg mb-2 ${calcularKmTotales() >= 500 ? '' : 'text-gray-500'}`}>Velocista</h3>
-                        <p className={`text-sm mb-3 ${calcularKmTotales() >= 500 ? 'text-gray-600' : 'text-gray-500'}`}>Alcanza 500km recorridos</p>
-                        <Badge className={calcularKmTotales() >= 500 ? 'bg-yellow-500 text-white' : ''}>
+                      <CardContent className="p-4 text-center">
+                        <div className={`text-3xl mb-2 ${calcularKmTotales() >= 500 ? '' : 'grayscale'}`}>🏎️</div>
+                        <h3 className={`font-bold text-sm mb-1 ${calcularKmTotales() >= 500 ? '' : 'text-gray-500'}`}>Velocista</h3>
+                        <p className={`text-xs mb-2 ${calcularKmTotales() >= 500 ? 'text-gray-600' : 'text-gray-500'}`}>500km recorridos</p>
+                        <Badge className={calcularKmTotales() >= 500 ? 'bg-yellow-500 text-white' : 'text-xs'}>
                           {calcularKmTotales() >= 500 ? 'Desbloqueado' : 'Bloqueado'}
                         </Badge>
                         {calcularKmTotales() < 500 && (
                           <>
                             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                              <div className="bg-orange-500 h-2 rounded-full" style={{width: `${Math.min((calcularKmTotales() / 500) * 100, 100)}%`}}></div>
+                              <div className="bg-yellow-500 h-2 rounded-full" style={{width: `${Math.min((calcularKmTotales() / 500) * 100, 100)}%`}}></div>
                             </div>
                             <p className="text-xs text-gray-500 mt-1">{calcularKmTotales()}/500 km</p>
                           </>
@@ -536,13 +598,13 @@ export default function PerfilPage() {
                       </CardContent>
                     </Card>
 
-                    {/* Logro 8: Eco Master - Progreso dinámico */}
+                    {/* Logro 2: Eco Warrior */}
                     <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
-                      <CardContent className="p-6 text-center">
-                        <div className={`text-4xl mb-3 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'grayscale'}`}>🌍</div>
-                        <h3 className={`font-bold text-lg mb-2 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'text-gray-500'}`}>Eco Master</h3>
-                        <p className={`text-sm mb-3 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 100kg de CO₂</p>
-                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 100 ? 'bg-green-500 text-white' : ''}>
+                      <CardContent className="p-4 text-center">
+                        <div className={`text-3xl mb-2 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'grayscale'}`}>🌱</div>
+                        <h3 className={`font-bold text-sm mb-1 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'text-gray-500'}`}>Eco Warrior</h3>
+                        <p className={`text-xs mb-2 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>100kg CO₂ ahorrado</p>
+                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 100 ? 'bg-green-500 text-white' : 'text-xs'}>
                           {parseFloat(calcularCO2Ahorrado()) >= 100 ? 'Desbloqueado' : 'Bloqueado'}
                         </Badge>
                         {parseFloat(calcularCO2Ahorrado()) < 100 && (
@@ -550,19 +612,19 @@ export default function PerfilPage() {
                             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                               <div className="bg-green-500 h-2 rounded-full" style={{width: `${Math.min((parseFloat(calcularCO2Ahorrado()) / 100) * 100, 100)}%`}}></div>
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">{calcularCO2Ahorrado()}/100 kg CO₂</p>
+                            <p className="text-xs text-gray-500 mt-1">{calcularCO2Ahorrado()}/100 kg</p>
                           </>
                         )}
                       </CardContent>
                     </Card>
 
-                    {/* Logro 9: Maratonista - Progreso dinámico */}
+                    {/* Logro 3: Maratonista */}
                     <Card className={`border-2 ${calcularTotalAlquileres() >= 50 ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
-                      <CardContent className="p-6 text-center">
-                        <div className={`text-4xl mb-3 ${calcularTotalAlquileres() >= 50 ? '' : 'grayscale'}`}>🏃</div>
-                        <h3 className={`font-bold text-lg mb-2 ${calcularTotalAlquileres() >= 50 ? '' : 'text-gray-500'}`}>Maratonista</h3>
-                        <p className={`text-sm mb-3 ${calcularTotalAlquileres() >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>Completa 50 alquileres</p>
-                        <Badge className={calcularTotalAlquileres() >= 50 ? 'bg-blue-500 text-white' : ''}>
+                      <CardContent className="p-4 text-center">
+                        <div className={`text-3xl mb-2 ${calcularTotalAlquileres() >= 50 ? '' : 'grayscale'}`}>🏃</div>
+                        <h3 className={`font-bold text-sm mb-1 ${calcularTotalAlquileres() >= 50 ? '' : 'text-gray-500'}`}>Maratonista</h3>
+                        <p className={`text-xs mb-2 ${calcularTotalAlquileres() >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>50 alquileres</p>
+                        <Badge className={calcularTotalAlquileres() >= 50 ? 'bg-blue-500 text-white' : 'text-xs'}>
                           {calcularTotalAlquileres() >= 50 ? 'Desbloqueado' : 'Bloqueado'}
                         </Badge>
                         {calcularTotalAlquileres() < 50 && (
@@ -570,7 +632,7 @@ export default function PerfilPage() {
                             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                               <div className="bg-blue-500 h-2 rounded-full" style={{width: `${Math.min((calcularTotalAlquileres() / 50) * 100, 100)}%`}}></div>
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">{calcularTotalAlquileres()}/50 alquileres</p>
+                            <p className="text-xs text-gray-500 mt-1">{calcularTotalAlquileres()}/50</p>
                           </>
                         )}
                       </CardContent>
@@ -578,66 +640,8 @@ export default function PerfilPage() {
                   </div>
                 </CardContent>
               </Card>
-
-              {/* Sistema de Puntos */}
-              <Card className="mt-6">
-                <CardHeader>
-                  <CardTitle className="bangers-regular text-xl text-blue-900">Sistema de Puntos</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
-                      <div>
-                        <div className="font-semibold text-blue-900">Descuento 5€</div>
-                        <div className="text-sm text-gray-600">En tu próximo alquiler</div>
-                      </div>
-                      <Badge variant="outline" className="border-orange-500 text-orange-600">
-                        1500 puntos
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
-                      <div>
-                        <div className="font-semibold text-blue-900">Descuento 10€</div>
-                        <div className="text-sm text-gray-600">En tu próximo alquiler</div>
-                      </div>
-                      <Badge variant="outline" className="border-orange-500 text-orange-600">
-                        2500 puntos
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
-                      <div>
-                        <div className="font-semibold text-blue-900">Alquiler Gratis</div>
-                        <div className="text-sm text-gray-600">1 hora de patinete</div>
-                      </div>
-                      <Badge variant="outline" className="border-orange-500 text-orange-600">
-                        4000 puntos
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
-                      <div>
-                        <div className="font-semibold text-blue-900">Alquiler Premium Gratis</div>
-                        <div className="text-sm text-gray-600">2 horas de moto eléctrica</div>
-                      </div>
-                      <Badge variant="outline" className="border-orange-500 text-orange-600">
-                        6000 puntos
-                      </Badge>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                    <div className="text-sm text-blue-800">
-                      <strong>¿Cómo ganar puntos?</strong>
-                      <ul className="mt-2 space-y-1">
-                        <li>• 15 puntos por cada euro gastado</li>
-                        <li>• 100 puntos extra por completar un alquiler</li>
-                        <li>• 200 puntos por reseña positiva</li>
-                        <li>• 500 puntos por referir a un amigo</li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
+
           </div>
         </div>
       </section>
