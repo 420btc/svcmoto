@@ -370,9 +370,9 @@ export default function Home() {
       <section id="servicios" className="py-16 bg-orange-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">{t('services.title')}</h2>
+            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">{t('servicesSection.title')}</h2>
             <p className="bangers-regular text-2xl md:text-3xl text-white">
-              {t('services.subtitle')}
+              {t('servicesSection.subtitle')}
             </p>
           </div>
 

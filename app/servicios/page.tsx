@@ -81,7 +81,7 @@ export default function ServiciosPage() {
 
   const abrirModalServicio = (servicio: any) => {
     if (!user) {
-      alert('Debes iniciar sesión para solicitar un servicio')
+      alert(t('services.loginRequired'))
       return
     }
     setSelectedServicio(servicio)
@@ -90,7 +90,7 @@ export default function ServiciosPage() {
 
   const realizarSolicitud = () => {
     if (!selectedServicio || !selectedHora || !formData.nombre || !formData.telefono) {
-      alert('Por favor completa todos los campos obligatorios')
+      alert(t('services.completeFields'))
       return
     }
 
@@ -129,49 +129,49 @@ export default function ServiciosPage() {
   const servicios = [
     {
       id: 1,
-      nombre: "Cambio de Batería",
-      descripcion: "Sustitución y mantenimiento de baterías",
+      nombre: t('serviceItem.batteryChange.name'),
+      descripcion: t('serviceItem.batteryChange.description'),
       icono: Battery,
-      precio: "Desde 150€",
-      tiempo: "2-4 horas",
+      precio: t('serviceItem.batteryChange.price'),
+      tiempo: t('serviceItem.batteryChange.time'),
       incluye: [
-        "Batería de litio original",
-        "Instalación profesional",
-        "Reciclaje de batería antigua",
-        "Calibración del sistema",
-        "Garantía de 2 años",
+        t('serviceItem.batteryChange.include1'),
+        t('serviceItem.batteryChange.include2'),
+        t('serviceItem.batteryChange.include3'),
+        t('serviceItem.batteryChange.include4'),
+        t('serviceItem.batteryChange.include5'),
       ],
       urgente: false,
     },
     {
       id: 2,
-      nombre: "Recogida y Entrega",
-      descripcion: "Servicio de recogida y entrega a domicilio",
+      nombre: t('serviceItem.pickupDelivery.name'),
+      descripcion: t('serviceItem.pickupDelivery.description'),
       icono: Truck,
-      precio: "15€",
-      tiempo: "Mismo día",
+      precio: t('serviceItem.pickupDelivery.price'),
+      tiempo: t('serviceItem.pickupDelivery.time'),
       incluye: [
-        "Recogida en tu domicilio",
-        "Transporte seguro",
-        "Entrega tras reparación",
-        "Zona de Málaga capital",
-        "Horario flexible",
+        t('serviceItem.pickupDelivery.include1'),
+        t('serviceItem.pickupDelivery.include2'),
+        t('serviceItem.pickupDelivery.include3'),
+        t('serviceItem.pickupDelivery.include4'),
+        t('serviceItem.pickupDelivery.include5'),
       ],
       urgente: false,
     },
     {
       id: 3,
-      nombre: "Servicio Express",
-      descripcion: "Reparaciones rápidas y urgentes",
+      nombre: t('serviceItem.expressService.name'),
+      descripcion: t('serviceItem.expressService.description'),
       icono: Zap,
-      precio: "Desde 55€",
-      tiempo: "30 min - 2 horas",
+      precio: t('serviceItem.expressService.price'),
+      tiempo: t('serviceItem.expressService.time'),
       incluye: [
-        "Atención prioritaria",
-        "Reparaciones menores",
-        "Cambio de neumáticos",
-        "Ajustes básicos",
-        "Sin cita previa",
+        t('serviceItem.expressService.include1'),
+        t('serviceItem.expressService.include2'),
+        t('serviceItem.expressService.include3'),
+        t('serviceItem.expressService.include4'),
+        t('serviceItem.expressService.include5'),
       ],
       urgente: true,
     },
@@ -320,11 +320,10 @@ export default function ServiciosPage() {
             <Link href="/" className="text-white hover:text-blue-200 mr-4">
               <ArrowLeft className="w-6 h-6" />
             </Link>
-            <h1 className="bangers-regular text-5xl md:text-6xl text-white">Servicios Técnicos</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white">{t('services.title')}</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
-            Mantenimiento, reparación y servicios especializados para tu vehículo eléctrico. Técnicos certificados y
-            repuestos originales.
+            {t('services.subtitle')}
           </p>
         </div>
       </section>
@@ -341,7 +340,7 @@ export default function ServiciosPage() {
                   className="border-2 border-gray-200 hover:border-orange-500 transition-colors relative"
                 >
                   {servicio.urgente && (
-                    <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white">Servicio Express</Badge>
+                    <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white">{t('services.expressService')}</Badge>
                   )}
 
                   <CardHeader>
@@ -360,11 +359,11 @@ export default function ServiciosPage() {
                     {/* Precio y Tiempo */}
                     <div className="flex justify-between items-center mb-6 p-3 bg-gray-50 rounded-lg">
                       <div>
-                        <p className="text-sm text-gray-600">Precio</p>
+                        <p className="text-sm text-gray-600">{t('services.price')}</p>
                         <p className="text-lg font-bold text-orange-600">{servicio.precio}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600">Tiempo</p>
+                        <p className="text-sm text-gray-600">{t('services.time')}</p>
                         <p className="text-sm font-semibold text-blue-900 flex items-center">
                           <Clock className="w-4 h-4 mr-1" />
                           {servicio.tiempo}
@@ -374,7 +373,7 @@ export default function ServiciosPage() {
 
                     {/* Incluye */}
                     <div className="mb-6">
-                      <h4 className="font-semibold text-blue-900 mb-3">Incluye:</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">{t('services.includes')}</h4>
                       <ul className="space-y-2">
                         {servicio.incluye.map((item, index) => (
                           <li key={index} className="flex items-start space-x-2 text-sm">
@@ -389,7 +388,7 @@ export default function ServiciosPage() {
                       onClick={() => abrirModalServicio(servicio)}
                       className="w-full bg-orange-500 hover:bg-orange-600 text-white"
                     >
-                      Solicitar {servicio.nombre}
+                      {t('services.request')} {servicio.nombre}
                     </Button>
                   </CardContent>
                 </Card>
@@ -403,8 +402,8 @@ export default function ServiciosPage() {
       <section className="py-16 bg-orange-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">¿Cómo Funciona Nuestro Servicio?</h2>
-            <p className="text-xl text-white/90">Proceso profesional y transparente</p>
+            <h2 className="bangers-regular text-4xl md:text-5xl font-bold text-white mb-4">{t('services.howItWorks')}</h2>
+            <p className="text-xl text-white/90">{t('services.howItWorksSubtitle')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -412,32 +411,32 @@ export default function ServiciosPage() {
               <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-orange-500">1</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">Diagnóstico</h3>
-              <p className="text-white/90 text-sm">Evaluación completa y presupuesto sin compromiso</p>
+              <h3 className="bangers-regular text-lg font-bold text-white mb-2">{t('services.step1Title')}</h3>
+              <p className="text-white/90 text-sm">{t('services.step1Description')}</p>
             </div>
 
             <div className="text-center">
               <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-orange-500">2</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">Aprobación</h3>
-              <p className="text-white/90 text-sm">Te informamos del problema y coste antes de proceder</p>
+              <h3 className="bangers-regular text-lg font-bold text-white mb-2">{t('services.step2Title')}</h3>
+              <p className="text-white/90 text-sm">{t('services.step2Description')}</p>
             </div>
 
             <div className="text-center">
               <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-orange-500">3</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">Reparación</h3>
-              <p className="text-white/90 text-sm">Trabajo profesional con repuestos originales</p>
+              <h3 className="bangers-regular text-lg font-bold text-white mb-2">{t('services.step3Title')}</h3>
+              <p className="text-white/90 text-sm">{t('services.step3Description')}</p>
             </div>
 
             <div className="text-center">
               <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-orange-500">4</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">Entrega</h3>
-              <p className="text-white/90 text-sm">Pruebas finales y garantía de calidad</p>
+              <h3 className="bangers-regular text-lg font-bold text-white mb-2">{t('services.step4Title')}</h3>
+              <p className="text-white/90 text-sm">{t('services.step4Description')}</p>
             </div>
           </div>
         </div>
@@ -447,17 +446,17 @@ export default function ServiciosPage() {
       <section className="py-16 bg-blue-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">Nuestras Garantías</h2>
-            <p className="text-xl text-white/90">Compromiso con la calidad y tu tranquilidad</p>
+            <h2 className="bangers-regular text-4xl md:text-5xl font-bold text-white mb-4">{t('services.guaranteesTitle')}</h2>
+            <p className="text-xl text-white/90">{t('services.guaranteesSubtitle')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="bg-white/10 backdrop-blur border-white/20">
               <CardContent className="p-6 text-center">
                 <Shield className="w-12 h-12 text-orange-500 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">Garantía de Calidad</h3>
+                <h3 className="bangers-regular text-xl font-bold text-white mb-2">{t('services.qualityGuarantee')}</h3>
                 <p className="text-white/90 text-sm">
-                  Todos nuestros trabajos incluyen garantía mínima de 6 meses en mano de obra y repuestos
+                  {t('services.qualityDescription')}
                 </p>
               </CardContent>
             </Card>
@@ -465,9 +464,9 @@ export default function ServiciosPage() {
             <Card className="bg-white/10 backdrop-blur border-white/20">
               <CardContent className="p-6 text-center">
                 <CheckCircle className="w-12 h-12 text-orange-500 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">Repuestos Originales</h3>
+                <h3 className="bangers-regular text-xl font-bold text-white mb-2">{t('services.originalParts')}</h3>
                 <p className="text-white/90 text-sm">
-                  Utilizamos únicamente repuestos originales o de primera calidad para garantizar durabilidad
+                  {t('services.originalPartsDescription')}
                 </p>
               </CardContent>
             </Card>
@@ -475,9 +474,9 @@ export default function ServiciosPage() {
             <Card className="bg-white/10 backdrop-blur border-white/20">
               <CardContent className="p-6 text-center">
                 <Clock className="w-12 h-12 text-orange-500 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">Servicio Rápido</h3>
+                <h3 className="bangers-regular text-xl font-bold text-white mb-2">{t('services.fastService')}</h3>
                 <p className="text-white/90 text-sm">
-                  Comprometidos con los plazos acordados. Servicio express disponible para urgencias
+                  {t('services.fastServiceDescription')}
                 </p>
               </CardContent>
             </Card>
@@ -488,20 +487,20 @@ export default function ServiciosPage() {
       {/* CTA Section */}
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-blue-900 mb-4">¿Necesitas Ayuda con tu Vehículo?</h2>
+          <h2 className="bangers-regular text-3xl font-bold text-blue-900 mb-4">{t('services.needHelp')}</h2>
           <p className="text-xl text-gray-600 mb-8">
-            Contacta con nuestros técnicos especializados para un diagnóstico gratuito
+            {t('services.needHelpSubtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white">
-              Llamar: 607 22 88 82
+              {t('services.call')}
             </Button>
             <Button
               size="lg"
               variant="outline"
               className="border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white bg-transparent"
             >
-              Solicitar Presupuesto
+              {t('services.requestQuote')}
             </Button>
           </div>
         </div>
@@ -519,14 +518,14 @@ export default function ServiciosPage() {
                      {selectedServicio && <selectedServicio.icono className="w-6 h-6 md:w-8 md:h-8 text-white" />}
                    </div>
                    <div>
-                     <h2 className="bangers-regular text-xl md:text-3xl text-white">SOLICITAR SERVICIO</h2>
+                     <h2 className="bangers-regular text-xl md:text-3xl text-white">{t('serviceModal.requestService')}</h2>
                      <p className="text-blue-200 text-sm md:text-base">{selectedServicio?.nombre}</p>
                    </div>
                  </div>
                  <div className="flex items-center space-x-3">
                    {selectedServicio?.urgente && (
                      <div className="bg-gradient-to-r from-red-500 to-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
-                       ⚡ URGENTE
+                       {t('serviceModal.urgent')}
                      </div>
                    )}
                    <button 
@@ -556,11 +555,11 @@ export default function ServiciosPage() {
                        
                        <div className="space-y-2 md:space-y-3">
                          <div className="flex items-center justify-between p-2 md:p-3 bg-white rounded-lg">
-                           <span className="text-xs md:text-sm text-gray-600">Precio:</span>
+                           <span className="text-xs md:text-sm text-gray-600">{t('serviceModal.price')}</span>
                            <span className="font-bold text-orange-600">{selectedServicio?.precio}</span>
                          </div>
                          <div className="flex items-center justify-between p-2 md:p-3 bg-white rounded-lg">
-                           <span className="text-xs md:text-sm text-gray-600">Tiempo:</span>
+                           <span className="text-xs md:text-sm text-gray-600">{t('serviceModal.time')}</span>
                            <span className="font-bold text-blue-900 flex items-center">
                              <Clock className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                              {selectedServicio?.tiempo}
@@ -574,7 +573,7 @@ export default function ServiciosPage() {
                      <div className="hidden lg:block bg-blue-50 rounded-xl p-2 md:p-6 border border-blue-200">
                        <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
                          <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
-                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">QUÉ INCLUYE</h4>
+                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">{t('serviceModal.whatIncludes')}</h4>
                        </div>
                        <ul className="space-y-1">
                          {selectedServicio?.incluye?.map((item: string, index: number) => (
@@ -595,37 +594,37 @@ export default function ServiciosPage() {
                      <div className="bg-blue-50 rounded-xl p-4 md:p-6 border border-blue-200">
                        <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
                          <User className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
-                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">DATOS PERSONALES</h4>
+                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">{t('serviceModal.personalData')}</h4>
                        </div>
                        <div className="space-y-3 md:space-y-4">
                          <div>
-                           <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Nombre completo *</label>
+                           <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">{t('serviceModal.fullName')}</label>
                            <input
                              type="text"
                              value={formData.nombre}
                              onChange={(e) => setFormData({...formData, nombre: e.target.value})}
                              className="w-full p-2 md:p-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
-                             placeholder="Tu nombre completo"
+                             placeholder={t('serviceModal.fullNamePlaceholder')}
                            />
                          </div>
                          <div>
-                           <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Teléfono *</label>
+                           <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">{t('serviceModal.phone')}</label>
                            <input
                              type="tel"
                              value={formData.telefono}
                              onChange={(e) => setFormData({...formData, telefono: e.target.value})}
                              className="w-full p-2 md:p-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
-                             placeholder="Tu número de teléfono"
+                             placeholder={t('serviceModal.phonePlaceholder')}
                            />
                          </div>
                          <div>
-                           <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                           <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">{t('serviceModal.address')}</label>
                            <input
                              type="text"
                              value={formData.direccion}
                              onChange={(e) => setFormData({...formData, direccion: e.target.value})}
                              className="w-full p-2 md:p-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
-                             placeholder="Dirección (opcional para recogida)"
+                             placeholder={t('serviceModal.addressPlaceholder')}
                            />
                          </div>
                        </div>
@@ -635,7 +634,7 @@ export default function ServiciosPage() {
                          <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200 flex-1">
                            <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
                              <Calendar className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
-                             <h4 className="bangers-regular text-lg md:text-xl text-blue-900">FECHA PREFERIDA</h4>
+                             <h4 className="bangers-regular text-lg md:text-xl text-blue-900">{t('serviceModal.preferredDate')}</h4>
                            </div>
                            <input
                              type="date"
@@ -646,7 +645,7 @@ export default function ServiciosPage() {
                            />
                            <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                              <p className="text-sm text-blue-800 text-center">
-                               📅 Selecciona la fecha que mejor te convenga
+                               {t('serviceModal.selectDate')}
                              </p>
                            </div>
                          </div>
@@ -660,14 +659,14 @@ export default function ServiciosPage() {
                      <div className="bg-orange-50 rounded-xl p-4 md:p-6 border border-orange-200">
                        <div className="flex items-center space-x-2 md:space-x-3 mb-3 md:mb-4">
                          <Settings className="w-5 h-5 md:w-6 md:h-6 text-orange-600" />
-                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">DESCRIPCIÓN DEL PROBLEMA</h4>
+                         <h4 className="bangers-regular text-lg md:text-xl text-blue-900">{t('serviceModal.problemDescription')}</h4>
                        </div>
                        <textarea
                          value={formData.descripcionProblema}
                          onChange={(e) => setFormData({...formData, descripcionProblema: e.target.value})}
                          rows={4}
                          className="w-full p-3 md:p-4 border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm md:text-base resize-none"
-                         placeholder="Describe el problema o servicio que necesitas..."
+                         placeholder={t('serviceModal.problemPlaceholder')}
                        />
                      </div>
 
@@ -675,7 +674,7 @@ export default function ServiciosPage() {
                        <div className="bg-gray-50 rounded-xl p-4 md:p-8 border border-gray-200 flex-1">
                          <div className="flex items-center justify-center space-x-3 md:space-x-4 mb-3 md:mb-12">
                            <Clock className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
-                           <h4 className="bangers-regular text-xl md:text-2xl text-blue-900 ">HORA PREFERIDA</h4>
+                           <h4 className="bangers-regular text-xl md:text-2xl text-blue-900 ">{t('serviceModal.preferredTime')}</h4>
                          </div>
                          <div className="grid grid-cols-4 md:grid-cols-3 gap-2">
                            {horarios.map((hora) => (
@@ -702,18 +701,18 @@ export default function ServiciosPage() {
                 <div className="mt-4 md:mt-8 bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-4 md:p-6 text-white">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 items-center">
                     <div>
-                      <h4 className="bangers-regular text-lg md:text-2xl mb-3 md:mb-4 text-orange-300">📋 RESUMEN DE SOLICITUD</h4>
+                      <h4 className="bangers-regular text-lg md:text-2xl mb-3 md:mb-4 text-orange-300">{t('serviceModal.requestSummary')}</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                         <div className="space-y-2">
                           <div className="flex items-center space-x-2">
                             <Settings className="w-4 h-4 text-orange-300" />
-                            <span className="text-xs md:text-sm text-blue-200">Servicio:</span>
+                            <span className="text-xs md:text-sm text-blue-200">{t('serviceModal.service')}</span>
                           </div>
                           <p className="font-bold text-sm md:text-base">{selectedServicio?.nombre}</p>
                           
                           <div className="flex items-center space-x-2 mt-2 md:mt-3">
                             <User className="w-4 h-4 text-orange-300" />
-                            <span className="text-xs md:text-sm text-blue-200">Cliente:</span>
+                            <span className="text-xs md:text-sm text-blue-200">{t('serviceModal.client')}</span>
                           </div>
                           <p className="font-bold text-xs md:text-base">{formData.nombre}</p>
                         </div>
@@ -721,13 +720,13 @@ export default function ServiciosPage() {
                         <div className="space-y-2">
                           <div className="flex items-center space-x-2">
                             <Calendar className="w-4 h-4 text-orange-300" />
-                            <span className="text-xs md:text-sm text-blue-200">Fecha:</span>
+                            <span className="text-xs md:text-sm text-blue-200">{t('serviceModal.date')}</span>
                           </div>
                           <p className="font-bold text-sm md:text-base">{new Date(selectedDate).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' })}</p>
                           
                           <div className="flex items-center space-x-2 mt-2 md:mt-3">
                             <Clock className="w-4 h-4 text-orange-300" />
-                            <span className="text-xs md:text-sm text-blue-200">Hora:</span>
+                            <span className="text-xs md:text-sm text-blue-200">{t('serviceModal.hour')}</span>
                           </div>
                           <p className="font-bold text-sm md:text-base">{selectedHora}</p>
                         </div>
@@ -735,7 +734,7 @@ export default function ServiciosPage() {
                       
                       <div className="mt-3 md:mt-4 p-2 md:p-3 bg-white/10 rounded-lg">
                         <div className="flex items-center justify-between">
-                          <span className="text-blue-200 text-xs md:text-sm">📞 Teléfono:</span>
+                          <span className="text-blue-200 text-xs md:text-sm">{t('serviceModal.phoneLabel')}</span>
                           <span className="font-bold text-orange-300 text-sm md:text-base">{formData.telefono}</span>
                         </div>
                       </div>
@@ -743,19 +742,19 @@ export default function ServiciosPage() {
                     
                     <div className="text-center lg:text-right">
                       <div className="bg-white/10 rounded-2xl p-4 md:p-6 mb-3 md:mb-4">
-                        <p className="text-blue-200 text-xs md:text-sm mb-1 md:mb-2">💰 PRECIO ESTIMADO</p>
+                        <p className="text-blue-200 text-xs md:text-sm mb-1 md:mb-2">{t('serviceModal.estimatedPrice')}</p>
                         <p className="bangers-regular text-2xl md:text-4xl text-orange-300">{selectedServicio?.precio}</p>
-                        <p className="text-xs text-blue-300 mt-1">Presupuesto final tras diagnóstico</p>
+                        <p className="text-xs text-blue-300 mt-1">{t('serviceModal.finalBudget')}</p>
                       </div>
                       
                       <Button 
                         onClick={realizarSolicitud}
                         className="w-full bg-orange-500 hover:bg-orange-600 text-white bangers-regular text-lg md:text-xl py-3 md:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
                       >
-                        🔧 SOLICITAR SERVICIO
+                        {t('serviceModal.requestServiceButton')}
                       </Button>
                       
-                      <p className="text-xs text-blue-300 mt-2">✅ Te contactaremos en 24h</p>
+                      <p className="text-xs text-blue-300 mt-2">{t('serviceModal.contactIn24h')}</p>
                     </div>
                   </div>
                 </div>
@@ -771,16 +770,16 @@ export default function ServiciosPage() {
           <Card className="w-96 mx-4">
             <CardHeader className="text-center">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <CardTitle className="text-2xl text-green-600">¡Solicitud Enviada!</CardTitle>
+              <CardTitle className="text-2xl text-green-600">{t('serviceModal.requestSent')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="mb-4">Tu solicitud de servicio ha sido procesada exitosamente.</p>
-              <p className="text-sm text-gray-600 mb-4">Te contactaremos en las próximas 24 horas para confirmar la cita.</p>
+              <p className="mb-4">{t('serviceModal.requestProcessed')}</p>
+              <p className="text-sm text-gray-600 mb-4">{t('serviceModal.contactSoon')}</p>
               <Button 
                 onClick={() => setShowConfirmation(false)}
                 className="bg-orange-500 hover:bg-orange-600 text-white"
               >
-                Continuar
+                {t('serviceModal.continue')}
               </Button>
             </CardContent>
           </Card>
