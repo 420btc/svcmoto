@@ -470,52 +470,52 @@ export default function Home() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
-              <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contact.title')}</h2>
+              <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contactSection.title')}</h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
                   <MapPin className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contact.location')}</h3>
-                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contact.address1')}</p>
-                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contact.address2')}</p>
+                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contactSection.location')}</h3>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contactSection.address1')}</p>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contactSection.address2')}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
                   <Phone className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contact.phone')}</h3>
-                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contact.phoneNumber')}</p>
-                    <p className="text-sm text-orange-500 md:text-orange-300 md:drop-shadow-sm">{t('contact.whatsapp')}</p>
+                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contactSection.phone')}</h3>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contactSection.phoneNumber')}</p>
+                    <p className="text-sm text-orange-500 md:text-orange-300 md:drop-shadow-sm">{t('contactSection.whatsapp')}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
                   <Clock className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
-                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contact.schedule')}</h3>
-                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contact.opens')}</p>
-                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contact.closed')}</p>
+                    <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contactSection.schedule')}</h3>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contactSection.opens')}</p>
+                    <p className="text-gray-300 md:text-white md:text-sm md:drop-shadow-sm">{t('contactSection.closed')}</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-8">
                 <Link href="/contacto">
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white md:shadow-lg md:border md:border-orange-400">{t('contact.cta')}</Button>
+                  <Button className="bg-orange-500 hover:bg-orange-600 text-white md:shadow-lg md:border md:border-orange-400">{t('contactSection.cta')}</Button>
                 </Link>
               </div>
             </div>
 
             <div className="hidden md:block">
-              <h3 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contact.servicesTitle')}</h3>
+              <h3 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contactSection.servicesTitle')}</h3>
               <div className="space-y-6">
                 <Link href="/alquiler" className="block">
                   <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
                     <Zap className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contact.service1.title')}</h4>
-                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contact.service1.description')}</p>
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contactSection.service1.title')}</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contactSection.service1.description')}</p>
                     </div>
                   </div>
                 </Link>
@@ -523,8 +523,8 @@ export default function Home() {
                   <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
                     <Zap className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contact.service2.title')}</h4>
-                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contact.service2.description')}</p>
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contactSection.service2.title')}</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contactSection.service2.description')}</p>
                     </div>
                   </div>
                 </Link>
@@ -532,15 +532,15 @@ export default function Home() {
                   <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
                     <Wrench className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contact.service3.title')}</h4>
-                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contact.service3.description')}</p>
+                      <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contactSection.service3.title')}</h4>
+                      <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contactSection.service3.description')}</p>
                     </div>
                   </div>
                 </Link>
               </div>
 
               <div className="mt-8">
-                <h4 className="text-lg font-semibold text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contact.paymentMethods')}</h4>
+                <h4 className="text-lg font-semibold text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contactSection.paymentMethods')}</h4>
                 <div className="flex flex-wrap gap-3">
                   {/* Visa */}
                    <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">
@@ -583,30 +583,30 @@ export default function Home() {
 
             {/* En móvil: contenido normal sin video de fondo */}
             <div className="block md:hidden">
-              <h3 className="bangers-regular text-4xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contact.servicesTitle')}</h3>
+              <h3 className="bangers-regular text-4xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contactSection.servicesTitle')}</h3>
               <div className="space-y-4">
                 <Link href="/alquiler" className="block">
                   <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
-                    <h4 className="text-lg font-semibold text-white mb-2">{t('contact.service1.title')}</h4>
-                    <p className="text-gray-300 text-sm">{t('contact.service1.description')}</p>
+                    <h4 className="text-lg font-semibold text-white mb-2">{t('contactSection.service1.title')}</h4>
+                    <p className="text-gray-300 text-sm">{t('contactSection.service1.description')}</p>
                   </div>
                 </Link>
                 <Link href="/alquiler" className="block">
                   <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
-                    <h4 className="text-lg font-semibold text-white mb-2">{t('contact.service2.title')}</h4>
-                    <p className="text-gray-300 text-sm">{t('contact.service2.description')}</p>
+                    <h4 className="text-lg font-semibold text-white mb-2">{t('contactSection.service2.title')}</h4>
+                    <p className="text-gray-300 text-sm">{t('contactSection.service2.description')}</p>
                   </div>
                 </Link>
                 <Link href="/servicios" className="block">
                   <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
-                    <h4 className="text-lg font-semibold text-white mb-2">{t('contact.service3.title')}</h4>
-                    <p className="text-gray-300 text-sm">{t('contact.service3.description')}</p>
+                    <h4 className="text-lg font-semibold text-white mb-2">{t('contactSection.service3.title')}</h4>
+                    <p className="text-gray-300 text-sm">{t('contactSection.service3.description')}</p>
                   </div>
                 </Link>
               </div>
 
               <div className="mt-8">
-                <h4 className="text-lg font-semibold text-white mb-4">{t('contact.paymentMethods')}</h4>
+                <h4 className="text-lg font-semibold text-white mb-4">{t('contactSection.paymentMethods')}</h4>
                 <div className="flex flex-wrap gap-3">
                   {/* Visa */}
                    <div className="bg-white rounded-lg p-2 shadow-lg border border-gray-200 w-16 h-10 flex items-center justify-center">

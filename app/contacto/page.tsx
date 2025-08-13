@@ -252,7 +252,7 @@ export default function ContactoPage() {
                         variant="outline"
                         className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full"
                       >
-                        Cerrar Sesión
+                        {t('contact.signOut')}
                       </Button>
                     </div>
                   ) : (
@@ -263,7 +263,7 @@ export default function ContactoPage() {
                       }}
                       className="bg-orange-500 hover:bg-orange-600 text-white w-full"
                     >
-                      Iniciar Sesión
+                      {t('contact.signIn')}
                     </Button>
                   )}
                 </div>
@@ -280,10 +280,10 @@ export default function ContactoPage() {
             <Link href="/" className="text-white hover:text-orange-200 mr-4">
               <ArrowLeft className="w-6 h-6" />
             </Link>
-            <h1 className="bangers-regular text-5xl md:text-6xl text-white">Contacto</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white">{t('contact.pageTitle')}</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
-            Estamos aquí para ayudarte. Contáctanos para alquileres, servicios técnicos o cualquier consulta.
+            {t('contact.pageSubtitle')}
           </p>
         </div>
       </section>
@@ -296,14 +296,14 @@ export default function ContactoPage() {
             <div>
               <Card>
                 <CardHeader>
-                  <CardTitle className="bangers-regular text-2xl text-blue-900">Envíanos un Mensaje</CardTitle>
-                  <p className="text-gray-600">Completa el formulario y te responderemos lo antes posible</p>
+                  <CardTitle className="bangers-regular text-2xl text-blue-900">{t('contact.sendMessage')}</CardTitle>
+                  <p className="text-gray-600">{t('contact.formSubtitle')}</p>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="nombre">Nombre completo *</Label>
+                        <Label htmlFor="nombre">{t('contact.fullName')}</Label>
                         <Input
                           id="nombre"
                           name="nombre"
@@ -315,7 +315,7 @@ export default function ContactoPage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="telefono">Teléfono *</Label>
+                        <Label htmlFor="telefono">{t('contact.phoneNumber')}</Label>
                         <Input
                           id="telefono"
                           name="telefono"
@@ -329,7 +329,7 @@ export default function ContactoPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="email">Email *</Label>
+                      <Label htmlFor="email">{t('contact.email')}</Label>
                       <Input
                         id="email"
                         name="email"
@@ -342,7 +342,7 @@ export default function ContactoPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="servicio">Servicio de interés</Label>
+                      <Label htmlFor="servicio">{t('contact.serviceInterest')}</Label>
                       <select
                         id="servicio"
                         name="servicio"
@@ -350,18 +350,18 @@ export default function ContactoPage() {
                         onChange={handleInputChange}
                         className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       >
-                        <option value="">Selecciona un servicio</option>
-                        <option value="alquiler-moto">Alquiler de Moto</option>
-                        <option value="alquiler-patinete">Alquiler de Patinete</option>
-                        <option value="reparacion">Reparación</option>
-                        <option value="mantenimiento">Mantenimiento</option>
-                        <option value="bateria">Cambio de Batería</option>
-                        <option value="otro">Otro</option>
+                        <option value="">{t('contact.selectService')}</option>
+                        <option value="alquiler-moto">{t('contact.motorcycleRental')}</option>
+                        <option value="alquiler-patinete">{t('contact.scooterRental')}</option>
+                        <option value="reparacion">{t('contact.repair')}</option>
+                        <option value="mantenimiento">{t('contact.maintenance')}</option>
+                        <option value="bateria">{t('contact.batteryChange')}</option>
+                        <option value="otro">{t('contact.other')}</option>
                       </select>
                     </div>
 
                     <div>
-                      <Label htmlFor="mensaje">Mensaje *</Label>
+                      <Label htmlFor="mensaje">{t('contact.message')}</Label>
                       <Textarea
                         id="mensaje"
                         name="mensaje"
@@ -369,13 +369,13 @@ export default function ContactoPage() {
                         rows={4}
                         value={formData.mensaje}
                         onChange={handleInputChange}
-                        placeholder="Cuéntanos en qué podemos ayudarte..."
+                        placeholder={t('contact.messagePlaceholder')}
                         className="mt-1"
                       />
                     </div>
 
                     <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white">
-                      Enviar Mensaje
+                      {t('contact.sendButton')}
                     </Button>
                   </form>
                 </CardContent>
@@ -387,13 +387,13 @@ export default function ContactoPage() {
               {/* Contact Details */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="bangers-regular text-2xl text-blue-900">Información de Contacto</CardTitle>
+                  <CardTitle className="bangers-regular text-2xl text-blue-900">{t('contact.contactInfo')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="flex items-start space-x-4">
                     <MapPin className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h3 className="bangers-regular text-lg text-blue-900">Ubicación</h3>
+                      <h3 className="bangers-regular text-lg text-blue-900">{t('contact.location')}</h3>
                       <p className="text-gray-600">C. Héroe de Sostoa, 37</p>
                       <p className="text-gray-600">Carretera de Cádiz</p>
                       <p className="text-gray-600">29002 Málaga, España</p>
@@ -403,16 +403,16 @@ export default function ContactoPage() {
                   <div className="flex items-start space-x-4">
                     <Phone className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h3 className="bangers-regular text-lg text-blue-900">Teléfono</h3>
+                      <h3 className="bangers-regular text-lg text-blue-900">{t('contact.phone')}</h3>
                       <p className="text-gray-600">607 22 88 82</p>
-                      <p className="text-sm text-orange-500">También disponible por WhatsApp</p>
+                      <p className="text-sm text-orange-500">{t('contact.whatsappAvailable')}</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-4">
                     <Mail className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h3 className="text-lg font-semibold text-blue-900">Email</h3>
+                      <h3 className="text-lg font-semibold text-blue-900">{t('contact.emailLabel')}</h3>
                       <p className="text-gray-600">info@svcmoto.com</p>
                     </div>
                   </div>
@@ -420,10 +420,10 @@ export default function ContactoPage() {
                   <div className="flex items-start space-x-4">
                     <Clock className="w-6 h-6 text-orange-500 mt-1" />
                     <div>
-                      <h3 className="text-lg font-semibold text-blue-900">Horario</h3>
-                      <p className="text-gray-600">Lunes a Viernes: 10:00 - 19:00</p>
-                      <p className="text-gray-600">Sábados: Cerrado</p>
-                      <p className="text-gray-600">Domingos: Cerrado</p>
+                      <h3 className="text-lg font-semibold text-blue-900">{t('contact.schedule')}</h3>
+                      <p className="text-gray-600">{t('contact.mondayFriday')}</p>
+                      <p className="text-gray-600">{t('contact.saturday')}</p>
+                      <p className="text-gray-600">{t('contact.sunday')}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -432,19 +432,19 @@ export default function ContactoPage() {
               {/* Quick Actions */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-xl text-blue-900">Contacto Rápido</CardTitle>
+                  <CardTitle className="text-xl text-blue-900">{t('contact.quickContact')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
                     <Phone className="w-4 h-4 mr-2" />
-                    WhatsApp: 607 22 88 82
+                    {t('contact.whatsappButton')}
                   </Button>
                   <Button
                     variant="outline"
                     className="w-full border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white bg-transparent"
                   >
                     <Phone className="w-4 h-4 mr-2" />
-                    Llamar Ahora
+                    {t('contact.callNow')}
                   </Button>
                 </CardContent>
               </Card>
@@ -457,8 +457,8 @@ export default function ContactoPage() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="bangers-regular text-3xl text-blue-900 mb-4">Nuestra Ubicación</h2>
-            <p className="text-xl text-gray-600">Encuéntranos en el corazón de Málaga</p>
+            <h2 className="bangers-regular text-3xl text-blue-900 mb-4">{t('contact.ourLocation')}</h2>
+            <p className="text-xl text-gray-600">{t('contact.locationSubtitle')}</p>
           </div>
 
           <Card>
@@ -468,10 +468,10 @@ export default function ContactoPage() {
           </Card>
 
           <div className="mt-8 text-center">
-            <p className="text-gray-600 mb-4">Cerca de Estación María Zambrano (456m) • Calle Larios (1,68km)</p>
+            <p className="text-gray-600 mb-4">{t('contact.nearbyLandmarks')}</p>
             <Button className="bg-orange-500 hover:bg-orange-600 text-white">
               <MapPin className="w-4 h-4 mr-2" />
-              Ver en Google Maps
+              {t('contact.viewOnMaps')}
             </Button>
           </div>
         </div>
