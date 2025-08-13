@@ -19,7 +19,7 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: '¡Hola! Soy SVC Asistente 🏍️ ¿En qué puedo ayudarte hoy? Puedo ayudarte con información sobre alquiler de motos, precios, servicios técnicos y más.',
+      content: 'Hola! 👋 Soy Li tu Asistente en SCV 🏍️, ¿en qué puedo ayudarte hoy?🫡​',
       timestamp: new Date()
     }
   ])
@@ -206,7 +206,7 @@ export default function ChatBot() {
                 onClick={() => {
                   setMessages([{
                     role: 'assistant',
-                    content: '¡Hola! Soy SVC Asistente 🏍️ ¿En qué puedo ayudarte hoy? Puedo ayudarte con información sobre alquiler de motos, precios, servicios técnicos y más.',
+                    content: 'Soy Li tu Asistente, ¿en qué puedo ayudarte hoy?',
                     timestamp: new Date()
                   }])
                 }}
