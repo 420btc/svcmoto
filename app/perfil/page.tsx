@@ -576,65 +576,313 @@ export default function PerfilPage() {
                 <CardHeader>
                   <CardTitle className="bangers-regular text-xl text-blue-900">Tus Logros</CardTitle>
                 </CardHeader>
-                <CardContent className="pb-6">
-                  <div className="space-y-4">
-                    {/* Logro 1: Velocista */}
-                    <Card className={`border-2 ${calcularKmTotales() >= 500 ? 'border-yellow-300 bg-yellow-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
-                      <CardContent className="p-4 text-center">
-                        <div className={`text-3xl mb-2 ${calcularKmTotales() >= 500 ? '' : 'grayscale'}`}>🏎️</div>
-                        <h3 className={`font-bold text-sm mb-1 ${calcularKmTotales() >= 500 ? '' : 'text-gray-500'}`}>Velocista</h3>
-                        <p className={`text-xs mb-2 ${calcularKmTotales() >= 500 ? 'text-gray-600' : 'text-gray-500'}`}>500km recorridos</p>
-                        <Badge className={calcularKmTotales() >= 500 ? 'bg-yellow-500 text-white' : 'text-xs'}>
-                          {calcularKmTotales() >= 500 ? 'Desbloqueado' : 'Bloqueado'}
+                <CardContent className="pb-2">
+                  <div className="max-h-[740px] overflow-y-auto scrollbar-hide space-y-2">
+                    {/* Logro 1: Primer Viaje */}
+                    <Card className={`border-2 ${calcularTotalAlquileres() >= 1 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularTotalAlquileres() >= 1 ? '' : 'grayscale'}`}>🚀</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 1 ? '' : 'text-gray-500'}`}>Primer Viaje</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 1 ? 'text-gray-600' : 'text-gray-500'}`}>Completa tu primer alquiler</p>
+                        </div>
+                        <Badge className={calcularTotalAlquileres() >= 1 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
+                          {calcularTotalAlquileres() >= 1 ? '✓' : '○'}
                         </Badge>
-                        {calcularKmTotales() < 500 && (
-                          <>
-                            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                              <div className="bg-yellow-500 h-2 rounded-full" style={{width: `${Math.min((calcularKmTotales() / 500) * 100, 100)}%`}}></div>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-1">{calcularKmTotales()}/500 km</p>
-                          </>
-                        )}
                       </CardContent>
                     </Card>
 
-                    {/* Logro 2: Eco Warrior */}
+                    {/* Logro 2: Explorador */}
+                    <Card className={`border-2 ${calcularKmTotales() >= 10 ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularKmTotales() >= 10 ? '' : 'grayscale'}`}>🗺️</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 10 ? '' : 'text-gray-500'}`}>Explorador</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 10 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 10km</p>
+                        </div>
+                        <Badge className={calcularKmTotales() >= 10 ? 'bg-blue-500 text-white text-xs' : 'text-xs'}>
+                          {calcularKmTotales() >= 10 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 3: Eco Principiante */}
+                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 1 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 1 ? '' : 'grayscale'}`}>🌱</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 1 ? '' : 'text-gray-500'}`}>Eco Principiante</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 1 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 1kg CO₂</p>
+                        </div>
+                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 1 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
+                          {parseFloat(calcularCO2Ahorrado()) >= 1 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 4: Frecuente */}
+                    <Card className={`border-2 ${calcularTotalAlquileres() >= 5 ? 'border-purple-300 bg-purple-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularTotalAlquileres() >= 5 ? '' : 'grayscale'}`}>🔄</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 5 ? '' : 'text-gray-500'}`}>Frecuente</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 5 ? 'text-gray-600' : 'text-gray-500'}`}>5 alquileres completados</p>
+                        </div>
+                        <Badge className={calcularTotalAlquileres() >= 5 ? 'bg-purple-500 text-white text-xs' : 'text-xs'}>
+                          {calcularTotalAlquileres() >= 5 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 5: Aventurero */}
+                    <Card className={`border-2 ${calcularKmTotales() >= 50 ? 'border-orange-300 bg-orange-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularKmTotales() >= 50 ? '' : 'grayscale'}`}>🏔️</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 50 ? '' : 'text-gray-500'}`}>Aventurero</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 50km</p>
+                        </div>
+                        <Badge className={calcularKmTotales() >= 50 ? 'bg-orange-500 text-white text-xs' : 'text-xs'}>
+                          {calcularKmTotales() >= 50 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 6: Eco Consciente */}
+                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 10 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 10 ? '' : 'grayscale'}`}>♻️</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 10 ? '' : 'text-gray-500'}`}>Eco Consciente</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 10 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 10kg CO₂</p>
+                        </div>
+                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 10 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
+                          {parseFloat(calcularCO2Ahorrado()) >= 10 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 7: Habitual */}
+                    <Card className={`border-2 ${calcularTotalAlquileres() >= 10 ? 'border-indigo-300 bg-indigo-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularTotalAlquileres() >= 10 ? '' : 'grayscale'}`}>📅</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 10 ? '' : 'text-gray-500'}`}>Habitual</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 10 ? 'text-gray-600' : 'text-gray-500'}`}>10 alquileres completados</p>
+                        </div>
+                        <Badge className={calcularTotalAlquileres() >= 10 ? 'bg-indigo-500 text-white text-xs' : 'text-xs'}>
+                          {calcularTotalAlquileres() >= 10 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 8: Viajero */}
+                    <Card className={`border-2 ${calcularKmTotales() >= 100 ? 'border-cyan-300 bg-cyan-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularKmTotales() >= 100 ? '' : 'grayscale'}`}>🧳</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 100 ? '' : 'text-gray-500'}`}>Viajero</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 100km</p>
+                        </div>
+                        <Badge className={calcularKmTotales() >= 100 ? 'bg-cyan-500 text-white text-xs' : 'text-xs'}>
+                          {calcularKmTotales() >= 100 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 9: Eco Defensor */}
+                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 25 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 25 ? '' : 'grayscale'}`}>🛡️</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 25 ? '' : 'text-gray-500'}`}>Eco Defensor</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 25 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 25kg CO₂</p>
+                        </div>
+                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 25 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
+                          {parseFloat(calcularCO2Ahorrado()) >= 25 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 10: Veterano */}
+                    <Card className={`border-2 ${calcularTotalAlquileres() >= 20 ? 'border-amber-300 bg-amber-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularTotalAlquileres() >= 20 ? '' : 'grayscale'}`}>🎖️</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 20 ? '' : 'text-gray-500'}`}>Veterano</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 20 ? 'text-gray-600' : 'text-gray-500'}`}>20 alquileres completados</p>
+                        </div>
+                        <Badge className={calcularTotalAlquileres() >= 20 ? 'bg-amber-500 text-white text-xs' : 'text-xs'}>
+                          {calcularTotalAlquileres() >= 20 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 11: Nómada */}
+                    <Card className={`border-2 ${calcularKmTotales() >= 200 ? 'border-teal-300 bg-teal-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularKmTotales() >= 200 ? '' : 'grayscale'}`}>🏕️</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 200 ? '' : 'text-gray-500'}`}>Nómada</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 200 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 200km</p>
+                        </div>
+                        <Badge className={calcularKmTotales() >= 200 ? 'bg-teal-500 text-white text-xs' : 'text-xs'}>
+                          {calcularKmTotales() >= 200 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 12: Eco Héroe */}
+                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 50 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 50 ? '' : 'grayscale'}`}>🦸</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 50 ? '' : 'text-gray-500'}`}>Eco Héroe</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 50kg CO₂</p>
+                        </div>
+                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 50 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
+                          {parseFloat(calcularCO2Ahorrado()) >= 50 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 13: Experto */}
+                    <Card className={`border-2 ${calcularTotalAlquileres() >= 30 ? 'border-violet-300 bg-violet-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularTotalAlquileres() >= 30 ? '' : 'grayscale'}`}>🎯</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 30 ? '' : 'text-gray-500'}`}>Experto</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 30 ? 'text-gray-600' : 'text-gray-500'}`}>30 alquileres completados</p>
+                        </div>
+                        <Badge className={calcularTotalAlquileres() >= 30 ? 'bg-violet-500 text-white text-xs' : 'text-xs'}>
+                          {calcularTotalAlquileres() >= 30 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 14: Explorador Urbano */}
+                    <Card className={`border-2 ${calcularKmTotales() >= 300 ? 'border-slate-300 bg-slate-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularKmTotales() >= 300 ? '' : 'grayscale'}`}>🏙️</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 300 ? '' : 'text-gray-500'}`}>Explorador Urbano</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 300 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 300km</p>
+                        </div>
+                        <Badge className={calcularKmTotales() >= 300 ? 'bg-slate-500 text-white text-xs' : 'text-xs'}>
+                          {calcularKmTotales() >= 300 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 15: Eco Warrior */}
                     <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
-                      <CardContent className="p-4 text-center">
-                        <div className={`text-3xl mb-2 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'grayscale'}`}>🌱</div>
-                        <h3 className={`font-bold text-sm mb-1 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'text-gray-500'}`}>Eco Warrior</h3>
-                        <p className={`text-xs mb-2 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>100kg CO₂ ahorrado</p>
-                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 100 ? 'bg-green-500 text-white' : 'text-xs'}>
-                          {parseFloat(calcularCO2Ahorrado()) >= 100 ? 'Desbloqueado' : 'Bloqueado'}
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'grayscale'}`}>⚔️</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'text-gray-500'}`}>Eco Warrior</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 100kg CO₂</p>
+                        </div>
+                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 100 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
+                          {parseFloat(calcularCO2Ahorrado()) >= 100 ? '✓' : '○'}
                         </Badge>
-                        {parseFloat(calcularCO2Ahorrado()) < 100 && (
-                          <>
-                            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                              <div className="bg-green-500 h-2 rounded-full" style={{width: `${Math.min((parseFloat(calcularCO2Ahorrado()) / 100) * 100, 100)}%`}}></div>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-1">{calcularCO2Ahorrado()}/100 kg</p>
-                          </>
-                        )}
                       </CardContent>
                     </Card>
 
-                    {/* Logro 3: Maratonista */}
-                    <Card className={`border-2 ${calcularTotalAlquileres() >= 50 ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
-                      <CardContent className="p-4 text-center">
-                        <div className={`text-3xl mb-2 ${calcularTotalAlquileres() >= 50 ? '' : 'grayscale'}`}>🏃</div>
-                        <h3 className={`font-bold text-sm mb-1 ${calcularTotalAlquileres() >= 50 ? '' : 'text-gray-500'}`}>Maratonista</h3>
-                        <p className={`text-xs mb-2 ${calcularTotalAlquileres() >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>50 alquileres</p>
-                        <Badge className={calcularTotalAlquileres() >= 50 ? 'bg-blue-500 text-white' : 'text-xs'}>
-                          {calcularTotalAlquileres() >= 50 ? 'Desbloqueado' : 'Bloqueado'}
+                    {/* Logro 16: Maestro */}
+                    <Card className={`border-2 ${calcularTotalAlquileres() >= 40 ? 'border-emerald-300 bg-emerald-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularTotalAlquileres() >= 40 ? '' : 'grayscale'}`}>🧙</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 40 ? '' : 'text-gray-500'}`}>Maestro</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 40 ? 'text-gray-600' : 'text-gray-500'}`}>40 alquileres completados</p>
+                        </div>
+                        <Badge className={calcularTotalAlquileres() >= 40 ? 'bg-emerald-500 text-white text-xs' : 'text-xs'}>
+                          {calcularTotalAlquileres() >= 40 ? '✓' : '○'}
                         </Badge>
-                        {calcularTotalAlquileres() < 50 && (
-                          <>
-                            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                              <div className="bg-blue-500 h-2 rounded-full" style={{width: `${Math.min((calcularTotalAlquileres() / 50) * 100, 100)}%`}}></div>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-1">{calcularTotalAlquileres()}/50</p>
-                          </>
-                        )}
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 17: Velocista */}
+                    <Card className={`border-2 ${calcularKmTotales() >= 500 ? 'border-yellow-300 bg-yellow-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularKmTotales() >= 500 ? '' : 'grayscale'}`}>🏎️</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 500 ? '' : 'text-gray-500'}`}>Velocista</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 500 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 500km</p>
+                        </div>
+                        <Badge className={calcularKmTotales() >= 500 ? 'bg-yellow-500 text-white text-xs' : 'text-xs'}>
+                          {calcularKmTotales() >= 500 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 18: Maratonista */}
+                    <Card className={`border-2 ${calcularTotalAlquileres() >= 50 ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularTotalAlquileres() >= 50 ? '' : 'grayscale'}`}>🏃</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 50 ? '' : 'text-gray-500'}`}>Maratonista</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 50 ? 'text-gray-600' : 'text-gray-500'}`}>50 alquileres completados</p>
+                        </div>
+                        <Badge className={calcularTotalAlquileres() >= 50 ? 'bg-blue-500 text-white text-xs' : 'text-xs'}>
+                          {calcularTotalAlquileres() >= 50 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 19: Eco Leyenda */}
+                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 200 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 200 ? '' : 'grayscale'}`}>👑</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 200 ? '' : 'text-gray-500'}`}>Eco Leyenda</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 200 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 200kg CO₂</p>
+                        </div>
+                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 200 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
+                          {parseFloat(calcularCO2Ahorrado()) >= 200 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 20: Súper Viajero */}
+                    <Card className={`border-2 ${calcularKmTotales() >= 1000 ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularKmTotales() >= 1000 ? '' : 'grayscale'}`}>🚁</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularKmTotales() >= 1000 ? '' : 'text-gray-500'}`}>Súper Viajero</h3>
+                          <p className={`text-xs ${calcularKmTotales() >= 1000 ? 'text-gray-600' : 'text-gray-500'}`}>Recorre 1000km</p>
+                        </div>
+                        <Badge className={calcularKmTotales() >= 1000 ? 'bg-red-500 text-white text-xs' : 'text-xs'}>
+                          {calcularKmTotales() >= 1000 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 21: Centurión */}
+                    <Card className={`border-2 ${calcularTotalAlquileres() >= 100 ? 'border-gold-300 bg-yellow-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${calcularTotalAlquileres() >= 100 ? '' : 'grayscale'}`}>🏛️</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${calcularTotalAlquileres() >= 100 ? '' : 'text-gray-500'}`}>Centurión</h3>
+                          <p className={`text-xs ${calcularTotalAlquileres() >= 100 ? 'text-gray-600' : 'text-gray-500'}`}>100 alquileres completados</p>
+                        </div>
+                        <Badge className={calcularTotalAlquileres() >= 100 ? 'bg-yellow-500 text-white text-xs' : 'text-xs'}>
+                          {calcularTotalAlquileres() >= 100 ? '✓' : '○'}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+
+                    {/* Logro 22: Eco Dios */}
+                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 500 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                      <CardContent className="p-2 flex items-center space-x-3">
+                        <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 500 ? '' : 'grayscale'}`}>🌍</div>
+                        <div className="flex-1">
+                          <h3 className={`font-bold text-xs ${parseFloat(calcularCO2Ahorrado()) >= 500 ? '' : 'text-gray-500'}`}>Eco Dios</h3>
+                          <p className={`text-xs ${parseFloat(calcularCO2Ahorrado()) >= 500 ? 'text-gray-600' : 'text-gray-500'}`}>Ahorra 500kg CO₂</p>
+                        </div>
+                        <Badge className={parseFloat(calcularCO2Ahorrado()) >= 500 ? 'bg-green-500 text-white text-xs' : 'text-xs'}>
+                          {parseFloat(calcularCO2Ahorrado()) >= 500 ? '✓' : '○'}
+                        </Badge>
                       </CardContent>
                     </Card>
                   </div>
