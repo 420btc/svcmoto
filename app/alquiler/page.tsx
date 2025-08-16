@@ -308,7 +308,7 @@ export default function AlquilerPage() {
             <Link href="/" className="text-white hover:text-orange-200 mr-4">
               <ArrowLeft className="w-6 h-6" />
             </Link>
-            <h1 className="bangers-regular text-5xl md:text-6xl text-white">{t('rental.title')}</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('rental.title')}</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
             {t('rental.subtitle')}
@@ -325,7 +325,7 @@ export default function AlquilerPage() {
                 <CardHeader>
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <CardTitle className="bangers-regular text-3xl md:text-4xl text-blue-900">{moto.nombre}</CardTitle>
+                      <CardTitle className="bangers-regular text-3xl md:text-4xl text-blue-900 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{moto.nombre}</CardTitle>
                       <Badge variant="secondary" className="mt-2 bg-orange-100 text-orange-800">
                         {moto.tipo}
                       </Badge>
@@ -417,7 +417,7 @@ export default function AlquilerPage() {
       <section className="py-16 bg-blue-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">{t('rental.howItWorks')}</h2>
+            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('rental.howItWorks')}</h2>
             <p className="bangers-regular text-2xl md:text-3xl text-white/90">{t('rental.howItWorksSubtitle')}</p>
           </div>
 
@@ -426,7 +426,7 @@ export default function AlquilerPage() {
               <div className="bg-orange-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
-              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('rental.step1Title')}</h3>
+              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('rental.step1Title')}</h3>
               <p className="text-white/90">{t('rental.step1Description')}</p>
             </div>
 
@@ -434,7 +434,7 @@ export default function AlquilerPage() {
               <div className="bg-orange-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
-              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('rental.step2Title')}</h3>
+              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('rental.step2Title')}</h3>
               <p className="text-white/90">{t('rental.step2Description')}</p>
             </div>
 
@@ -442,7 +442,7 @@ export default function AlquilerPage() {
               <div className="bg-orange-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
-              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('rental.step3Title')}</h3>
+              <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('rental.step3Title')}</h3>
               <p className="text-white/90">{t('rental.step3Description')}</p>
             </div>
           </div>
