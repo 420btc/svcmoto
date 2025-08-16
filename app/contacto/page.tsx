@@ -30,6 +30,8 @@ export default function ContactoPage() {
   })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
+  const [showRoutes, setShowRoutes] = useState(false)
+  const [activeRoute, setActiveRoute] = useState<number | null>(null)
   const router = useRouter()
   const { t } = useTranslation()
   
@@ -119,6 +121,117 @@ export default function ContactoPage() {
           }, 2000)
         }, 1000)
       })
+
+      // Add routes functionality with real street routing
+      const addTouristRoutes = async () => {
+        if (!map.current) return
+
+        // Define waypoints for tourist routes in Málaga
+        const routeWaypoints = {
+          route1: {
+            name: "Ruta 1: Centro Histórico",
+            waypoints: [
+              [lng, lat], // Tienda (punto de partida)
+              [-4.4214, 36.7213], // Plaza de la Constitución
+              [-4.4183, 36.7209], // Catedral de Málaga
+              [-4.4158, 36.7202], // Teatro Romano
+              [-4.4147, 36.7195], // Alcazaba
+              [-4.4203, 36.7184], // Museo Picasso
+              [-4.4234, 36.7198], // Calle Larios
+              [lng, lat] // Vuelta a la tienda
+            ]
+          },
+          route2: {
+            name: "Ruta 2: Playa y Puerto",
+            waypoints: [
+              [lng, lat], // Tienda
+              [-4.4089, 36.7156], // Muelle Uno
+              [-4.4067, 36.7134], // Puerto de Málaga
+              [-4.4023, 36.7089], // Playa de la Malagueta
+              [-4.3989, 36.7067], // Baños del Carmen
+              [-4.4156, 36.7123], // Paseo del Parque
+              [-4.4234, 36.7156], // Plaza de la Marina
+              [lng, lat] // Vuelta a la tienda
+            ]
+          },
+          route3: {
+            name: "Ruta 3: Mirador y Castillo",
+            waypoints: [
+              [lng, lat], // Tienda
+              [-4.4089, 36.7234], // Subida al Castillo
+              [-4.4067, 36.7289], // Castillo de Gibralfaro
+              [-4.4123, 36.7312], // Mirador de Gibralfaro
+              [-4.4178, 36.7267], // Parador de Málaga
+              [-4.4203, 36.7234], // Jardines de Puerta Oscura
+              [-4.4234, 36.7198], // Bajada al centro
+              [lng, lat] // Vuelta a la tienda
+            ]
+          }
+        }
+
+        // Function to get route between waypoints using Mapbox Directions API
+        const getRouteCoordinates = async (waypoints: number[][]) => {
+          try {
+            const waypointsStr = waypoints.map(wp => `${wp[0]},${wp[1]}`).join(';')
+            const response = await fetch(
+              `https://api.mapbox.com/directions/v5/mapbox/cycling/${waypointsStr}?geometries=geojson&access_token=${mapboxToken}`
+            )
+            const data = await response.json()
+            
+            if (data.routes && data.routes[0]) {
+              return data.routes[0].geometry.coordinates
+            }
+            return waypoints // Fallback to straight lines if API fails
+          } catch (error) {
+            console.warn('Error fetching route:', error)
+            return waypoints // Fallback to straight lines
+          }
+        }
+
+        // Create routes with real street routing
+        for (const [routeId, route] of Object.entries(routeWaypoints)) {
+          const sourceId = `route-${routeId}`
+          const layerId = `route-${routeId}-layer`
+
+          // Get real street coordinates
+          const streetCoordinates = await getRouteCoordinates(route.waypoints)
+
+          // Add source
+          map.current?.addSource(sourceId, {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: { name: route.name },
+              geometry: {
+                type: 'LineString',
+                coordinates: streetCoordinates
+              }
+            }
+          })
+
+          // Add layer
+          map.current?.addLayer({
+            id: layerId,
+            type: 'line',
+            source: sourceId,
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#f97316', // Orange color
+              'line-width': 4,
+              'line-opacity': 0.8
+            }
+          })
+
+          // Initially hide all routes
+          map.current?.setLayoutProperty(layerId, 'visibility', 'none')
+        }
+      }
+
+      // Add routes after map loads
+      map.current?.on('load', addTouristRoutes)
     }).catch((error) => {
       console.warn("Error loading mapbox-gl:", error)
     })
@@ -477,10 +590,59 @@ export default function ContactoPage() {
 
           <div className="mt-8 text-center">
             <p className="text-gray-600 mb-4">{t('contact.nearbyLandmarks')}</p>
-            <Button className="bg-orange-500 hover:bg-orange-600 text-white">
-              <MapPin className="w-4 h-4 mr-2" />
-              {t('contact.viewOnMaps')}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button 
+                onClick={() => setShowRoutes(!showRoutes)}
+                className="bg-orange-500 hover:bg-orange-600 text-white"
+              >
+                🗺️ Ver Rutas
+              </Button>
+              <Button className="bg-blue-500 hover:bg-blue-600 text-white">
+                <MapPin className="w-4 h-4 mr-2" />
+                {t('contact.viewOnMaps')}
+              </Button>
+            </div>
+            
+            {showRoutes && (
+              <div className="mt-6 bg-white rounded-lg shadow-lg p-4 max-w-md mx-auto">
+                <h3 className="bangers-regular text-lg text-blue-900 mb-4">Rutas Turísticas por Málaga</h3>
+                <div className="space-y-2">
+                  {[
+                    { id: 1, name: "Ruta 1: Centro Histórico", description: "Catedral, Alcazaba, Museo Picasso" },
+                    { id: 2, name: "Ruta 2: Playa y Puerto", description: "Muelle Uno, Playa Malagueta, Puerto" },
+                    { id: 3, name: "Ruta 3: Mirador y Castillo", description: "Gibralfaro, Mirador, Parador" }
+                  ].map((route) => (
+                    <button
+                      key={route.id}
+                      onClick={() => {
+                        setActiveRoute(activeRoute === route.id ? null : route.id)
+                        if (map.current) {
+                          // Hide all routes first
+                          for (let i = 1; i <= 3; i++) {
+                            map.current.setLayoutProperty(`route-route${i}-layer`, 'visibility', 'none')
+                          }
+                          // Show selected route
+                          if (activeRoute !== route.id) {
+                            map.current.setLayoutProperty(`route-route${route.id}-layer`, 'visibility', 'visible')
+                          }
+                        }
+                      }}
+                      className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                        activeRoute === route.id 
+                          ? 'bg-orange-100 border-orange-500 text-orange-700' 
+                          : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                      }`}
+                    >
+                      <div className="font-semibold text-sm">{route.name}</div>
+                      <div className="text-xs text-gray-600">{route.description}</div>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-3 text-center">
+                  Todas las rutas comienzan y terminan en nuestra tienda
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>
