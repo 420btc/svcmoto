@@ -10,6 +10,17 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useTranslation } from "@/contexts/TranslationContext"
 import { LanguageToggle } from "@/components/LanguageToggle"
+import dynamic from "next/dynamic"
+
+// Importar el visor 3D dinámicamente para evitar problemas de SSR
+const Model3DViewer = dynamic(() => import('@/components/Model3DViewer'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+    </div>
+  )
+})
 
 interface Reserva {
   id: string
@@ -34,6 +45,7 @@ export default function AlquilerPage() {
   const [duracion, setDuracion] = useState<number>(1)
   const [reservas, setReservas] = useState<Reserva[]>([])
   const [showConfirmation, setShowConfirmation] = useState(false)
+  const [show3D, setShow3D] = useState<{[key: number]: boolean}>({})
   const router = useRouter()
   const { t } = useTranslation()
   
@@ -96,6 +108,13 @@ export default function AlquilerPage() {
     }
     setSelectedMoto(moto)
     setShowReservaModal(true)
+  }
+
+  const toggle3DView = (motoId: number) => {
+    setShow3D(prev => ({
+      ...prev,
+      [motoId]: !prev[motoId]
+    }))
   }
 
   const realizarReserva = () => {
@@ -376,15 +395,29 @@ export default function AlquilerPage() {
                     </div>
                   </div>
 
-                  {/* Imagen de la moto */}
-                  <div className="w-full h-48 bg-transparent rounded-lg overflow-hidden mb-4">
-                    <Image
-                      src={moto.imagen}
-                      alt={moto.nombre}
-                      width={400}
-                      height={200}
-                      className="w-full h-full object-contain"
-                    />
+                  {/* Imagen de la moto o Visor 3D */}
+                  <div className="w-full h-48 bg-transparent rounded-lg overflow-hidden mb-4 relative">
+                    {show3D[moto.id] && moto.nombre === "City Explorer" ? (
+                      <Model3DViewer modelPath="/oxwin3d.glb" />
+                    ) : (
+                      <Image
+                        src={moto.imagen}
+                        alt={moto.nombre}
+                        width={400}
+                        height={200}
+                        className="w-full h-full object-contain"
+                      />
+                    )}
+                    
+                    {/* Botón Ver 3D solo para City Explorer */}
+                    {moto.nombre === "City Explorer" && (
+                      <button
+                        onClick={() => toggle3DView(moto.id)}
+                        className="absolute top-2 right-2 bg-orange-500 hover:bg-orange-600 text-white text-xs px-2 py-1 rounded-md transition-colors shadow-lg"
+                      >
+                        {show3D[moto.id] ? "Ver Foto" : "Ver 3D"}
+                      </button>
+                    )}
                   </div>
                 </CardHeader>
 
