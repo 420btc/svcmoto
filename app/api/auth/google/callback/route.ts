@@ -69,8 +69,8 @@ export async function GET(request: NextRequest) {
             // Marcar que el usuario acaba de conectarse
             localStorage.setItem('justConnected', 'true');
             
-            // Redirigir a la página principal
-            window.location.href = '/';
+            // Redirigir al perfil del usuario
+            window.location.href = '/perfil';
           </script>
           <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
             <h2>Autenticación exitosa</h2>
