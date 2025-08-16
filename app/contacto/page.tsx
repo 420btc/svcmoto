@@ -722,11 +722,21 @@ export default function ContactoPage() {
                 }}
                 className="bg-orange-500 hover:bg-orange-600 text-white"
               >
-                🗺️ Ver Rutas
+                <span className="mr-2">🗺️</span>
+                Ver Rutas
               </Button>
-              <Button className="bg-blue-500 hover:bg-blue-600 text-white">
-                <MapPin className="w-4 h-4 mr-2" />
-                {t('contact.viewOnMaps')}
+              <Button 
+                asChild
+                className="bg-blue-500 hover:bg-blue-600 text-white"
+              >
+                <a 
+                  href="https://www.google.com/local/place/fid/0xd72f7a34cd172ef:0x9e529a00319757e7/photosphere?iu=https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid%3DjzqsEBo9Wc18V7gLt5plMw%26cb_client%3Dsearch.gws-prod.gps%26yaw%3D176.95654%26pitch%3D0%26thumbfov%3D100%26w%3D0%26h%3D0&ik=CAISFmp6cXNFQm85V2MxOFY3Z0x0NXBsTXc%3D&sa=X&ved=2ahUKEwjLv4K-p5CPAxWFTaQEHcfrLH4Qpx96BAhWEBA"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MapPin className="w-4 h-4 mr-2" />
+                  {t('contact.viewOnMaps')}
+                </a>
               </Button>
             </div>
             

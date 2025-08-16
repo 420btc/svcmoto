@@ -579,12 +579,17 @@ export default function Home() {
                   </div>
                   
                   {/* Cash */}
-                  <div className="bg-white rounded-lg p-1 shadow-lg border border-gray-200 w-12 h-8 flex items-center justify-center">
-                    <svg viewBox="0 0 48 32" className="w-10 h-6">
-                      <rect width="48" height="32" fill="#22C55E"/>
-                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold" fontFamily="Arial, sans-serif">CASH</text>
-                    </svg>
-                  </div>
+                   <div className="bg-white rounded-lg p-1 shadow-lg border border-gray-200 w-12 h-8 flex items-center justify-center">
+                      <svg viewBox="0 0 48 32" className="w-10 h-6">
+                        <defs>
+                          <filter id="textShadow1" x="-50%" y="-50%" width="200%" height="200%">
+                            <feDropShadow dx="1" dy="1" stdDeviation="0.5" floodColor="rgba(0,0,0,0.3)"/>
+                          </filter>
+                        </defs>
+                        <rect width="48" height="32" fill="#22C55E"/>
+                        <text x="24" y="20" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold" fontFamily="Arial, sans-serif" filter="url(#textShadow1)">CASH</text>
+                      </svg>
+                    </div>
                   
                   {/* Bitcoin */}
                   <div className="bg-white rounded-lg p-1 shadow-lg border border-gray-200 w-12 h-8 flex items-center justify-center">
@@ -661,12 +666,17 @@ export default function Home() {
                   </div>
                   
                   {/* Cash */}
-                  <div className="bg-white rounded-lg p-1 shadow-lg border border-gray-200 w-12 h-8 flex items-center justify-center">
-                    <svg viewBox="0 0 48 32" className="w-10 h-6">
-                      <rect width="48" height="32" fill="#22C55E"/>
-                      <text x="24" y="20" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold" fontFamily="Arial, sans-serif">CASH</text>
-                    </svg>
-                  </div>
+                   <div className="bg-white rounded-lg p-1 shadow-lg border border-gray-200 w-12 h-8 flex items-center justify-center">
+                      <svg viewBox="0 0 48 32" className="w-10 h-6">
+                        <defs>
+                          <filter id="textShadow2" x="-50%" y="-50%" width="200%" height="200%">
+                            <feDropShadow dx="1" dy="1" stdDeviation="0.5" floodColor="rgba(0,0,0,0.3)"/>
+                          </filter>
+                        </defs>
+                        <rect width="48" height="32" fill="#22C55E"/>
+                        <text x="24" y="20" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold" fontFamily="Arial, sans-serif" filter="url(#textShadow2)">CASH</text>
+                      </svg>
+                    </div>
                   
                   {/* Bitcoin */}
                   <div className="bg-white rounded-lg p-1 shadow-lg border border-gray-200 w-12 h-8 flex items-center justify-center">
