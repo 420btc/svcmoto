@@ -509,7 +509,7 @@ export default function ContactoPage() {
             <Link href="/" className="text-white hover:text-orange-200 mr-4">
               <ArrowLeft className="w-6 h-6" />
             </Link>
-            <h1 className="bangers-regular text-5xl md:text-6xl text-white">{t('contact.pageTitle')}</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contact.pageTitle')}</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
             {t('contact.pageSubtitle')}

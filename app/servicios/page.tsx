@@ -454,7 +454,7 @@ export default function ServiciosPage() {
             <Card className="bg-white/10 backdrop-blur border-white/20">
               <CardContent className="p-6 text-center">
                 <Shield className="w-12 h-12 text-orange-500 mx-auto mb-4" />
-                <h3 className="bangers-regular text-xl font-bold text-white mb-2">{t('services.qualityGuarantee')}</h3>
+                <h3 className="bangers-regular text-xl font-bold text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.qualityGuarantee')}</h3>
                 <p className="text-white/90 text-sm">
                   {t('services.qualityDescription')}
                 </p>
@@ -464,7 +464,7 @@ export default function ServiciosPage() {
             <Card className="bg-white/10 backdrop-blur border-white/20">
               <CardContent className="p-6 text-center">
                 <CheckCircle className="w-12 h-12 text-orange-500 mx-auto mb-4" />
-                <h3 className="bangers-regular text-xl font-bold text-white mb-2">{t('services.originalParts')}</h3>
+                <h3 className="bangers-regular text-xl font-bold text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.originalParts')}</h3>
                 <p className="text-white/90 text-sm">
                   {t('services.originalPartsDescription')}
                 </p>
@@ -474,7 +474,7 @@ export default function ServiciosPage() {
             <Card className="bg-white/10 backdrop-blur border-white/20">
               <CardContent className="p-6 text-center">
                 <Clock className="w-12 h-12 text-orange-500 mx-auto mb-4" />
-                <h3 className="bangers-regular text-xl font-bold text-white mb-2">{t('services.fastService')}</h3>
+                <h3 className="bangers-regular text-xl font-bold text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.fastService')}</h3>
                 <p className="text-white/90 text-sm">
                   {t('services.fastServiceDescription')}
                 </p>
