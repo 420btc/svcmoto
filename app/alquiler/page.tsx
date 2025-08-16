@@ -717,29 +717,30 @@ export default function AlquilerPage() {
                          </div>
                        </div>
                        
-                       <div className="mt-3 md:mt-4 p-2 md:p-3 bg-white/10 rounded-lg">
-                         <div className="flex items-center justify-between">
-                           <span className="text-blue-200 text-xs md:text-sm">{t('rental.estimatedKm')}</span>
-                           <span className="font-bold text-orange-300 text-sm md:text-base">{calcularKmEstimados()} km</span>
-                         </div>
-                       </div>
                      </div>
                      
-                     <div className="text-center lg:text-right">
-                       <div className="bg-white/10 rounded-2xl p-4 md:p-6 mb-3 md:mb-4">
-                         <p className="text-blue-200 text-xs md:text-sm mb-1 md:mb-2">{t('rental.totalPrice')}</p>
-                         <p className="bangers-regular text-2xl md:text-4xl text-orange-300">{calcularPrecio()}€</p>
-                         <p className="text-xs text-blue-300 mt-1">{t('rental.vatIncluded')}</p>
+                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mt-4">
+                       <div className="p-3 bg-white/10 rounded-lg flex-1">
+                         <div className="flex items-center justify-between">
+                           <span className="text-blue-200 text-sm">{t('rental.estimatedKm')}</span>
+                           <span className="font-bold text-orange-300 text-base">{calcularKmEstimados()} km</span>
+                         </div>
                        </div>
                        
-                       <Button 
-                         onClick={realizarReserva}
-                         className="w-full bg-orange-500 hover:bg-orange-600 text-white bangers-regular text-lg md:text-xl py-3 md:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-                       >
-                         {t('rental.confirmReservation')}
-                       </Button>
-                       
-                       <p className="text-xs text-blue-300 mt-2">{t('rental.instantConfirmation')}</p>
+                       <div className="text-center lg:text-right flex-1">
+                         <div className="bg-white/10 rounded-xl p-4 mb-4 shadow-md w-40 h-36 flex flex-col justify-center items-center mx-auto">
+                            <p className="text-blue-200 text-xs mb-1">{t('rental.totalPrice')}</p>
+                            <p className="bangers-regular text-3xl text-orange-300">{calcularPrecio()}€</p>
+                            <p className="text-blue-200 text-xs">{t('rental.vatIncluded')}</p>
+                          </div>
+                         
+                         <Button 
+                           onClick={realizarReserva}
+                           className="w-full bg-orange-500 hover:bg-orange-600 text-white bangers-regular text-xl md:text-2xl py-4 md:py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                         >
+                           {t('rental.confirmReservation')}
+                         </Button>
+                       </div>
                      </div>
                    </div>
                  </div>
