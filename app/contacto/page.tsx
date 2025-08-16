@@ -708,7 +708,18 @@ export default function ContactoPage() {
             <p className="text-gray-600 mb-4">{t('contact.nearbyLandmarks')}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
-                onClick={() => setShowRoutes(!showRoutes)}
+                onClick={() => {
+                  setShowRoutes(!showRoutes)
+                  // Auto-scroll to routes panel on mobile when opening
+                   if (!showRoutes && window.innerWidth <= 768) {
+                     setTimeout(() => {
+                       const routesPanel = document.querySelector('.routes-panel')
+                       if (routesPanel) {
+                         routesPanel.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                       }
+                     }, 200)
+                   }
+                }}
                 className="bg-orange-500 hover:bg-orange-600 text-white"
               >
                 🗺️ Ver Rutas
@@ -720,7 +731,7 @@ export default function ContactoPage() {
             </div>
             
             {showRoutes && (
-              <div className="mt-6 bg-white rounded-lg shadow-lg p-4 max-w-md mx-auto">
+              <div className="routes-panel mt-6 bg-white rounded-lg shadow-lg p-4 max-w-md mx-auto">
                 <h3 className="bangers-regular text-lg text-blue-900 mb-4">Rutas Turísticas por Málaga</h3>
                 <div className="space-y-2">
                   {[
@@ -752,6 +763,15 @@ export default function ContactoPage() {
                                 marker.addTo(map.current!)
                               })
                             }
+                            // Auto-scroll to map on mobile when selecting a route
+                               if (window.innerWidth <= 768) {
+                                  setTimeout(() => {
+                                    const mapSection = document.querySelector('h2')?.closest('section')
+                                    if (mapSection) {
+                                      mapSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                                    }
+                                  }, 100)
+                                }
                           }
                         }
                       }}
