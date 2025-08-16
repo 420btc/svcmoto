@@ -132,12 +132,12 @@ export default function ContactoPage() {
             name: "Ruta 1: Centro Histórico",
             waypoints: [
               [lng, lat], // Tienda (punto de partida)
-              [-4.4214, 36.7213], // Plaza de la Constitución
-              [-4.4183, 36.7209], // Catedral de Málaga
-              [-4.4158, 36.7202], // Teatro Romano
-              [-4.4147, 36.7195], // Alcazaba
-              [-4.4203, 36.7184], // Museo Picasso
-              [-4.4234, 36.7198], // Calle Larios
+              [-4.421982, 36.721078], // Plaza de la Constitución
+              [-4.419311, 36.720169], // Catedral de Málaga
+              [-4.416890, 36.721190], // Teatro Romano
+              [-4.415560, 36.721390], // Alcazaba
+              [-4.418330, 36.721670], // Museo Picasso (Palacio de Buenavista)
+              [-4.421340, 36.718170], // Calle Marqués de Larios (punto central)
               [lng, lat] // Vuelta a la tienda
             ]
           },
@@ -145,25 +145,25 @@ export default function ContactoPage() {
             name: "Ruta 2: Playa y Puerto",
             waypoints: [
               [lng, lat], // Tienda
-              [-4.4089, 36.7156], // Muelle Uno
-              [-4.4067, 36.7134], // Puerto de Málaga
-              [-4.4023, 36.7089], // Playa de la Malagueta
-              [-4.3989, 36.7067], // Baños del Carmen
-              [-4.4156, 36.7123], // Paseo del Parque
-              [-4.4234, 36.7156], // Plaza de la Marina
+              [-4.413670, 36.716830], // Muelle Uno (muelle comercial)
+              [-4.420500, 36.717200], // Puerto de Málaga (zona del puerto central / morro del dique)
+              [-4.406560, 36.719200], // Playa de la Malagueta (entrada/sector central)
+              [-4.382680, 36.721160], // Baños del Carmen (El Pedregalejo / Balneario)
+              [-4.415872, 36.719056], // Paseo del Parque (promenade junto al parque)
+              [-4.420410, 36.717690], // Plaza de la Marina (frente al puerto / acceso principal)
               [lng, lat] // Vuelta a la tienda
             ]
           },
           route3: {
-            name: "Ruta 3: Mirador y Castillo",
+            name: "Ruta 3: Cultura y Mirador",
             waypoints: [
               [lng, lat], // Tienda
-              [-4.4089, 36.7234], // Subida al Castillo
-              [-4.4067, 36.7289], // Castillo de Gibralfaro
-              [-4.4123, 36.7312], // Mirador de Gibralfaro
-              [-4.4178, 36.7267], // Parador de Málaga
-              [-4.4203, 36.7234], // Jardines de Puerta Oscura
-              [-4.4234, 36.7198], // Bajada al centro
+              [-4.409938, 36.720974], // Inicio/Subida al Castillo (Paseo de Reding / acceso subida)
+              [-4.410850, 36.723500], // Mirador de Gibralfaro (punto panorámico)
+              [-4.420500, 36.719800], // Museo Carmen Thyssen Málaga
+              [-4.417200, 36.720300], // Centro de Arte Contemporáneo (CAC Málaga)
+              [-4.414540, 36.721140], // Jardines de Puerta Oscura (jardines en la ladera)
+              [-4.421340, 36.718170], // Bajada al centro (Calle Larios / acceso centro)
               [lng, lat] // Vuelta a la tienda
             ]
           }
@@ -188,15 +188,45 @@ export default function ContactoPage() {
           }
         }
 
+        // Define points of interest for each route with corrected coordinates and descriptions
+        const routePOIs = {
+          route1: [
+            { name: "Plaza de la Constitución", coords: [-4.421982, 36.721078] as [number, number], icon: "🏛️", description: "Plaza principal del centro histórico, corazón de la ciudad" },
+            { name: "Catedral de Málaga", coords: [-4.419311, 36.720169] as [number, number], icon: "⛪", description: "La Manquita - Catedral renacentista con una torre inacabada" },
+            { name: "Teatro Romano", coords: [-4.416890, 36.721190] as [number, number], icon: "🏛️", description: "Teatro romano del siglo I a.C., vestigio de la Málaga antigua" },
+            { name: "Alcazaba", coords: [-4.415560, 36.721390] as [number, number], icon: "🏰", description: "Fortaleza árabe del siglo XI con jardines y vistas panorámicas" },
+            { name: "Museo Picasso", coords: [-4.418330, 36.721670] as [number, number], icon: "🎨", description: "Museo dedicado al artista malagueño Pablo Picasso" },
+            { name: "Calle Larios", coords: [-4.421340, 36.718170] as [number, number], icon: "🛍️", description: "Calle peatonal principal para compras y paseo" }
+          ],
+          route2: [
+            { name: "Muelle Uno", coords: [-4.413670, 36.716830] as [number, number], icon: "⚓", description: "Centro comercial y gastronómico junto al puerto" },
+            { name: "Puerto de Málaga", coords: [-4.420500, 36.717200] as [number, number], icon: "🚢", description: "Puerto marítimo con actividad comercial y de cruceros" },
+            { name: "Playa de la Malagueta", coords: [-4.406560, 36.719200] as [number, number], icon: "🏖️", description: "Playa urbana principal de Málaga, ideal para relajarse" },
+            { name: "Baños del Carmen", coords: [-4.382680, 36.721160] as [number, number], icon: "🏊", description: "Balneario histórico en El Pedregalejo, zona de marisquerías" },
+            { name: "Paseo del Parque", coords: [-4.415872, 36.719056] as [number, number], icon: "🌳", description: "Parque urbano con jardines tropicales y zona de paseo" },
+            { name: "Plaza de la Marina", coords: [-4.420410, 36.717690] as [number, number], icon: "⛵", description: "Plaza frente al puerto, punto de encuentro y eventos" }
+          ],
+          route3: [
+            { name: "Subida al Castillo", coords: [-4.409938, 36.720974] as [number, number], icon: "⬆️", description: "Inicio del ascenso hacia el mirador con vistas panorámicas de la ciudad" },
+            { name: "Mirador de Gibralfaro", coords: [-4.410850, 36.723500] as [number, number], icon: "👁️", description: "Mirador con las mejores vistas panorámicas de Málaga, puerto y costa" },
+            { name: "Museo Carmen Thyssen", coords: [-4.420500, 36.719800] as [number, number], icon: "🎨", description: "Museo de arte con obras de maestros españoles del siglo XIX" },
+            { name: "Centro de Arte Contemporáneo", coords: [-4.417200, 36.720300] as [number, number], icon: "🖼️", description: "CAC Málaga - Arte contemporáneo y exposiciones temporales" },
+            { name: "Jardines de Puerta Oscura", coords: [-4.414540, 36.721140] as [number, number], icon: "🌺", description: "Jardines históricos con vistas a la ciudad y zona de descanso" },
+            { name: "Bajada al centro", coords: [-4.421340, 36.718170] as [number, number], icon: "⬇️", description: "Regreso al centro histórico por la famosa Calle Larios" }
+          ]
+        }
+
         // Create routes with real street routing
         for (const [routeId, route] of Object.entries(routeWaypoints)) {
           const sourceId = `route-${routeId}`
           const layerId = `route-${routeId}-layer`
+          const poisSourceId = `pois-${routeId}`
+          const poisLayerId = `pois-${routeId}-layer`
 
           // Get real street coordinates
           const streetCoordinates = await getRouteCoordinates(route.waypoints)
 
-          // Add source
+          // Add route source
           map.current?.addSource(sourceId, {
             type: 'geojson',
             data: {
@@ -209,7 +239,7 @@ export default function ContactoPage() {
             }
           })
 
-          // Add layer
+          // Add route layer
           map.current?.addLayer({
             id: layerId,
             type: 'line',
@@ -225,7 +255,93 @@ export default function ContactoPage() {
             }
           })
 
-          // Initially hide all routes
+          // Note: Removed POIs layer to avoid duplicate markers
+          // Only using custom HTML markers below
+
+          // Create custom markers for POIs - use waypoint coordinates to ensure alignment
+          const waypointCoords = route.waypoints.slice(1, -1) // Exclude start and end (tienda)
+          
+          waypointCoords.forEach((coords, index) => {
+            const poi = routePOIs[routeId as keyof typeof routePOIs][index]
+            if (!poi) return
+            
+            const markerElement = document.createElement('div')
+            markerElement.className = `poi-marker poi-marker-${routeId}`
+            markerElement.innerHTML = `
+               <div style="
+                 background-color: #f97316;
+                 border-radius: 50%;
+                 width: 36px;
+                 height: 36px;
+                 display: flex;
+                 align-items: center;
+                 justify-content: center;
+                 font-size: 16px;
+                 font-weight: bold;
+                 color: white;
+                 border: 3px solid white;
+                 box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+                 cursor: pointer;
+                 transition: all 0.2s ease;
+                 z-index: 1000;
+               " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">${index + 1}</div>
+             `
+
+            // Create marker using waypoint coordinates to ensure alignment
+              import('mapbox-gl').then((mapboxgl) => {
+                // Add click event to show POI info with description
+                markerElement.addEventListener('click', (e) => {
+                  e.stopPropagation()
+                  // Create popup content with description - mobile optimized
+                   const isMobile = window.innerWidth <= 768
+                   const popupContent = `
+                     <div style="text-align: center; padding: ${isMobile ? '8px' : '12px'}; max-width: ${isMobile ? '200px' : '250px'};">
+                       <div style="font-size: ${isMobile ? '20px' : '24px'}; margin-bottom: ${isMobile ? '4px' : '6px'};">${poi.icon}</div>
+                       <div style="font-weight: bold; color: #1e40af; font-size: ${isMobile ? '14px' : '16px'}; margin-bottom: ${isMobile ? '3px' : '4px'};">${poi.name}</div>
+                       <div style="font-size: ${isMobile ? '11px' : '13px'}; color: #374151; margin-bottom: ${isMobile ? '4px' : '6px'}; line-height: 1.3;">${poi.description || 'Punto de interés en la ruta turística'}</div>
+                       <div style="font-size: ${isMobile ? '9px' : '11px'}; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: ${isMobile ? '3px' : '4px'};">Punto ${index + 1} - ${route.name}</div>
+                     </div>
+                   `
+                  
+                  // Create and add popup with auto-close - mobile responsive
+                    const popup = new mapboxgl.default.Popup({ 
+                      closeOnClick: true, 
+                      closeButton: true,
+                      maxWidth: isMobile ? '220px' : '280px',
+                      offset: isMobile ? 15 : 25,
+                      className: 'custom-popup'
+                    })
+                     .setLngLat(coords as [number, number])
+                     .setHTML(popupContent)
+                     .addTo(map.current!)
+                   
+                   // Auto-close popup after 3 seconds
+                   setTimeout(() => {
+                     if (popup.isOpen()) {
+                       popup.remove()
+                     }
+                   }, 3000)
+                })
+
+                // Add larger click area for easier interaction
+                markerElement.style.padding = '8px'
+                markerElement.style.margin = '-8px'
+
+                const marker = new mapboxgl.default.Marker(markerElement)
+                  .setLngLat(coords as [number, number])
+
+                // Store marker reference for show/hide functionality
+                if (!(window as any).routeMarkers) {
+                  (window as any).routeMarkers = {}
+                }
+                if (!(window as any).routeMarkers[routeId]) {
+                  (window as any).routeMarkers[routeId] = []
+                }
+                (window as any).routeMarkers[routeId].push(marker)
+              })
+          })
+
+          // Initially hide all routes and POIs
           map.current?.setLayoutProperty(layerId, 'visibility', 'none')
         }
       }
@@ -610,20 +726,32 @@ export default function ContactoPage() {
                   {[
                     { id: 1, name: "Ruta 1: Centro Histórico", description: "Catedral, Alcazaba, Museo Picasso" },
                     { id: 2, name: "Ruta 2: Playa y Puerto", description: "Muelle Uno, Playa Malagueta, Puerto" },
-                    { id: 3, name: "Ruta 3: Mirador y Castillo", description: "Gibralfaro, Mirador, Parador" }
+                    { id: 3, name: "Ruta 3: Cultura y Mirador", description: "Mirador Gibralfaro, Museos, Arte" }
                   ].map((route) => (
                     <button
                       key={route.id}
                       onClick={() => {
                         setActiveRoute(activeRoute === route.id ? null : route.id)
                         if (map.current) {
-                          // Hide all routes first
+                          // Hide all routes and POIs first
                           for (let i = 1; i <= 3; i++) {
                             map.current.setLayoutProperty(`route-route${i}-layer`, 'visibility', 'none')
+                            // Hide POI markers
+                            if ((window as any).routeMarkers && (window as any).routeMarkers[`route${i}`]) {
+                              (window as any).routeMarkers[`route${i}`].forEach((marker: any) => {
+                                marker.remove()
+                              })
+                            }
                           }
-                          // Show selected route
+                          // Show selected route and POIs
                           if (activeRoute !== route.id) {
                             map.current.setLayoutProperty(`route-route${route.id}-layer`, 'visibility', 'visible')
+                            // Show POI markers for selected route
+                            if ((window as any).routeMarkers && (window as any).routeMarkers[`route${route.id}`]) {
+                              (window as any).routeMarkers[`route${route.id}`].forEach((marker: any) => {
+                                marker.addTo(map.current!)
+                              })
+                            }
                           }
                         }
                       }}
