@@ -337,7 +337,7 @@ export default function PerfilPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center mb-6">
             <User className="w-8 h-8 text-white mr-4" />
-            <h1 className="bangers-regular text-5xl md:text-6xl text-white">{t('profile.title')}</h1>
+            <h1 className="bangers-regular text-5xl md:text-6xl text-white drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('profile.title')}</h1>
           </div>
           <p className="text-xl text-white/90 max-w-3xl">
             {t('profile.subtitle')}
@@ -457,7 +457,12 @@ export default function PerfilPage() {
                       <div className="text-2xl font-bold text-blue-600">{stats.alquileresCompletados}</div>
                       <div className="text-sm text-gray-600">{t('profile.rentals')}</div>
                     </div>
-                    <div className="text-center p-4 bg-green-50 rounded-lg col-span-2">
+                    <div className="text-center p-4 bg-purple-50 rounded-lg">
+                       <MapPin className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+                       <div className="text-2xl font-bold text-purple-600">{calcularKmTotales()} km</div>
+                       <div className="text-sm text-gray-600">{t('profile.kmTraveled')}</div>
+                     </div>
+                    <div className="text-center p-4 bg-green-50 rounded-lg">
                       <Trophy className="w-8 h-8 text-green-500 mx-auto mb-2" />
                       <div className="text-2xl font-bold text-green-600">{calcularCO2Ahorrado()} kg</div>
                       <div className="text-sm text-gray-600">{t('profile.co2Saved')}</div>
