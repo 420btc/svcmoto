@@ -325,7 +325,7 @@ export default function AlquilerPage() {
                 <CardHeader>
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <CardTitle className="bangers-regular text-3xl md:text-4xl text-blue-900 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{moto.nombre}</CardTitle>
+                      <CardTitle className="bangers-regular text-3xl md:text-4xl text-blue-900">{moto.nombre}</CardTitle>
                       <Badge variant="secondary" className="mt-2 bg-orange-100 text-orange-800">
                         {moto.tipo}
                       </Badge>
@@ -452,7 +452,7 @@ export default function AlquilerPage() {
       {/* CTA Section */}
       <section className="py-16 bg-orange-500">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">{t('rental.readyTitle')}</h2>
+          <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('rental.readyTitle')}</h2>
           <p className="text-xl text-white/90 mb-8">
             {t('rental.readySubtitle')}
           </p>
