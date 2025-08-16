@@ -190,26 +190,70 @@ export default function ServiciosPage() {
               </Link>
             </div>
             
-            {/* Desktop Navigation - Center Column */}
-            <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
-              <Link href="/alquiler" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+            {/* Tablet Navigation - Center Column */}
+            <div className="hidden sm:flex lg:hidden items-center justify-center flex-1 space-x-4">
+              <Link href="/alquiler" className="bangers-regular text-base text-blue-900 hover:text-orange-500 transition-colors">
                 {t('nav.rental')}
               </Link>
-              <Link href="/servicios" className="bangers-regular text-lg md:text-xl text-orange-500 border-b-2 border-orange-500 transition-colors">
+              <Link href="/servicios" className="bangers-regular text-base text-orange-500 border-b-2 border-orange-500 transition-colors">
                 {t('nav.services')}
               </Link>
-              <Link href="/contacto" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+              <Link href="/contacto" className="bangers-regular text-base text-blue-900 hover:text-orange-500 transition-colors">
                 {t('nav.contact')}
               </Link>
               {user && (
-                <Link href="/perfil" className="bangers-regular text-lg md:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                <Link href="/perfil" className="bangers-regular text-base text-blue-900 hover:text-orange-500 transition-colors">
                   {t('nav.profile')}
                 </Link>
               )}
             </div>
             
-            {/* Authentication Section - Right Column */}
-            <div className="hidden md:flex items-center justify-end space-x-4 w-1/4">
+            {/* Tablet Auth Section - Right Column */}
+            <div className="hidden sm:flex lg:hidden items-center justify-end space-x-3 w-1/4">
+               <LanguageToggle />
+               {user ? (
+                 <div className="flex items-center space-x-2">
+                   <span className="text-xs text-blue-900">{user.name}</span>
+                   <Button 
+                     onClick={signOut}
+                     variant="outline" 
+                     size="sm"
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-xs"
+                   >
+                     {t('nav.signOut')}
+                   </Button>
+                 </div>
+               ) : (
+                 <Button 
+                   onClick={signIn}
+                   size="sm"
+                   className="bg-orange-500 hover:bg-orange-600 text-white text-xs"
+                 >
+                   {t('nav.signIn')}
+                 </Button>
+               )}
+            </div>
+
+            {/* Desktop Navigation - Center Column */}
+            <div className="hidden lg:flex items-center justify-center flex-1 space-x-6">
+              <Link href="/alquiler" className="bangers-regular text-lg xl:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                {t('nav.rental')}
+              </Link>
+              <Link href="/servicios" className="bangers-regular text-lg xl:text-xl text-orange-500 border-b-2 border-orange-500 transition-colors">
+                {t('nav.services')}
+              </Link>
+              <Link href="/contacto" className="bangers-regular text-lg xl:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                {t('nav.contact')}
+              </Link>
+              {user && (
+                <Link href="/perfil" className="bangers-regular text-lg xl:text-xl text-blue-900 hover:text-orange-500 transition-colors">
+                  {t('nav.profile')}
+                </Link>
+              )}
+            </div>
+            
+            {/* Desktop Authentication Section - Right Column */}
+            <div className="hidden lg:flex items-center justify-end space-x-4 w-1/4">
                <LanguageToggle />
                {user ? (
                  <div className="flex items-center space-x-4">
@@ -233,7 +277,7 @@ export default function ServiciosPage() {
             </div>
             
             {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center justify-between w-full">
+            <div className="sm:hidden flex items-center justify-between w-full">
               <div></div>
               <div className="flex items-center space-x-2">
                 <LanguageToggle className="p-1" />
@@ -248,7 +292,7 @@ export default function ServiciosPage() {
             </div>
           </div>
           {mobileMenuOpen && (
-            <div className="md:hidden">
+            <div className="sm:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
                 <Link
                   href="/alquiler"
