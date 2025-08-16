@@ -146,7 +146,7 @@ export default function ContactoPage() {
             waypoints: [
               [lng, lat], // Tienda
               [-4.413670, 36.716830], // Muelle Uno (muelle comercial)
-              [-4.420500, 36.717200], // Puerto de Málaga (zona del puerto central / morro del dique)
+              [-4.418696869137278, 36.717006621583664], // Puerto de Málaga (zona del puerto central / morro del dique)
               [-4.406560, 36.719200], // Playa de la Malagueta (entrada/sector central)
               [-4.382680, 36.721160], // Baños del Carmen (El Pedregalejo / Balneario)
               [-4.415872, 36.719056], // Paseo del Parque (promenade junto al parque)
@@ -160,7 +160,7 @@ export default function ContactoPage() {
               [lng, lat], // Tienda
               [-4.409938, 36.720974], // Inicio/Subida al Castillo (Paseo de Reding / acceso subida)
               [-4.410850, 36.723500], // Mirador de Gibralfaro (punto panorámico)
-              [-4.420500, 36.719800], // Museo Carmen Thyssen Málaga
+              [-4.4228895, 36.7215963], // Museo Carmen Thyssen Málaga
               [-4.417200, 36.720300], // Centro de Arte Contemporáneo (CAC Málaga)
               [-4.414540, 36.721140], // Jardines de Puerta Oscura (jardines en la ladera)
               [-4.421340, 36.718170], // Bajada al centro (Calle Larios / acceso centro)
@@ -200,7 +200,7 @@ export default function ContactoPage() {
           ],
           route2: [
             { name: "Muelle Uno", coords: [-4.413670, 36.716830] as [number, number], icon: "⚓", description: "Centro comercial y gastronómico junto al puerto" },
-            { name: "Puerto de Málaga", coords: [-4.420500, 36.717200] as [number, number], icon: "🚢", description: "Puerto marítimo con actividad comercial y de cruceros" },
+            { name: "Puerto de Málaga", coords: [-4.418696869137278, 36.717006621583664] as [number, number], icon: "🚢", description: "Puerto marítimo con actividad comercial y de cruceros" },
             { name: "Playa de la Malagueta", coords: [-4.406560, 36.719200] as [number, number], icon: "🏖️", description: "Playa urbana principal de Málaga, ideal para relajarse" },
             { name: "Baños del Carmen", coords: [-4.382680, 36.721160] as [number, number], icon: "🏊", description: "Balneario histórico en El Pedregalejo, zona de marisquerías" },
             { name: "Paseo del Parque", coords: [-4.415872, 36.719056] as [number, number], icon: "🌳", description: "Parque urbano con jardines tropicales y zona de paseo" },
@@ -209,7 +209,7 @@ export default function ContactoPage() {
           route3: [
             { name: "Subida al Castillo", coords: [-4.409938, 36.720974] as [number, number], icon: "⬆️", description: "Inicio del ascenso hacia el mirador con vistas panorámicas de la ciudad" },
             { name: "Mirador de Gibralfaro", coords: [-4.410850, 36.723500] as [number, number], icon: "👁️", description: "Mirador con las mejores vistas panorámicas de Málaga, puerto y costa" },
-            { name: "Museo Carmen Thyssen", coords: [-4.420500, 36.719800] as [number, number], icon: "🎨", description: "Museo de arte con obras de maestros españoles del siglo XIX" },
+            { name: "Museo Carmen Thyssen", coords: [-4.4228895, 36.7215963] as [number, number], icon: "🎨", description: "Museo de arte con obras de maestros españoles del siglo XIX" },
             { name: "Centro de Arte Contemporáneo", coords: [-4.417200, 36.720300] as [number, number], icon: "🖼️", description: "CAC Málaga - Arte contemporáneo y exposiciones temporales" },
             { name: "Jardines de Puerta Oscura", coords: [-4.414540, 36.721140] as [number, number], icon: "🌺", description: "Jardines históricos con vistas a la ciudad y zona de descanso" },
             { name: "Bajada al centro", coords: [-4.421340, 36.718170] as [number, number], icon: "⬇️", description: "Regreso al centro histórico por la famosa Calle Larios" }

@@ -267,7 +267,7 @@ export default function Home() {
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="bangers-regular text-5xl md:text-7xl text-white mb-6">
+          <h1 className="bangers-regular text-5xl md:text-7xl text-white mb-6 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
             {t('hero.title').split('\n').map((line, index) => (
               <span key={index}>
                 {line}
@@ -281,7 +281,7 @@ export default function Home() {
              {t('hero.subtitle')}
            </p>
           <Link href="/alquiler">
-              <Button size="lg" className="bangers-regular bg-orange-500 hover:bg-orange-600 text-white text-2xl md:text-3xl px-10 py-5">
+              <Button size="lg" className="bangers-regular bg-orange-500 hover:bg-orange-600 text-white text-2xl md:text-3xl px-10 py-5 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
                 {t('hero.cta')}
               </Button>
             </Link>
@@ -383,7 +383,7 @@ export default function Home() {
       <section id="servicios" className="py-16 bg-orange-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4">{t('servicesSection.title')}</h2>
+            <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('servicesSection.title')}</h2>
             <p className="bangers-regular text-2xl md:text-3xl text-white">
               {t('servicesSection.subtitle')}
             </p>
@@ -395,8 +395,8 @@ export default function Home() {
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">1</span>
                 </div>
-                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('services.step1.title')}</h3>
-                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">{t('services.step1.subtitle')}</h4>
+                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.step1.title')}</h3>
+                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.step1.subtitle')}</h4>
                 <p className="text-white/90 text-sm">
                   {t('services.step1.description')}
                 </p>
@@ -408,8 +408,8 @@ export default function Home() {
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">2</span>
                 </div>
-                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('services.step2.title')}</h3>
-                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">{t('services.step2.subtitle')}</h4>
+                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.step2.title')}</h3>
+                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.step2.subtitle')}</h4>
                 <p className="text-white/90 text-sm">
                   {t('services.step2.description')}
                 </p>
@@ -421,8 +421,8 @@ export default function Home() {
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-orange-500">3</span>
                 </div>
-                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2">{t('services.step3.title')}</h3>
-                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2">{t('services.step3.subtitle')}</h4>
+                <h3 className="bangers-regular text-2xl md:text-3xl text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.step3.title')}</h3>
+                <h4 className="bangers-regular text-xl md:text-2xl text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.step3.subtitle')}</h4>
                 <p className="text-white/90 text-sm">
                   {t('services.step3.description')}
                 </p>
