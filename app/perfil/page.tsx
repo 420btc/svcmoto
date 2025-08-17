@@ -1216,6 +1216,10 @@ export default function PerfilPage() {
                 </p>
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
                   <div className="flex justify-between items-center mb-2">
+                    <span className="text-blue-700 text-sm">Fecha:</span>
+                    <span className="font-bold text-blue-900">{completedRental.fecha}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
                     <span className="text-blue-700 text-sm">Duración:</span>
                     <span className="font-bold text-blue-900">{completedRental.duracion}</span>
                   </div>
@@ -1241,7 +1245,7 @@ export default function PerfilPage() {
                     Comparte tu experiencia y gana <strong className="text-orange-600">+200 puntos extra</strong>
                   </p>
                   <Button 
-                    onClick={() => window.open('https://search.google.com/local/writereview?placeid=0xd72f7a34cd172ef:0x9e529a00319757e7', '_blank')}
+                    onClick={() => window.open('https://share.google/OpXKIKXkSPawlDSpw', '_blank')}
                     className="bg-blue-500 hover:bg-blue-600 text-white mb-2 w-full"
                   >
                     ⭐ Dejar Reseña en Google Maps
