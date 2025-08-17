@@ -31,8 +31,11 @@ interface Reserva {
   horaFin: string
   duracion: number
   precio: number
-  estado: 'pendiente' | 'confirmada' | 'completada' | 'cancelada'
+  estado: 'pendiente' | 'en_curso' | 'completada' | 'cancelada'
   kmEstimados: number
+  userId?: string
+  fechaCreacion?: string
+  fechaFinalizacion?: string
 }
 
 export default function AlquilerPage() {
@@ -64,13 +67,30 @@ export default function AlquilerPage() {
     
     const savedUser = localStorage.getItem('user')
     if (savedUser) {
-      setUser(JSON.parse(savedUser))
-    }
-    
-    // Cargar reservas existentes
-    const savedReservas = localStorage.getItem('reservas')
-    if (savedReservas) {
-      setReservas(JSON.parse(savedReservas))
+      const userData = JSON.parse(savedUser)
+      setUser(userData)
+      
+      // Cargar reservas específicas del usuario
+      const userReservasKey = `reservas_${userData.email}`
+      const savedUserReservas = localStorage.getItem(userReservasKey)
+      if (savedUserReservas) {
+        setReservas(JSON.parse(savedUserReservas))
+      } else {
+        // Si no hay reservas específicas del usuario, cargar las generales (compatibilidad)
+        const savedReservas = localStorage.getItem('reservas')
+        if (savedReservas) {
+          const allReservas = JSON.parse(savedReservas)
+          // Filtrar solo las reservas del usuario actual
+          const userReservas = allReservas.filter((reserva: Reserva) => 
+            reserva.userId === userData.email || !reserva.userId // Incluir reservas sin userId para compatibilidad
+          )
+          setReservas(userReservas)
+          // Guardar las reservas del usuario en su clave específica
+          if (userReservas.length > 0) {
+            localStorage.setItem(userReservasKey, JSON.stringify(userReservas))
+          }
+        }
+      }
     }
   }, [])
 
@@ -106,6 +126,21 @@ export default function AlquilerPage() {
       alert(t('rental.loginRequired'))
       return
     }
+    
+    // Verificar sistema anti-trampas
+    const antiCheatKey = `antiCheat_${user.email}`
+    const now = Date.now()
+    const existingAttempts = localStorage.getItem(antiCheatKey)
+    const attempts = existingAttempts ? JSON.parse(existingAttempts) : []
+    
+    // Filtrar intentos de los últimos 5 minutos
+    const recentAttempts = attempts.filter((timestamp: number) => now - timestamp < 5 * 60 * 1000)
+    
+    if (recentAttempts.length >= 3) {
+      alert('Has alcanzado el límite de alquileres. Espera 5 minutos antes de realizar otro alquiler.')
+      return
+    }
+    
     setSelectedMoto(moto)
     setShowReservaModal(true)
   }
@@ -123,6 +158,11 @@ export default function AlquilerPage() {
       return
     }
 
+    if (!user || !user.email) {
+      alert('Error: Usuario no autenticado')
+      return
+    }
+
     const nuevaReserva: Reserva = {
       id: Date.now().toString(),
       motoId: selectedMoto.id,
@@ -132,13 +172,71 @@ export default function AlquilerPage() {
       horaFin: `${parseInt(selectedHora.split(':')[0]) + duracion}:${selectedHora.split(':')[1]}`,
       duracion: duracion,
       precio: calcularPrecio(),
-      estado: 'confirmada',
-      kmEstimados: calcularKmEstimados()
+      estado: 'en_curso',
+      kmEstimados: calcularKmEstimados(),
+      userId: user.email,
+      fechaCreacion: new Date().toISOString()
     }
 
-    const nuevasReservas = [...reservas, nuevaReserva]
-    setReservas(nuevasReservas)
-    localStorage.setItem('reservas', JSON.stringify(nuevasReservas))
+    // Guardar reserva específica del usuario
+    const userReservasKey = `reservas_${user.email}`
+    const existingReservas = localStorage.getItem(userReservasKey)
+    const userReservas = existingReservas ? JSON.parse(existingReservas) : []
+    const nuevasReservas = [...userReservas, nuevaReserva]
+    
+    localStorage.setItem(userReservasKey, JSON.stringify(nuevasReservas))
+    
+    // También mantener compatibilidad con el sistema actual
+    const allReservas = [...reservas, nuevaReserva]
+    setReservas(allReservas)
+    localStorage.setItem('reservas', JSON.stringify(allReservas))
+    
+    // Actualizar estadísticas del usuario
+    const userStatsKey = `userStats_${user.email}`
+    const existingStats = localStorage.getItem(userStatsKey)
+    const currentStats = existingStats ? JSON.parse(existingStats) : { puntosTotales: 0, alquileresCompletados: 0 }
+    
+    // Calcular puntos: 100 puntos base + 15 puntos por euro
+    const puntosGanados = 100 + (calcularPrecio() * 15)
+    const newStats = {
+      puntosTotales: currentStats.puntosTotales + puntosGanados,
+      alquileresCompletados: currentStats.alquileresCompletados + 1
+    }
+    
+    localStorage.setItem(userStatsKey, JSON.stringify(newStats))
+    localStorage.setItem('userStats', JSON.stringify(newStats)) // Compatibilidad
+    
+    // Guardar en historial de alquileres del usuario
+     const userHistoryKey = `rentalHistory_${user.email}`
+     const existingHistory = localStorage.getItem(userHistoryKey)
+     const userHistory = existingHistory ? JSON.parse(existingHistory) : []
+     const newHistory = [...userHistory, {
+       id: nuevaReserva.id,
+       vehiculo: nuevaReserva.motoNombre,
+       fecha: nuevaReserva.fecha,
+       horaInicio: nuevaReserva.horaInicio,
+       duracion: `${nuevaReserva.duracion} hora${nuevaReserva.duracion > 1 ? 's' : ''}`,
+       precio: `${nuevaReserva.precio}€`,
+       puntos: puntosGanados,
+       estado: 'en_curso',
+       fechaCreacion: nuevaReserva.fechaCreacion,
+       fechaFinalizacion: new Date(new Date(nuevaReserva.fechaCreacion || new Date().toISOString()).getTime() + (nuevaReserva.duracion * 60 * 60 * 1000)).toISOString()
+     }]
+     
+     localStorage.setItem(userHistoryKey, JSON.stringify(newHistory))
+     localStorage.setItem('rentalHistory', JSON.stringify(newHistory)) // Compatibilidad
+     
+     // Implementar sistema anti-trampas
+     const antiCheatKey = `antiCheat_${user.email}`
+     const now = Date.now()
+     const existingAttempts = localStorage.getItem(antiCheatKey)
+     const attempts = existingAttempts ? JSON.parse(existingAttempts) : []
+     
+     // Filtrar intentos de los últimos 5 minutos
+     const recentAttempts = attempts.filter((timestamp: number) => now - timestamp < 5 * 60 * 1000)
+     recentAttempts.push(now)
+     
+     localStorage.setItem(antiCheatKey, JSON.stringify(recentAttempts))
     
     setShowReservaModal(false)
     setShowConfirmation(true)
