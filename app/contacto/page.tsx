@@ -944,6 +944,18 @@ export default function ContactoPage() {
           </div>
         </div>
       </footer>
+      
+      {/* Panel Admin Section */}
+      <div className="bg-gray-50 py-4 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <Link 
+            href="/admin/verification"
+            className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium"
+          >
+            Panel Admin
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }

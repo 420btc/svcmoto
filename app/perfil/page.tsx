@@ -39,6 +39,7 @@ export default function PerfilPage() {
   const [isEditing, setIsEditing] = useState(false)
   const [countdowns, setCountdowns] = useState<{[key: string]: {time: number, type: string}}>({})
   const [showPointsModal, setShowPointsModal] = useState(false)
+  const [showDeleteHistoryModal, setShowDeleteHistoryModal] = useState(false)
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -198,6 +199,28 @@ export default function PerfilPage() {
       return JSON.parse(generalHistory)
     }
     return []
+  }
+
+  // Función para borrar todo el historial
+  const handleDeleteHistory = () => {
+    if (typeof window === 'undefined' || !user?.email) return
+    
+    const userHistoryKey = `rentalHistory_${user.email}`
+    const userStatsKey = `userStats_${user.email}`
+    
+    // Borrar historial y estadísticas
+    localStorage.removeItem(userHistoryKey)
+    localStorage.removeItem(userStatsKey)
+    
+    // También borrar claves generales por compatibilidad
+    localStorage.removeItem('rentalHistory')
+    localStorage.removeItem('userStats')
+    
+    // Cerrar modal
+    setShowDeleteHistoryModal(false)
+    
+    // Forzar re-render
+    window.location.reload()
   }
 
   const stats = getStats()
@@ -692,7 +715,19 @@ export default function PerfilPage() {
             <div className="lg:col-span-1">
               <Card className="h-full">
                 <CardHeader>
-                  <CardTitle className="bangers-regular text-xl lg:text-2xl text-blue-900">{t('profile.rentalHistory')}</CardTitle>
+                  <div className="relative">
+                    <CardTitle className="bangers-regular text-xl lg:text-2xl text-blue-900">{t('profile.rentalHistory')}</CardTitle>
+                    {alquileres.length > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowDeleteHistoryModal(true)}
+                        className="absolute top-8 right-0 p-1 hover:bg-red-100 text-red-600 hover:text-red-700 text-lg"
+                      >
+                        🗑️
+                      </Button>
+                    )}
+                  </div>
                 </CardHeader>
                 <CardContent>
                   {alquileres.length === 0 ? (
@@ -1400,6 +1435,37 @@ export default function PerfilPage() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Modal de confirmación para borrar historial */}
+      {showDeleteHistoryModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl border-4 border-orange-500">
+            <div className="text-center">
+              <div className="text-6xl mb-4">⚠️</div>
+              <h2 className="bangers-regular text-2xl text-red-600 mb-4">
+                ¿Estás seguro que quieres eliminar el historial?
+              </h2>
+              <p className="text-blue-700 mb-6">
+                Esta acción no se puede deshacer. Se borrarán todos tus alquileres y estadísticas.
+              </p>
+              <div className="flex space-x-3">
+                <Button
+                  onClick={() => setShowDeleteHistoryModal(false)}
+                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white bangers-regular text-lg"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleDeleteHistory}
+                  className="flex-1 bg-red-500 hover:bg-red-600 text-white bangers-regular text-lg"
+                >
+                  Sí, Borrar Todo
+                </Button>
               </div>
             </div>
           </div>
