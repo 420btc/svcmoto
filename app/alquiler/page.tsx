@@ -10,6 +10,7 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useTranslation } from "@/contexts/TranslationContext"
 import { LanguageToggle } from "@/components/LanguageToggle"
+import { generateVerificationCode } from "@/lib/verification"
 import dynamic from "next/dynamic"
 
 // Importar el visor 3D dinámicamente para evitar problemas de SSR
@@ -31,11 +32,13 @@ interface Reserva {
   horaFin: string
   duracion: number
   precio: number
-  estado: 'pendiente' | 'en_curso' | 'completada' | 'cancelada'
+  estado: 'pendiente' | 'en_curso' | 'completada' | 'cancelada' | 'verificado'
   kmEstimados: number
   userId?: string
   fechaCreacion?: string
   fechaFinalizacion?: string
+  verificationCode?: string
+  isVerified?: boolean
 }
 
 export default function AlquilerPage() {
@@ -172,10 +175,12 @@ export default function AlquilerPage() {
       horaFin: `${parseInt(selectedHora.split(':')[0]) + duracion}:${selectedHora.split(':')[1]}`,
       duracion: duracion,
       precio: calcularPrecio(),
-      estado: 'en_curso',
+      estado: 'pendiente', // Cambiar a pendiente hasta verificación
       kmEstimados: calcularKmEstimados(),
       userId: user.email,
-      fechaCreacion: new Date().toISOString()
+      fechaCreacion: new Date().toISOString(),
+      verificationCode: generateVerificationCode(), // Generar código de verificación
+      isVerified: false // Inicialmente no verificado
     }
 
     // Guardar reserva específica del usuario
@@ -191,20 +196,8 @@ export default function AlquilerPage() {
     setReservas(allReservas)
     localStorage.setItem('reservas', JSON.stringify(allReservas))
     
-    // Actualizar estadísticas del usuario
-    const userStatsKey = `userStats_${user.email}`
-    const existingStats = localStorage.getItem(userStatsKey)
-    const currentStats = existingStats ? JSON.parse(existingStats) : { puntosTotales: 0, alquileresCompletados: 0 }
-    
-    // Calcular puntos: 100 puntos base + 15 puntos por euro
-    const puntosGanados = 100 + (calcularPrecio() * 15)
-    const newStats = {
-      puntosTotales: currentStats.puntosTotales + puntosGanados,
-      alquileresCompletados: currentStats.alquileresCompletados + 1
-    }
-    
-    localStorage.setItem(userStatsKey, JSON.stringify(newStats))
-    localStorage.setItem('userStats', JSON.stringify(newStats)) // Compatibilidad
+    // Las estadísticas y puntos se actualizarán cuando se verifique la reserva
+    // No se entregan puntos automáticamente
     
     // Guardar en historial de alquileres del usuario
      const userHistoryKey = `rentalHistory_${user.email}`
@@ -217,10 +210,12 @@ export default function AlquilerPage() {
        horaInicio: nuevaReserva.horaInicio,
        duracion: `${nuevaReserva.duracion} hora${nuevaReserva.duracion > 1 ? 's' : ''}`,
        precio: `${nuevaReserva.precio}€`,
-       puntos: puntosGanados,
-       estado: 'en_curso',
+       puntos: 0, // No se entregan puntos hasta verificación
+       estado: 'pendiente',
        fechaCreacion: nuevaReserva.fechaCreacion,
-       fechaFinalizacion: new Date(new Date(nuevaReserva.fechaCreacion || new Date().toISOString()).getTime() + (nuevaReserva.duracion * 60 * 60 * 1000)).toISOString()
+       fechaFinalizacion: new Date(new Date(nuevaReserva.fechaCreacion || new Date().toISOString()).getTime() + (nuevaReserva.duracion * 60 * 60 * 1000)).toISOString(),
+       verificationCode: nuevaReserva.verificationCode, // Agregar código de verificación
+       isVerified: false // Inicialmente no verificado
      }]
      
      localStorage.setItem(userHistoryKey, JSON.stringify(newHistory))

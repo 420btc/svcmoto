@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { User, Star, Calendar, MapPin, Edit, Save, X, Trophy, Gift, Menu, ArrowLeft, Home, Clock, Zap, CheckCircle } from "lucide-react"
+import { User, Star, Calendar, MapPin, Edit, Save, X, Trophy, Gift, Menu, ArrowLeft, Home, Clock, Zap, CheckCircle, Key, Copy } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -21,7 +21,9 @@ interface Alquiler {
   duracion: string
   precio: string
   puntos: number
-  estado: "completado" | "en_curso" | "cancelado"
+  estado: "completado" | "en_curso" | "cancelado" | "pendiente" | "verificado"
+  verificationCode?: string
+  isVerified?: boolean
 }
 
 export default function PerfilPage() {
@@ -35,8 +37,6 @@ export default function PerfilPage() {
   })
   const [editedInfo, setEditedInfo] = useState(userInfo)
   const [isEditing, setIsEditing] = useState(false)
-  const [showCompletionModal, setShowCompletionModal] = useState(false)
-  const [completedRental, setCompletedRental] = useState<any>(null)
   const [countdowns, setCountdowns] = useState<{[key: string]: {time: number, type: string}}>({})
   const [showPointsModal, setShowPointsModal] = useState(false)
   const router = useRouter()
@@ -258,15 +258,8 @@ export default function PerfilPage() {
           if (timeData.type === 'waiting' || timeData.type === 'active') {
             hasActiveRentals = true
           } else if (timeData.type === 'finished') {
-            // Alquiler completado - mostrar modal
-            const modalKey = `completionModal_${user?.email}_${alquiler.id}`
-            const modalShown = localStorage.getItem(modalKey)
-            
-            if (!modalShown) {
-              setCompletedRental(alquiler)
-              setShowCompletionModal(true)
-              localStorage.setItem(modalKey, 'pending')
-            }
+            // Alquiler completado - ahora requiere verificación física
+            // No se entregan puntos automáticamente
           }
         }
       })
@@ -300,77 +293,7 @@ export default function PerfilPage() {
     setIsEditing(false)
   }
   
-  // Función para manejar confirmación de alquiler completado
-  const handleRentalCompletion = (confirmed: boolean) => {
-    if (!completedRental || !user?.email) return
-    
-    const modalKey = `completionModal_${user.email}_${completedRental.id}`
-    
-    if (confirmed) {
-      // Actualizar estado a completado y entregar puntos
-      const userHistoryKey = `rentalHistory_${user.email}`
-      const existingHistory = localStorage.getItem(userHistoryKey)
-      const userHistory = existingHistory ? JSON.parse(existingHistory) : []
-      
-      const updatedHistory = userHistory.map((alquiler: any) => {
-        if (alquiler.id === completedRental.id) {
-          return { ...alquiler, estado: 'completado' }
-        }
-        return alquiler
-      })
-      
-      localStorage.setItem(userHistoryKey, JSON.stringify(updatedHistory))
-      localStorage.setItem('rentalHistory', JSON.stringify(updatedHistory))
-      
-      // También actualizar las reservas principales
-      const userReservasKey = `reservas_${user.email}`
-      const existingReservas = localStorage.getItem(userReservasKey)
-      const userReservas = existingReservas ? JSON.parse(existingReservas) : []
-      
-      const updatedReservas = userReservas.map((reserva: any) => {
-        if (reserva.id === completedRental.id) {
-          return { ...reserva, estado: 'completado' }
-        }
-        return reserva
-      })
-      
-      localStorage.setItem(userReservasKey, JSON.stringify(updatedReservas))
-      localStorage.setItem('reservas', JSON.stringify(updatedReservas))
-      
-      // Actualizar estadísticas
-      const userStatsKey = `userStats_${user.email}`
-      const existingStats = localStorage.getItem(userStatsKey)
-      const currentStats = existingStats ? JSON.parse(existingStats) : { puntosTotales: 0, alquileresCompletados: 0 }
-      
-      const newStats = {
-        puntosTotales: currentStats.puntosTotales + completedRental.puntos,
-        alquileresCompletados: currentStats.alquileresCompletados + 1
-      }
-      
-      localStorage.setItem(userStatsKey, JSON.stringify(newStats))
-      localStorage.setItem('userStats', JSON.stringify(newStats))
-      
-      localStorage.setItem(modalKey, 'completed')
-    } else {
-      // Eliminar del historial
-      const userHistoryKey = `rentalHistory_${user.email}`
-      const existingHistory = localStorage.getItem(userHistoryKey)
-      const userHistory = existingHistory ? JSON.parse(existingHistory) : []
-      
-      const filteredHistory = userHistory.filter((alquiler: any) => alquiler.id !== completedRental.id)
-      
-      localStorage.setItem(userHistoryKey, JSON.stringify(filteredHistory))
-      localStorage.setItem('rentalHistory', JSON.stringify(filteredHistory))
-      
-      localStorage.setItem(modalKey, 'rejected')
-    }
-    
-    setShowCompletionModal(false)
-    setCompletedRental(null)
-    
-    // Recargar página para actualizar datos
-    window.location.reload()
-  }
+
 
   const getEstadoBadge = (estado: string) => {
     switch (estado) {
@@ -835,7 +758,7 @@ export default function PerfilPage() {
                             </div>
                             
                             {/* Precio y puntos */}
-                            <div className="flex justify-between items-center bg-orange-100 border border-orange-300 rounded-lg p-3">
+                            <div className="flex justify-between items-center bg-orange-100 border border-orange-300 rounded-lg p-3 mb-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-2xl">💰</span>
                                 <div>
@@ -851,6 +774,38 @@ export default function PerfilPage() {
                                 </div>
                               </div>
                             </div>
+                            
+                            {/* Código de verificación */}
+                            {alquiler.verificationCode && (
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center space-x-2">
+                                    <Key className="w-4 h-4 text-blue-500" />
+                                    <div>
+                                      <p className="text-blue-700 text-xs font-medium">Código de Verificación</p>
+                                      <p className="font-bold text-blue-900 text-lg font-mono tracking-wider">{alquiler.verificationCode}</p>
+                                      <p className="text-blue-600 text-xs">
+                                        {alquiler.isVerified ? '✅ Verificado por el administrador' : '⏳ Pendiente de verificación'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(alquiler.verificationCode || '')
+                                      // Aquí podrías agregar un toast de confirmación
+                                    }}
+                                    className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+                                  >
+                                    <Copy className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                                <div className="mt-2 p-2 bg-blue-100 rounded text-xs text-blue-700">
+                                  💡 Presenta este código en la tienda física para completar tu alquiler y recibir tus puntos.
+                                </div>
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -1193,88 +1148,7 @@ export default function PerfilPage() {
         </div>
       </section>
       
-      {/* Modal de Confirmación de Alquiler Completado */}
-      {showCompletionModal && completedRental && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
-            <div className="bg-gradient-to-r from-blue-900 to-blue-800 px-6 py-4 rounded-t-2xl">
-              <div className="flex items-center space-x-3">
-                <div className="bg-orange-500 p-2 rounded-full">
-                  <CheckCircle className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">¡Alquiler Finalizado!</h2>
-                  <p className="text-blue-200 text-sm">{completedRental.vehiculo}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-6">
-              <div className="text-center mb-6">
-                <p className="text-gray-700 mb-4">
-                  ¿Completaste exitosamente tu alquiler de <strong>{completedRental.vehiculo}</strong>?
-                </p>
-                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-blue-700 text-sm">Fecha:</span>
-                    <span className="font-bold text-blue-900">{completedRental.fecha}</span>
-                  </div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-blue-700 text-sm">Duración:</span>
-                    <span className="font-bold text-blue-900">{completedRental.duracion}</span>
-                  </div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-blue-700 text-sm">Precio:</span>
-                    <span className="font-bold text-blue-900">{completedRental.precio}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-blue-700 text-sm">Puntos a ganar:</span>
-                    <span className="font-bold text-orange-600">+{completedRental.puntos}</span>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-600">
-                  Si confirmas, recibirás los puntos. Si no completaste el alquiler, selecciona "No" y se eliminará del historial.
-                </p>
-              </div>
-              
-              {/* Sección de Reseña */}
-              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <div className="text-center">
-                  <h3 className="font-bold text-blue-900 mb-2">🌟 ¡Ayúdanos con una reseña!</h3>
-                  <p className="text-sm text-gray-600 mb-3">
-                    Comparte tu experiencia y gana <strong className="text-orange-600">+200 puntos extra</strong>
-                  </p>
-                  <Button 
-                    onClick={() => window.open('https://share.google/OpXKIKXkSPawlDSpw', '_blank')}
-                    className="bg-blue-500 hover:bg-blue-600 text-white mb-2 w-full"
-                  >
-                    ⭐ Dejar Reseña en Google Maps
-                  </Button>
-                  <p className="text-xs text-gray-500">
-                    Después de dejar tu reseña, contacta con nosotros para recibir tus puntos extra
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex space-x-3">
-                <Button 
-                  onClick={() => handleRentalCompletion(false)}
-                  variant="outline"
-                  className="flex-1 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-                >
-                  No completé
-                </Button>
-                <Button 
-                  onClick={() => handleRentalCompletion(true)}
-                  className="flex-1 bg-green-500 hover:bg-green-600 text-white"
-                >
-                  Sí, completé
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Modal de Puntos */}
       {showPointsModal && (

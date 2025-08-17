@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  bookings     Booking[]
+  pointsLedger PointsLedger[]
+
+  @@map("users")
+}
+
+model Booking {
+  id                String        @id @default(cuid())
+  userId            String
+  vehicleType       String        // "moto", "patinete", etc.
+  vehicleId         String        // ID específico del vehículo
+  startAt           DateTime
+  endAt             DateTime
+  totalPrice        Float
+  status            BookingStatus @default(PENDING)
+  verificationCode  String?       @unique // Código de 6 dígitos para verificación física
+  isVerified        Boolean       @default(false) // Si ha sido verificado por el admin
+  pointsAwarded     Int?          // Puntos otorgados al completar
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  // Relations
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pointsLedger PointsLedger[]
+
+  @@map("bookings")
+}
+
+model PointsLedger {
+  id          String   @id @default(cuid())
+  userId      String
+  bookingId   String?
+  points      Int      // Puede ser positivo (ganados) o negativo (gastados)
+  reason      String   // "rental_completion", "bonus", "redemption", etc.
+  description String?
+  createdAt   DateTime @default(now())
+
+  // Relations
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  booking Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  @@map("points_ledger")
+}
+
+enum BookingStatus {
+  PENDING    // Reserva creada, esperando verificación
+  VERIFIED   // Verificada por admin, lista para usar
+  COMPLETED  // Completada y puntos otorgados
+  CANCELLED  // Cancelada
+  EXPIRED    // Expirada sin usar
+}

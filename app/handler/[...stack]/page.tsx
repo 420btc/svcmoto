@@ -126,6 +126,14 @@ export default function AuthModal() {
             <p className="text-xs text-gray-500">
               Al continuar, aceptas nuestros términos y condiciones
             </p>
+            {/* Acceso discreto al panel admin */}
+            <button
+              onClick={() => router.push('/admin/verification')}
+              className="mt-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              title="Panel de administración"
+            >
+              ⚙️
+            </button>
           </div>
         </CardContent>
         </Card>
