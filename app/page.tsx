@@ -335,7 +335,7 @@ export default function Home() {
              {t('hero.subtitle')}
            </p>
           <Link href="/alquiler">
-              <Button size="lg" className="bangers-regular bg-orange-500 hover:bg-orange-600 text-white text-2xl md:text-3xl px-10 py-5 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
+              <Button size="lg" className="bangers-regular bg-orange-500 hover:bg-orange-600 text-white text-2xl md:text-3xl px-10 py-5 drop-shadow-lg shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)', boxShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
                 {t('hero.cta')}
               </Button>
             </Link>
@@ -348,6 +348,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
             className="absolute bottom-[1.25rem] md:bottom-4 left-1/2 transform -translate-x-1/2 md:left-14 md:transform-none bg-white hover:bg-gray-50 text-gray-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-300 hover:scale-105 flex items-center space-x-2 border border-orange-500"
+            style={{boxShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}
           >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
