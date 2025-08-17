@@ -605,7 +605,11 @@ export default function PerfilPage() {
                         className="mt-1"
                       />
                     ) : (
-                      <p className="mt-1 text-gray-900">{userInfo.nombre}</p>
+                      <div className="mt-1">
+                        <Badge className="bg-blue-900 text-white px-3 py-1 text-sm font-semibold border border-orange-500">
+                          {userInfo.nombre}
+                        </Badge>
+                      </div>
                     )}
                   </div>
                   
