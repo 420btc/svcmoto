@@ -459,7 +459,7 @@ export default function Home() {
       {/* Services Section */}
       <section id="servicios" className="py-16 bg-orange-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-6">
             <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-4 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('servicesSection.title')}</h2>
             <p className="bangers-regular text-2xl md:text-3xl text-white">
               {t('servicesSection.subtitle')}
@@ -523,6 +523,61 @@ export default function Home() {
                   {t('services.cta2')}
                 </Button>
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partners Section */}
+      <section className="py-8 bg-white">
+        <div className="max-w-7xl mx-auto px-0 md:px-4 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="bangers-regular text-3xl md:text-4xl text-orange-500 mb-4">{t('partners.title')}</h2>
+             <p className="bangers-regular text-xl md:text-2xl text-blue-900">{t('partners.subtitle')}</p>
+          </div>
+          
+          {/* Logos carousel */}
+          <div className="relative overflow-hidden">
+            <div className="flex animate-scroll space-x-4 md:space-x-16">
+              {/* First set of logos */}
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/The_Hertz_Corporation-Logo.300200.png" alt="Hertz" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/logo-riderly300200.png" alt="Riderly" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/bikebooking300200.png" alt="BikeBooking" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/Airbnb-Logo.300200.png" alt="Airbnb" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/Booking.com-Logo.300200.png" alt="Booking.com" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/TripAdvisor-Logo.300200.png" alt="TripAdvisor" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               
+               {/* Duplicate set for seamless loop */}
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/The_Hertz_Corporation-Logo.300200.png" alt="Hertz" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/logo-riderly300200.png" alt="Riderly" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/bikebooking300200.png" alt="BikeBooking" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/Airbnb-Logo.300200.png" alt="Airbnb" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/Booking.com-Logo.300200.png" alt="Booking.com" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
+               <div className="flex items-center justify-center min-w-[120px] md:min-w-[200px]">
+                 <Image src="/TripAdvisor-Logo.300200.png" alt="TripAdvisor" width={120} height={80} className="object-contain md:w-[150px] md:h-[100px]" />
+               </div>
             </div>
           </div>
         </div>
@@ -778,6 +833,141 @@ export default function Home() {
                   Tu navegador no soporta videos HTML5.
                 </video>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="bangers-regular text-3xl md:text-4xl text-orange-500 mb-4">{t('testimonials.title')}</h2>
+            <p className="bangers-regular text-xl md:text-2xl text-blue-900">{t('testimonials.subtitle')}</p>
+            
+            {/* Google Rating Summary - Moved to top */}
+            <div className="mt-8 flex justify-center">
+              <div className="flex items-center bg-white rounded-lg p-4 shadow-lg border border-gray-200 w-full max-w-md">
+                <div className="flex items-center space-x-4 w-full">
+                  <svg className="w-8 h-8" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  <div className="flex-1">
+                    <div className="bangers-regular text-2xl text-blue-900">EXCELLENT</div>
+                    <div className="flex justify-center">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Reviews Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Review 1 - Sylvana */}
+            <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  S
+                </div>
+                <div className="ml-3">
+                  <h3 className="font-semibold text-blue-900">Sylvana v O</h3>
+                  <p className="text-sm text-gray-500">5 months ago</p>
+                </div>
+              </div>
+              <div className="flex items-center mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                ))}
+                <span className="ml-2 text-sm text-gray-600">Review from Google</span>
+              </div>
+              <p className="text-gray-700 text-sm leading-relaxed">
+                Together with a friend we decided to rent scooters super last minute. The scooter company closed at 2 p.m., but stayed open for us so we could rent the...
+                <span className="text-orange-500 cursor-pointer">More</span>
+              </p>
+            </div>
+
+            {/* Review 2 - Freddy */}
+            <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  F
+                </div>
+                <div className="ml-3">
+                  <h3 className="font-semibold text-blue-900">Freddy</h3>
+                  <p className="text-sm text-gray-500">5 months ago</p>
+                </div>
+              </div>
+              <div className="flex items-center mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                ))}
+                <span className="ml-2 text-sm text-gray-600">Review from Google</span>
+              </div>
+              <p className="text-gray-700 text-sm leading-relaxed">
+                We rented a scooter for a day and had a lovely trip! The guy was super nice and helpful. The scooter was great fun. Definitely recommend this place
+              </p>
+            </div>
+
+            {/* Review 3 - Beatriz */}
+             <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow">
+               <div className="flex items-center mb-4">
+                 <div className="w-12 h-12 rounded-full overflow-hidden">
+                   <Image src="/beagoogle.png" alt="Beatriz Cardozo" width={48} height={48} className="w-full h-full object-cover" />
+                 </div>
+                 <div className="ml-3">
+                   <h3 className="font-semibold text-blue-900">Beatriz Cardozo</h3>
+                   <p className="text-sm text-gray-500">5 months ago</p>
+                 </div>
+               </div>
+              <div className="flex items-center mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                ))}
+                <span className="ml-2 text-sm text-gray-600">Review from Google</span>
+              </div>
+              <p className="text-gray-700 text-sm leading-relaxed">
+                Muy buena motocicleta! Recomendó 100%
+              </p>
+            </div>
+
+            {/* Review 4 - Tony */}
+             <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow relative">
+               <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">New</span>
+               <div className="flex items-center mb-4">
+                 <div className="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                   T
+                 </div>
+                 <div className="ml-3">
+                   <h3 className="font-semibold text-blue-900">Tony</h3>
+                   <p className="text-sm text-gray-500">5 days ago</p>
+                 </div>
+               </div>
+              <div className="flex items-center mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                ))}
+                <span className="ml-2 text-sm text-gray-600">Review from Google</span>
+              </div>
+              <p className="text-gray-700 text-sm leading-relaxed">
+                Great experience!
+              </p>
             </div>
           </div>
         </div>

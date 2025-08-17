@@ -130,3 +130,24 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Partners carousel animation */
+@keyframes scroll {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+/* Faster animation on mobile for continuous flow */
+@media (max-width: 768px) {
+  .animate-scroll {
+    animation: scroll 15s linear infinite;
+  }
+}

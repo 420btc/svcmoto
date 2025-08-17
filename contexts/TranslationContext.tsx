@@ -68,6 +68,14 @@ const translations = {
      'contactSection.phone': 'Teléfono',
      'contactSection.schedule': 'Horario',
     
+    // Partners Section
+    'partners.title': 'Partners',
+    'partners.subtitle': 'También Disponible a Través de Nuestros Partners de Confianza',
+    
+    // Testimonials Section
+    'testimonials.title': 'Testimonios',
+    'testimonials.subtitle': 'Lo que nuestros clientes dicen sobre nosotros',
+    
     // Footer
     'footer.nearStation': 'Cerca de Estación María Zambrano (456m) • Calle Larios (1,68km)',
     'footer.madeBy': 'Web made by:',
@@ -634,6 +642,14 @@ const translations = {
     'contact.viewOnMaps': 'View on Google Maps',
     'contact.signOut': 'Sign Out',
     'contact.signIn': 'Sign In',
+    
+    // Partners Section
+    'partners.title': 'Partners',
+    'partners.subtitle': 'Also Available via Our Trusted Partners',
+    
+    // Testimonials Section
+    'testimonials.title': 'Testimonials',
+    'testimonials.subtitle': 'What our customers are saying about us',
     
     // Profile Page
     'profile.title': 'My Profile',
