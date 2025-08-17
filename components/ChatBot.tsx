@@ -201,6 +201,7 @@ export default function ChatBot() {
         <Button
           onClick={() => setIsOpen(true)}
           className="h-14 w-14 rounded-full bg-orange-500 hover:bg-orange-600 shadow-lg transition-all duration-300 hover:scale-110"
+          style={{boxShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}
         >
           <MessageCircle className="h-8 w-8 text-white" />
         </Button>
