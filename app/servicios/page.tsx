@@ -360,15 +360,28 @@ export default function ServiciosPage() {
       {/* Header */}
       <section className="bg-gradient-to-r from-blue-900 to-blue-800 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center mb-6">
-            <Link href="/" className="text-white hover:text-blue-200 mr-4">
-              <ArrowLeft className="w-6 h-6" />
-            </Link>
-            <h1 className="bangers-regular text-5xl md:text-6xl text-white drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.title')}</h1>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <div className="flex items-center mb-6">
+                <Link href="/" className="text-white hover:text-blue-200 mr-4">
+                  <ArrowLeft className="w-6 h-6" />
+                </Link>
+                <h1 className="bangers-regular text-5xl md:text-6xl text-white drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.title')}</h1>
+              </div>
+              <p className="text-xl text-white/90 max-w-3xl">
+                {t('services.subtitle')}
+              </p>
+            </div>
+            <div className="hidden lg:flex justify-center">
+               <Image 
+                 src="/carga.png" 
+                 alt="Carga eléctrica" 
+                 width={240} 
+                 height={240} 
+                 className="object-contain"
+               />
+             </div>
           </div>
-          <p className="text-xl text-white/90 max-w-3xl">
-            {t('services.subtitle')}
-          </p>
         </div>
       </section>
 
