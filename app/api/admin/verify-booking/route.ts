@@ -32,11 +32,19 @@ export async function POST(request: NextRequest) {
     const normalizedCode = normalizeVerificationCode(verificationCode)
     
     // Buscar la reserva por código de verificación
+    // Buscar tanto el código normalizado como el formateado
     const booking = await prisma.booking.findFirst({
       where: {
-        verificationCode: {
-          contains: normalizedCode
-        },
+        OR: [
+          {
+            verificationCode: {
+              contains: normalizedCode
+            }
+          },
+          {
+            verificationCode: verificationCode.trim()
+          }
+        ],
         isVerified: false, // Solo reservas no verificadas
         status: 'PENDING' // Solo reservas pendientes
       },

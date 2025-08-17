@@ -6,9 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider = "sqlite"
+  url = env("DATABASE_URL")
 }
 
 model User {
@@ -38,6 +37,8 @@ model Booking {
   verificationCode  String?       @unique // Código de 6 dígitos para verificación física
   isVerified        Boolean       @default(false) // Si ha sido verificado por el admin
   pointsAwarded     Int?          // Puntos otorgados al completar
+  estimatedKm       Float?        // Kilómetros estimados del viaje
+  duration          Float?        // Duración en horas
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 

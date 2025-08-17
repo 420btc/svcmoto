@@ -102,7 +102,14 @@ export default function PerfilPage() {
     router.push('/')
   }
 
-  // Verificar autenticación
+  // Cargar bookings desde API cuando el usuario esté disponible
+  useEffect(() => {
+    if (user?.email) {
+      fetchBookingsFromAPI()
+    }
+  }, [user?.email])
+  
+  // Verificar autenticación desde localStorage
   useEffect(() => {
     // Verificar que estamos en el cliente
     if (typeof window === 'undefined') return
@@ -159,7 +166,7 @@ export default function PerfilPage() {
     // Las reservas se cargan directamente en las funciones de cálculo
   }, [router])
 
-  // Obtener estadísticas desde localStorage específicas del usuario
+  // Obtener estadísticas combinando API y localStorage
   const getStats = () => {
     if (typeof window === 'undefined' || !user?.email) {
       return {
@@ -167,38 +174,92 @@ export default function PerfilPage() {
         alquileresCompletados: 0
       }
     }
+    
+    // Calcular estadísticas desde API
+    const apiStats = {
+      puntosTotales: apiBookings.reduce((total, booking) => total + (booking.pointsAwarded || 0), 0),
+      alquileresCompletados: apiBookings.filter(booking => booking.isVerified).length
+    }
+    
+    // Fallback a localStorage para compatibilidad
     const userStatsKey = `userStats_${user.email}`
     const savedStats = localStorage.getItem(userStatsKey)
-    if (savedStats) {
-      return JSON.parse(savedStats)
-    }
-    // Fallback a estadísticas generales para compatibilidad
-    const generalStats = localStorage.getItem('userStats')
-    if (generalStats) {
-      return JSON.parse(generalStats)
-    }
+    const localStats = savedStats ? JSON.parse(savedStats) : { puntosTotales: 0, alquileresCompletados: 0 }
+    
+    // Combinar estadísticas, priorizando API si hay datos
     return {
-      puntosTotales: 0,
-      alquileresCompletados: 0
+      puntosTotales: apiStats.puntosTotales > 0 ? apiStats.puntosTotales : localStats.puntosTotales,
+      alquileresCompletados: apiStats.alquileresCompletados > 0 ? apiStats.alquileresCompletados : localStats.alquileresCompletados
     }
   }
 
-  // Obtener historial desde localStorage específico del usuario
+  // Obtener historial desde la API
+  const [apiBookings, setApiBookings] = useState([])
+  const [loadingBookings, setLoadingBookings] = useState(false)
+  
+  const fetchBookingsFromAPI = async () => {
+    if (!user?.email) return
+    
+    setLoadingBookings(true)
+    try {
+      // Primero obtener el usuario de la API
+      const userResponse = await fetch(`/api/users?email=${encodeURIComponent(user.email)}`)
+      if (userResponse.ok) {
+        const userData = await userResponse.json()
+        
+        // Luego obtener las reservas del usuario
+        const bookingsResponse = await fetch(`/api/bookings?userId=${userData.user.id}`)
+        if (bookingsResponse.ok) {
+          const bookingsData = await bookingsResponse.json()
+          setApiBookings(bookingsData.bookings || [])
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching bookings:', error)
+    } finally {
+      setLoadingBookings(false)
+    }
+  }
+  
+  // Obtener historial combinando API y localStorage
   const getRentalHistory = () => {
     if (typeof window === 'undefined' || !user?.email) {
       return []
     }
+    
+    // Convertir bookings de API al formato esperado
+    const apiHistory = apiBookings.map(booking => ({
+      id: booking.id,
+      vehiculo: booking.vehicleType,
+      fecha: new Date(booking.startAt).toLocaleDateString(),
+      horaInicio: new Date(booking.startAt).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+      duracion: `${booking.duration || 1} hora${(booking.duration || 1) > 1 ? 's' : ''}`,
+      precio: `${booking.totalPrice}€`,
+      puntos: booking.pointsAwarded || 0,
+      estado: booking.isVerified ? 'verificado' : 'pendiente',
+      fechaCreacion: booking.createdAt,
+      fechaFinalizacion: booking.endAt,
+      verificationCode: booking.verificationCode,
+      isVerified: booking.isVerified
+    }))
+    
+    // Fallback a localStorage para compatibilidad
     const userHistoryKey = `rentalHistory_${user.email}`
     const savedHistory = localStorage.getItem(userHistoryKey)
-    if (savedHistory) {
-      return JSON.parse(savedHistory)
-    }
-    // Fallback a historial general para compatibilidad
-    const generalHistory = localStorage.getItem('rentalHistory')
-    if (generalHistory) {
-      return JSON.parse(generalHistory)
-    }
-    return []
+    const localHistory = savedHistory ? JSON.parse(savedHistory) : []
+    
+    // Combinar ambos, priorizando API
+    const combinedHistory = [...apiHistory]
+    
+    // Agregar elementos de localStorage que no estén en API
+    localHistory.forEach(localItem => {
+      const existsInAPI = apiHistory.some(apiItem => apiItem.verificationCode === localItem.verificationCode)
+      if (!existsInAPI) {
+        combinedHistory.push(localItem)
+      }
+    })
+    
+    return combinedHistory.sort((a, b) => new Date(b.fechaCreacion || 0) - new Date(a.fechaCreacion || 0))
   }
 
   // Función para borrar todo el historial

@@ -155,7 +155,7 @@ export default function AlquilerPage() {
     }))
   }
 
-  const realizarReserva = () => {
+  const realizarReserva = async () => {
     if (!selectedMoto || !selectedHora) {
       alert(t('rental.selectTime'))
       return
@@ -166,60 +166,113 @@ export default function AlquilerPage() {
       return
     }
 
-    const nuevaReserva: Reserva = {
-      id: Date.now().toString(),
-      motoId: selectedMoto.id,
-      motoNombre: selectedMoto.nombre,
-      fecha: selectedDate,
-      horaInicio: selectedHora,
-      horaFin: `${parseInt(selectedHora.split(':')[0]) + duracion}:${selectedHora.split(':')[1]}`,
-      duracion: duracion,
-      precio: calcularPrecio(),
-      estado: 'pendiente', // Cambiar a pendiente hasta verificación
-      kmEstimados: calcularKmEstimados(),
-      userId: user.email,
-      fechaCreacion: new Date().toISOString(),
-      verificationCode: generateVerificationCode(), // Generar código de verificación
-      isVerified: false // Inicialmente no verificado
+    try {
+      // Primero, asegurar que el usuario existe en la base de datos
+      const userResponse = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email,
+          name: user.name || user.email.split('@')[0],
+          phone: user.phone
+        })
+      })
+      
+      if (!userResponse.ok) {
+        throw new Error('Error al crear/actualizar usuario')
+      }
+      
+      const userData = await userResponse.json()
+      
+      // Crear reserva en la base de datos
+      const startDate = new Date(`${selectedDate}T${selectedHora}:00`)
+      const endDate = new Date(startDate.getTime() + (duracion * 60 * 60 * 1000))
+      
+      const bookingData = {
+        userId: userData.user.id, // Usar el ID real del usuario
+        vehicleType: selectedMoto.nombre,
+        vehicleId: selectedMoto.id.toString(),
+        startAt: startDate.toISOString(),
+        endAt: endDate.toISOString(),
+        totalPrice: calcularPrecio(),
+        duration: duracion,
+        estimatedKm: calcularKmEstimados()
+      }
+      
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData)
+      })
+      
+      if (!response.ok) {
+        throw new Error('Error al crear la reserva')
+      }
+      
+      const result = await response.json()
+      
+      // Crear objeto para compatibilidad con localStorage (temporal)
+      const nuevaReserva: Reserva = {
+        id: result.booking.id,
+        motoId: selectedMoto.id,
+        motoNombre: selectedMoto.nombre,
+        fecha: selectedDate,
+        horaInicio: selectedHora,
+        horaFin: `${parseInt(selectedHora.split(':')[0]) + duracion}:${selectedHora.split(':')[1]}`,
+        duracion: duracion,
+        precio: calcularPrecio(),
+        estado: 'pendiente',
+        kmEstimados: calcularKmEstimados(),
+        userId: user.email,
+        fechaCreacion: new Date().toISOString(),
+        verificationCode: result.booking.verificationCode,
+        isVerified: false
+      }
+      
+      // Actualizar estado local
+      const allReservas = [...reservas, nuevaReserva]
+      setReservas(allReservas)
+      
+      // Mantener en localStorage para compatibilidad
+      localStorage.setItem('reservas', JSON.stringify(allReservas))
+      
+      const userReservasKey = `reservas_${user.email}`
+      const existingReservas = localStorage.getItem(userReservasKey)
+      const userReservas = existingReservas ? JSON.parse(existingReservas) : []
+      const nuevasReservas = [...userReservas, nuevaReserva]
+      localStorage.setItem(userReservasKey, JSON.stringify(nuevasReservas))
+      
+      // Guardar en historial de alquileres del usuario
+      const userHistoryKey = `rentalHistory_${user.email}`
+      const existingHistory = localStorage.getItem(userHistoryKey)
+      const userHistory = existingHistory ? JSON.parse(existingHistory) : []
+      const newHistory = [...userHistory, {
+        id: nuevaReserva.id,
+        vehiculo: nuevaReserva.motoNombre,
+        fecha: nuevaReserva.fecha,
+        horaInicio: nuevaReserva.horaInicio,
+        duracion: `${nuevaReserva.duracion} hora${nuevaReserva.duracion > 1 ? 's' : ''}`,
+        precio: `${nuevaReserva.precio}€`,
+        puntos: 0, // No se entregan puntos hasta verificación
+        estado: 'pendiente',
+        fechaCreacion: nuevaReserva.fechaCreacion,
+        fechaFinalizacion: new Date(new Date(nuevaReserva.fechaCreacion || new Date().toISOString()).getTime() + (nuevaReserva.duracion * 60 * 60 * 1000)).toISOString(),
+        verificationCode: nuevaReserva.verificationCode, // Agregar código de verificación
+        isVerified: false // Inicialmente no verificado
+      }]
+      
+      localStorage.setItem(userHistoryKey, JSON.stringify(newHistory))
+      localStorage.setItem('rentalHistory', JSON.stringify(newHistory)) // Compatibilidad
+      
+    } catch (error) {
+      console.error('Error al crear la reserva:', error)
+      alert('Error al crear la reserva. Por favor, inténtalo de nuevo.')
+      return
     }
-
-    // Guardar reserva específica del usuario
-    const userReservasKey = `reservas_${user.email}`
-    const existingReservas = localStorage.getItem(userReservasKey)
-    const userReservas = existingReservas ? JSON.parse(existingReservas) : []
-    const nuevasReservas = [...userReservas, nuevaReserva]
-    
-    localStorage.setItem(userReservasKey, JSON.stringify(nuevasReservas))
-    
-    // También mantener compatibilidad con el sistema actual
-    const allReservas = [...reservas, nuevaReserva]
-    setReservas(allReservas)
-    localStorage.setItem('reservas', JSON.stringify(allReservas))
-    
-    // Las estadísticas y puntos se actualizarán cuando se verifique la reserva
-    // No se entregan puntos automáticamente
-    
-    // Guardar en historial de alquileres del usuario
-     const userHistoryKey = `rentalHistory_${user.email}`
-     const existingHistory = localStorage.getItem(userHistoryKey)
-     const userHistory = existingHistory ? JSON.parse(existingHistory) : []
-     const newHistory = [...userHistory, {
-       id: nuevaReserva.id,
-       vehiculo: nuevaReserva.motoNombre,
-       fecha: nuevaReserva.fecha,
-       horaInicio: nuevaReserva.horaInicio,
-       duracion: `${nuevaReserva.duracion} hora${nuevaReserva.duracion > 1 ? 's' : ''}`,
-       precio: `${nuevaReserva.precio}€`,
-       puntos: 0, // No se entregan puntos hasta verificación
-       estado: 'pendiente',
-       fechaCreacion: nuevaReserva.fechaCreacion,
-       fechaFinalizacion: new Date(new Date(nuevaReserva.fechaCreacion || new Date().toISOString()).getTime() + (nuevaReserva.duracion * 60 * 60 * 1000)).toISOString(),
-       verificationCode: nuevaReserva.verificationCode, // Agregar código de verificación
-       isVerified: false // Inicialmente no verificado
-     }]
-     
-     localStorage.setItem(userHistoryKey, JSON.stringify(newHistory))
-     localStorage.setItem('rentalHistory', JSON.stringify(newHistory)) // Compatibilidad
      
      // Implementar sistema anti-trampas
      const antiCheatKey = `antiCheat_${user.email}`
