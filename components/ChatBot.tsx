@@ -48,12 +48,24 @@ export default function ChatBot() {
   }, [isOpen])
 
   useEffect(() => {
-    // Mostrar chat después de un delay para evitar que aparezca en la intro
-    const timer = setTimeout(() => {
-      setShowChat(true)
-    }, 5000)
+    // Verificar si la intro ya se mostró
+    const introShown = sessionStorage.getItem("svc-intro-shown")
     
-    return () => clearTimeout(timer)
+    if (introShown) {
+      // Si la intro ya se mostró, mostrar chat al instante
+      setShowChat(true)
+    } else {
+      // Si no se ha mostrado la intro, esperar a que termine
+      const checkIntro = setInterval(() => {
+        const introShownCheck = sessionStorage.getItem("svc-intro-shown")
+        if (introShownCheck) {
+          setShowChat(true)
+          clearInterval(checkIntro)
+        }
+      }, 100)
+      
+      return () => clearInterval(checkIntro)
+    }
   }, [])
 
   // Cargar mensajes desde localStorage al montar el componente
