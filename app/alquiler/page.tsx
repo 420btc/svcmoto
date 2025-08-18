@@ -116,12 +116,19 @@ export default function AlquilerPage() {
   }
 
   const isHorarioDisponible = (hora: string) => {
-    return !reservas.some(reserva => 
-      reserva.fecha === selectedDate && 
-      reserva.horaInicio === hora && 
-      reserva.motoId === selectedMoto?.id &&
-      reserva.estado !== 'cancelada'
-    )
+    // Solo bloquear horarios si hay reservas ACTIVAS (pendiente, en_curso, completado, verificado)
+    // Permitir reservas si las anteriores están canceladas, no realizadas, o expiradas
+    return !reservas.some(reserva => {
+      if (reserva.fecha === selectedDate && 
+          reserva.horaInicio === hora && 
+          reserva.motoId === selectedMoto?.id) {
+        
+        // Estados que SÍ bloquean el horario (reservas activas)
+        const estadosActivos = ['pendiente', 'en_curso', 'completado', 'verificado', 'completada']
+        return estadosActivos.includes(reserva.estado)
+      }
+      return false
+    })
   }
 
   const abrirModalReserva = (moto: any) => {

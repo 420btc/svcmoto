@@ -160,7 +160,7 @@ export default function PerfilPage() {
     const history = getRentalHistory()
     
     const totalKm = history.reduce((total: number, alquiler: any) => {
-      if (alquiler.estado === 'completada' || alquiler.estado === 'completado' || alquiler.estado === 'COMPLETED' || alquiler.estado === 'verificado') {
+      if (alquiler.estado === 'completada' || alquiler.estado === 'completado' || alquiler.estado === 'COMPLETED' || alquiler.estado === 'verificado' || alquiler.estado === 'completado_sin_verificacion') {
         // Estimar 15 km por hora de duración
         const duracionHoras = parseInt(alquiler.duracion?.toString().replace(/[^0-9]/g, '')) || 1
         return total + (duracionHoras * 15)
@@ -177,7 +177,7 @@ export default function PerfilPage() {
     const history = getRentalHistory()
     
     return history.reduce((total: number, alquiler: any) => {
-      if (alquiler.estado === 'completada' || alquiler.estado === 'completado' || alquiler.estado === 'COMPLETED' || alquiler.estado === 'verificado') {
+      if (alquiler.estado === 'completada' || alquiler.estado === 'completado' || alquiler.estado === 'COMPLETED' || alquiler.estado === 'verificado' || alquiler.estado === 'completado_sin_verificacion') {
         // Estimar 15 km por hora de duración
         const duracionHoras = parseInt(alquiler.duracion?.toString().replace(/[^0-9]/g, '')) || 1
         return total + (duracionHoras * 15)
@@ -192,7 +192,7 @@ export default function PerfilPage() {
     // Usar función que combina API y localStorage
     const history = getRentalHistory()
     
-    return history.filter((alquiler: any) => alquiler.estado === 'completada' || alquiler.estado === 'completado' || alquiler.estado === 'COMPLETED' || alquiler.estado === 'verificado').length
+    return history.filter((alquiler: any) => alquiler.estado === 'completada' || alquiler.estado === 'completado' || alquiler.estado === 'COMPLETED' || alquiler.estado === 'verificado' || alquiler.estado === 'completado_sin_verificacion').length
   }
   
   const signIn = () => router.push('/handler/sign-in')
@@ -355,7 +355,10 @@ export default function PerfilPage() {
       duracion: `${booking.duration || 1} hora${(booking.duration || 1) > 1 ? 's' : ''}`,
       precio: `${booking.totalPrice}€`,
       puntos: booking.pointsAwarded || 0,
-      estado: booking.status === 'COMPLETED' ? 'verificado' : (booking.isVerified ? 'verificado' : 'pendiente'),
+      estado: booking.status === 'COMPLETED' ? 'verificado' : 
+              booking.status === 'COMPLETED_NO_VERIFICATION' ? 'completado_sin_verificacion' :
+              booking.status === 'CANCELLED' ? 'cancelado' :
+              booking.isVerified ? 'verificado' : 'pendiente',
       fechaCreacion: booking.createdAt,
       fechaFinalizacion: booking.endAt,
       verificationCode: booking.verificationCode,
@@ -507,11 +510,16 @@ export default function PerfilPage() {
   const getEstadoBadge = (estado: string) => {
     switch (estado) {
       case "completado":
+      case "verificado":
         return <Badge className="bg-green-100 text-green-800">Completado</Badge>
+      case "completado_sin_verificacion":
+        return <Badge className="bg-orange-100 text-orange-800">Completado (Sin Puntos)</Badge>
       case "en_curso":
         return <Badge className="bg-blue-100 text-blue-800">En Curso</Badge>
       case "cancelado":
         return <Badge className="bg-red-100 text-red-800">Cancelado</Badge>
+      case "pendiente":
+        return <Badge className="bg-yellow-100 text-yellow-800">Pendiente</Badge>
       default:
         return <Badge>Desconocido</Badge>
     }
@@ -690,7 +698,7 @@ export default function PerfilPage() {
             
             {/* Información Personal */}
             <div className="lg:col-span-1">
-              <Card>
+              <Card className="shadow-lg">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="bangers-regular text-2xl lg:text-3xl text-blue-900">{t('profile.personalInfo')}</CardTitle>
                   {!isEditing ? (
@@ -783,28 +791,28 @@ export default function PerfilPage() {
               </Card>
 
               {/* Estadísticas */}
-              <Card className="mt-6">
+              <Card className="mt-6 shadow-lg">
                 <CardHeader>
                   <CardTitle className="bangers-regular text-xl lg:text-2xl text-blue-900">{t('profile.myStats')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-4 bg-orange-50 rounded-lg">
+                    <div className="text-center p-4 bg-orange-50 rounded-lg shadow-lg">
                       <Star className="w-8 h-8 text-orange-500 mx-auto mb-2" />
                       <div className="text-2xl font-bold text-orange-600">{stats.puntosTotales}</div>
                       <div className="text-sm text-gray-600">{t('profile.totalPoints')}</div>
                     </div>
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
+                    <div className="text-center p-4 bg-blue-50 rounded-lg shadow-lg">
                       <Calendar className="w-8 h-8 text-blue-500 mx-auto mb-2" />
                       <div className="text-2xl font-bold text-blue-600">{stats.alquileresCompletados}</div>
                       <div className="text-sm text-gray-600">{t('profile.rentals')}</div>
                     </div>
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
+                    <div className="text-center p-4 bg-purple-50 rounded-lg shadow-lg">
                        <MapPin className="w-8 h-8 text-purple-500 mx-auto mb-2" />
                        <div className="text-2xl font-bold text-purple-600">{calcularKmTotales()} km</div>
                        <div className="text-sm text-gray-600">{t('profile.kmTraveled')}</div>
                      </div>
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
+                    <div className="text-center p-4 bg-green-50 rounded-lg shadow-lg">
                       <Trophy className="w-8 h-8 text-green-500 mx-auto mb-2" />
                       <div className="text-2xl font-bold text-green-600">{calcularCO2Ahorrado()} kg</div>
                       <div className="text-sm text-gray-600">{t('profile.co2Saved')}</div>
@@ -839,13 +847,13 @@ export default function PerfilPage() {
 
             {/* Sistema de Puntos */}
             <div className="lg:col-span-1">
-              <Card className="h-full">
+              <Card className="h-full shadow-lg">
                 <CardHeader>
                   <CardTitle className="bangers-regular text-xl lg:text-2xl text-blue-900">{t('profile.pointsSystem')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg shadow-lg">
                       <div>
                         <div className="font-semibold text-blue-900">{t('profile.discount5')}</div>
                         <div className="text-sm text-gray-600">{t('profile.nextRentalDiscount')}</div>
@@ -854,7 +862,7 @@ export default function PerfilPage() {
                         1500 puntos
                       </Badge>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg shadow-lg">
                       <div>
                         <div className="font-semibold text-blue-900">{t('profile.discount10')}</div>
                         <div className="text-sm text-gray-600">{t('profile.nextRentalDiscount')}</div>
@@ -863,7 +871,7 @@ export default function PerfilPage() {
                         2500 puntos
                       </Badge>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg shadow-lg">
                       <div>
                         <div className="font-semibold text-blue-900">{t('profile.freeRental')}</div>
                         <div className="text-sm text-gray-600">{t('profile.oneHourScooter')}</div>
@@ -872,7 +880,7 @@ export default function PerfilPage() {
                         4000 puntos
                       </Badge>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg shadow-lg">
                       <div>
                         <div className="font-semibold text-blue-900">{t('profile.premiumFreeRental')}</div>
                         <div className="text-sm text-gray-600">{t('profile.twoHoursBike')}</div>
@@ -883,7 +891,7 @@ export default function PerfilPage() {
                     </div>
                   </div>
                   
-                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg shadow-lg">
                     <div className="text-base lg:text-lg text-blue-900">
                       <strong className="bangers-regular">{t('profile.howToEarnPoints')}</strong>
                       <ul className="mt-2 space-y-1">
@@ -899,7 +907,7 @@ export default function PerfilPage() {
 
             {/* Historial de Alquileres */}
             <div className="lg:col-span-1">
-              <Card className="h-full">
+              <Card className="h-full shadow-lg">
                 <CardHeader>
                   <div className="relative">
                     <CardTitle className="bangers-regular text-xl lg:text-2xl text-blue-900">{t('profile.rentalHistory')}</CardTitle>
@@ -922,7 +930,7 @@ export default function PerfilPage() {
                       <h3 className="text-lg font-semibold text-gray-600 mb-2">{t('profile.noRentalsYet')}</h3>
                       <p className="text-gray-500 mb-4">{t('profile.firstRentalMessage')}</p>
                       <Link href="/alquiler">
-                        <Button className="bg-orange-500 hover:bg-orange-600">
+                        <Button className="bg-orange-500 hover:bg-orange-600 shadow-lg">
                           {t('profile.viewAvailableVehicles')}
                         </Button>
                       </Link>
@@ -931,7 +939,7 @@ export default function PerfilPage() {
                     <>
                       <div className="space-y-4 max-h-[720px] overflow-y-auto scrollbar-hide">
                         {alquileres.map((alquiler: any) => (
-                          <div key={alquiler.id} className="bg-white border-2 border-orange-500 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-200">
+                          <div key={alquiler.id} className="bg-white border-2 border-orange-500 rounded-xl p-4 shadow-xl hover:shadow-2xl transition-all duration-200">
                             {/* Header de la tarjeta */}
                              <div className="mb-3">
                                <div className="flex items-center space-x-2 mb-2">
@@ -962,24 +970,36 @@ export default function PerfilPage() {
                             
                             {/* Información principal */}
                             <div className="grid grid-cols-2 gap-3 mb-3">
-                              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 shadow-lg">
                                 <div className="flex items-center space-x-2 mb-1">
                                   <Calendar className="w-4 h-4 text-orange-500" />
                                   <span className="text-blue-700 text-xs">{t('profile.date')}</span>
                                 </div>
                                 <p className="font-bold text-blue-900 text-sm break-words">{alquiler.fecha}</p>
                               </div>
-                              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 shadow-lg">
                                 <div className="flex items-center space-x-2 mb-1">
                                   <Clock className="w-4 h-4 text-orange-500" />
                                   <span className="text-blue-700 text-xs">{t('profile.duration')}</span>
                                 </div>
-                                <p className="font-bold text-blue-900 whitespace-nowrap">{alquiler.duracion}</p>
+                                <p className="font-bold text-blue-900 text-sm">{alquiler.duracion}</p>
+                                {alquiler.horaInicio && (
+                                  <p className="text-gray-600 text-xs mt-1">
+                                    {alquiler.horaInicio} - {alquiler.horaFin || 
+                                      (() => {
+                                        const [hora, minuto] = alquiler.horaInicio.split(':').map(Number)
+                                        const duracionHoras = parseInt(alquiler.duracion?.toString().replace(/[^0-9]/g, '')) || 1
+                                        const horaFin = (hora + duracionHoras) % 24
+                                        return `${horaFin.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`
+                                      })()
+                                    }
+                                  </p>
+                                )}
                               </div>
                             </div>
                             
                             {/* Precio y puntos */}
-                            <div className="flex justify-between items-center bg-orange-100 border border-orange-300 rounded-lg p-3 mb-3">
+                            <div className="flex justify-between items-center bg-orange-100 border border-orange-300 rounded-lg p-3 mb-3 shadow-lg">
                               <div className="flex items-center space-x-2">
                                 <span className="text-2xl">💰</span>
                                 <div>
@@ -998,13 +1018,13 @@ export default function PerfilPage() {
                             
                             {/* Código de verificación */}
                             {alquiler.verificationCode && (
-                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 shadow-lg">
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center space-x-2">
                                     <Key className="w-4 h-4 text-blue-500" />
                                     <div>
                                       <p className="text-blue-700 text-xs font-medium">Código de Verificación</p>
-                                      <p className="font-bold text-blue-900 text-base font-mono tracking-wider break-all">{alquiler.verificationCode}</p>
+                                      <p className="font-bold text-red-600 text-base font-mono tracking-wider break-all">{alquiler.verificationCode}</p>
                                       <p className="text-blue-600 text-xs">
                                         {alquiler.isVerified ? '✅ Verificado por el administrador' : '⏳ Pendiente de verificación'}
                                       </p>
@@ -1034,7 +1054,7 @@ export default function PerfilPage() {
                       <div className="mt-6 text-center">
                         <Button 
                           variant="outline" 
-                          className="border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white"
+                          className="border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white shadow-lg"
                           onClick={() => setShowPointsModal(true)}
                         >
                           Ver puntos
@@ -1048,14 +1068,14 @@ export default function PerfilPage() {
 
             {/* Logros y Achievements */}
             <div className="lg:col-span-1">
-              <Card className="h-full">
+              <Card className="h-full shadow-lg">
                 <CardHeader>
                   <CardTitle className="bangers-regular text-xl lg:text-2xl text-blue-900">{t('profile.achievements')}</CardTitle>
                 </CardHeader>
                 <CardContent className="pb-2">
                   <div className="max-h-[740px] overflow-y-auto scrollbar-hide space-y-2">
                     {/* Logro 1: Primer Viaje */}
-                    <Card className={`border-2 ${calcularTotalAlquileres() >= 1 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularTotalAlquileres() >= 1 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 1 ? '' : 'grayscale'}`}>🚀</div>
                         <div className="flex-1">
@@ -1069,7 +1089,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 2: Explorador */}
-                    <Card className={`border-2 ${calcularKmTotales() >= 10 ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularKmTotales() >= 10 ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 10 ? '' : 'grayscale'}`}>🗺️</div>
                         <div className="flex-1">
@@ -1083,7 +1103,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 3: Eco Principiante */}
-                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 1 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${parseFloat(calcularCO2Ahorrado()) >= 1 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 1 ? '' : 'grayscale'}`}>🌱</div>
                         <div className="flex-1">
@@ -1097,7 +1117,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 4: Frecuente */}
-                    <Card className={`border-2 ${calcularTotalAlquileres() >= 5 ? 'border-purple-300 bg-purple-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularTotalAlquileres() >= 5 ? 'border-purple-300 bg-purple-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 5 ? '' : 'grayscale'}`}>🔄</div>
                         <div className="flex-1">
@@ -1111,7 +1131,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 5: Aventurero */}
-                    <Card className={`border-2 ${calcularKmTotales() >= 50 ? 'border-orange-300 bg-orange-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularKmTotales() >= 50 ? 'border-orange-300 bg-orange-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 50 ? '' : 'grayscale'}`}>🏔️</div>
                         <div className="flex-1">
@@ -1125,7 +1145,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 6: Eco Consciente */}
-                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 10 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${parseFloat(calcularCO2Ahorrado()) >= 10 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 10 ? '' : 'grayscale'}`}>♻️</div>
                         <div className="flex-1">
@@ -1139,7 +1159,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 7: Habitual */}
-                    <Card className={`border-2 ${calcularTotalAlquileres() >= 10 ? 'border-indigo-300 bg-indigo-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularTotalAlquileres() >= 10 ? 'border-indigo-300 bg-indigo-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 10 ? '' : 'grayscale'}`}>📅</div>
                         <div className="flex-1">
@@ -1153,7 +1173,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 8: Viajero */}
-                    <Card className={`border-2 ${calcularKmTotales() >= 100 ? 'border-cyan-300 bg-cyan-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularKmTotales() >= 100 ? 'border-cyan-300 bg-cyan-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 100 ? '' : 'grayscale'}`}>🧳</div>
                         <div className="flex-1">
@@ -1167,7 +1187,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 9: Eco Defensor */}
-                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 25 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${parseFloat(calcularCO2Ahorrado()) >= 25 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 25 ? '' : 'grayscale'}`}>🛡️</div>
                         <div className="flex-1">
@@ -1181,7 +1201,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 10: Veterano */}
-                    <Card className={`border-2 ${calcularTotalAlquileres() >= 20 ? 'border-amber-300 bg-amber-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularTotalAlquileres() >= 20 ? 'border-amber-300 bg-amber-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 20 ? '' : 'grayscale'}`}>🎖️</div>
                         <div className="flex-1">
@@ -1195,7 +1215,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 11: Nómada */}
-                    <Card className={`border-2 ${calcularKmTotales() >= 200 ? 'border-teal-300 bg-teal-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularKmTotales() >= 200 ? 'border-teal-300 bg-teal-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 200 ? '' : 'grayscale'}`}>🏕️</div>
                         <div className="flex-1">
@@ -1209,7 +1229,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 12: Eco Héroe */}
-                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 50 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${parseFloat(calcularCO2Ahorrado()) >= 50 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 50 ? '' : 'grayscale'}`}>🦸</div>
                         <div className="flex-1">
@@ -1223,7 +1243,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 13: Experto */}
-                    <Card className={`border-2 ${calcularTotalAlquileres() >= 30 ? 'border-violet-300 bg-violet-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularTotalAlquileres() >= 30 ? 'border-violet-300 bg-violet-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 30 ? '' : 'grayscale'}`}>🎯</div>
                         <div className="flex-1">
@@ -1237,7 +1257,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 14: Explorador Urbano */}
-                    <Card className={`border-2 ${calcularKmTotales() >= 300 ? 'border-slate-300 bg-slate-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularKmTotales() >= 300 ? 'border-slate-300 bg-slate-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 300 ? '' : 'grayscale'}`}>🏙️</div>
                         <div className="flex-1">
@@ -1251,7 +1271,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 15: Eco Warrior */}
-                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${parseFloat(calcularCO2Ahorrado()) >= 100 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 100 ? '' : 'grayscale'}`}>⚔️</div>
                         <div className="flex-1">
@@ -1265,7 +1285,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 16: Maestro */}
-                    <Card className={`border-2 ${calcularTotalAlquileres() >= 40 ? 'border-emerald-300 bg-emerald-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularTotalAlquileres() >= 40 ? 'border-emerald-300 bg-emerald-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 40 ? '' : 'grayscale'}`}>🧙</div>
                         <div className="flex-1">
@@ -1279,7 +1299,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 17: Velocista */}
-                    <Card className={`border-2 ${calcularKmTotales() >= 500 ? 'border-yellow-300 bg-yellow-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularKmTotales() >= 500 ? 'border-yellow-300 bg-yellow-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 500 ? '' : 'grayscale'}`}>🏎️</div>
                         <div className="flex-1">
@@ -1293,7 +1313,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 18: Maratonista */}
-                    <Card className={`border-2 ${calcularTotalAlquileres() >= 50 ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularTotalAlquileres() >= 50 ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 50 ? '' : 'grayscale'}`}>🏃</div>
                         <div className="flex-1">
@@ -1307,7 +1327,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 19: Eco Leyenda */}
-                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 200 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${parseFloat(calcularCO2Ahorrado()) >= 200 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 200 ? '' : 'grayscale'}`}>👑</div>
                         <div className="flex-1">
@@ -1321,7 +1341,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 20: Súper Viajero */}
-                    <Card className={`border-2 ${calcularKmTotales() >= 1000 ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularKmTotales() >= 1000 ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularKmTotales() >= 1000 ? '' : 'grayscale'}`}>🚁</div>
                         <div className="flex-1">
@@ -1335,7 +1355,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 21: Centurión */}
-                    <Card className={`border-2 ${calcularTotalAlquileres() >= 100 ? 'border-gold-300 bg-yellow-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${calcularTotalAlquileres() >= 100 ? 'border-gold-300 bg-yellow-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${calcularTotalAlquileres() >= 100 ? '' : 'grayscale'}`}>🏛️</div>
                         <div className="flex-1">
@@ -1349,7 +1369,7 @@ export default function PerfilPage() {
                     </Card>
 
                     {/* Logro 22: Eco Dios */}
-                    <Card className={`border-2 ${parseFloat(calcularCO2Ahorrado()) >= 500 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
+                    <Card className={`border-2 shadow-lg ${parseFloat(calcularCO2Ahorrado()) >= 500 ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 opacity-60'}`}>
                       <CardContent className="p-2 flex items-center space-x-3">
                         <div className={`text-2xl ${parseFloat(calcularCO2Ahorrado()) >= 500 ? '' : 'grayscale'}`}>🌍</div>
                         <div className="flex-1">
@@ -1399,7 +1419,7 @@ export default function PerfilPage() {
             <div className="p-6">
               {/* Puntos Actuales */}
               <div className="text-center mb-8">
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-6 border border-orange-200">
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-6 border border-orange-200 shadow-lg">
                   <div className="text-4xl font-bold text-orange-600 mb-2">{stats.puntosTotales}</div>
                   <div className="text-orange-700 font-medium">Puntos Totales</div>
                   <div className="text-sm text-gray-600 mt-2">
@@ -1412,7 +1432,7 @@ export default function PerfilPage() {
               <div className="mb-8">
                  <h3 className="bangers-regular text-xl text-blue-900 mb-4">💰 Cómo Ganar Puntos</h3>
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 shadow-lg">
                     <div className="flex items-center space-x-3">
                       <div className="bg-blue-500 p-2 rounded-full">
                         <span className="text-white text-sm font-bold">15</span>
@@ -1423,7 +1443,7 @@ export default function PerfilPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                  <div className="bg-green-50 rounded-lg p-4 border border-green-200 shadow-lg">
                     <div className="flex items-center space-x-3">
                       <div className="bg-green-500 p-2 rounded-full">
                         <span className="text-white text-sm font-bold">100</span>
@@ -1434,7 +1454,7 @@ export default function PerfilPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                  <div className="bg-purple-50 rounded-lg p-4 border border-purple-200 shadow-lg">
                     <div className="flex items-center space-x-3">
                       <div className="bg-purple-500 p-2 rounded-full">
                         <span className="text-white text-sm font-bold">200</span>
@@ -1454,7 +1474,7 @@ export default function PerfilPage() {
                 <h3 className="bangers-regular text-xl text-blue-900 mb-4">🎯 Progreso hacia Recompensas</h3>
                 <div className="space-y-4">
                   {/* Descuento 5€ */}
-                  <div className={`rounded-xl p-4 border-2 ${
+                  <div className={`rounded-xl p-4 border-2 shadow-lg ${
                     stats.puntosTotales >= 1500 
                       ? 'bg-green-50 border-green-300' 
                       : 'bg-gray-50 border-gray-300'
@@ -1496,7 +1516,7 @@ export default function PerfilPage() {
                   </div>
 
                   {/* Descuento 10€ */}
-                  <div className={`rounded-xl p-4 border-2 ${
+                  <div className={`rounded-xl p-4 border-2 shadow-lg ${
                     stats.puntosTotales >= 2500 
                       ? 'bg-green-50 border-green-300' 
                       : 'bg-gray-50 border-gray-300'
@@ -1538,7 +1558,7 @@ export default function PerfilPage() {
                   </div>
 
                   {/* Alquiler Gratis */}
-                  <div className={`rounded-xl p-4 border-2 ${
+                  <div className={`rounded-xl p-4 border-2 shadow-lg ${
                     stats.puntosTotales >= 4000 
                       ? 'bg-green-50 border-green-300' 
                       : 'bg-gray-50 border-gray-300'
@@ -1580,7 +1600,7 @@ export default function PerfilPage() {
                   </div>
 
                   {/* Alquiler Premium Gratis */}
-                  <div className={`rounded-xl p-4 border-2 ${
+                  <div className={`rounded-xl p-4 border-2 shadow-lg ${
                     stats.puntosTotales >= 6000 
                       ? 'bg-green-50 border-green-300' 
                       : 'bg-gray-50 border-gray-300'
@@ -1671,7 +1691,7 @@ export default function PerfilPage() {
                 Reserva Expirada
               </h3>
               
-              <div className="bg-gray-50 rounded-lg p-4 mb-4 text-left">
+              <div className="bg-gray-50 rounded-lg p-4 mb-4 text-left shadow-lg">
                 <p className="text-sm text-gray-600 mb-2">
                   <strong>Vehículo:</strong> {expiredBooking.vehicleType}
                 </p>
@@ -1690,7 +1710,7 @@ export default function PerfilPage() {
                 Esta reserva ha expirado sin verificación. ¿Se realizó el alquiler?
               </p>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6 shadow-lg">
                 <p className="text-sm text-yellow-800">
                   <strong>Importante:</strong> Si confirmas que se realizó, no recibirás puntos por no haber verificado el código a tiempo.
                 </p>
