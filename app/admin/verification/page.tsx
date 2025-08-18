@@ -681,7 +681,7 @@ export default function AdminVerificationPage() {
                   }`}
                 >
                   <BarChart3 className="w-4 h-4 mr-1" />
-                  <span className="text-xs">Stats</span>
+                  <span className="text-xs">Stats & Users</span>
                 </Button>
                 <Button
                   onClick={() => setCurrentView('discounts')}
@@ -751,7 +751,7 @@ export default function AdminVerificationPage() {
                 }`}
               >
                 <BarChart3 className="w-4 h-4 mr-2" />
-                Estadísticas
+                Estadísticas y Usuarios
               </Button>
               <Button
                 onClick={() => setCurrentView('discounts')}
@@ -1303,114 +1303,276 @@ export default function AdminVerificationPage() {
             </div>
 
             {/* Gestión de Usuarios */}
-            <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
-              <CardHeader className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="flex items-center bangers-regular text-xl">
-                    <Users className="w-6 h-6 mr-2" />
-                    Usuarios Registrados
-                  </CardTitle>
-                  <div className="flex items-center space-x-2">
-                    <div className="relative">
-                      <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                      <Input
-                        placeholder="Buscar usuarios..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 w-64 bg-white text-gray-900"
-                      />
-                    </div>
-                    <Button onClick={fetchDashboardData} variant="outline" size="sm" className="bg-white text-purple-600 hover:bg-purple-50">
-                      Actualizar
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
+             <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
+               <CardHeader className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+                 <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+                   <CardTitle className="flex items-center bangers-regular text-xl">
+                     <Users className="w-6 h-6 mr-2" />
+                     Usuarios Registrados
+                     <Badge variant="secondary" className="ml-3 bg-white/20 text-white border-white/30">
+                       {users.length} total
+                     </Badge>
+                   </CardTitle>
+                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-1">
+                       <div className="relative flex-1 sm:flex-none">
+                         <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 z-10" />
+                         <Input
+                           placeholder="Buscar por email, nombre o teléfono..."
+                           value={searchTerm}
+                           onChange={(e) => setSearchTerm(e.target.value)}
+                           className="pl-10 sm:w-80 h-10 bg-white text-gray-900 border-2 border-white/50 focus:border-white focus:ring-2 focus:ring-white/30 placeholder:text-gray-400 shadow-lg backdrop-blur-sm rounded-lg transition-all duration-200"
+                         />
+                       </div>
+                     <Button 
+                       onClick={fetchDashboardData} 
+                       variant="outline" 
+                       size="sm" 
+                       className="bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/50 transition-all duration-200 backdrop-blur-sm"
+                       disabled={loading}
+                     >
+                       {loading ? (
+                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                       ) : (
+                         <Users className="w-4 h-4 mr-2" />
+                       )}
+                       {loading ? 'Cargando...' : 'Actualizar'}
+                     </Button>
+                   </div>
+                 </div>
+                 {searchTerm && (
+                   <div className="mt-3 flex items-center gap-2">
+                     <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+                       {filteredUsers.length} resultado{filteredUsers.length !== 1 ? 's' : ''}
+                     </Badge>
+                     <Button
+                       variant="ghost"
+                       size="sm"
+                       onClick={() => setSearchTerm('')}
+                       className="text-white/80 hover:text-white hover:bg-white/10 h-6 px-2"
+                     >
+                       <XCircle className="w-3 h-3 mr-1" />
+                       Limpiar
+                     </Button>
+                   </div>
+                 )}
+               </CardHeader>
               <CardContent className="p-6">
                 {loading ? (
-                  <div className="text-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
-                    <p className="mt-2 text-gray-600">Cargando usuarios...</p>
-                  </div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="text-left py-3 px-4 font-medium text-gray-700">Usuario</th>
-                          <th className="text-left py-3 px-4 font-medium text-gray-700">Método Auth</th>
-                          <th className="text-left py-3 px-4 font-medium text-gray-700">Estado</th>
-                          <th className="text-left py-3 px-4 font-medium text-gray-700">Reservas</th>
-                          <th className="text-left py-3 px-4 font-medium text-gray-700">Último Login</th>
-                          <th className="text-left py-3 px-4 font-medium text-gray-700">Acciones</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredUsers.map((user) => (
-                          <tr key={user.id} className="border-b hover:bg-gray-50 transition-colors">
-                            <td className="py-3 px-4">
-                              <div>
-                                <div className="font-medium text-gray-900">{user.name || 'Sin nombre'}</div>
-                                <div className="text-sm text-gray-600">{user.email}</div>
-                                {user.phone && (
-                                  <div className="text-sm text-gray-500">{user.phone}</div>
-                                )}
-                              </div>
-                            </td>
-                            <td className="py-3 px-4">
-                              <Badge variant={user.authMethod === 'GOOGLE' ? 'default' : 'secondary'}>
-                                {user.authMethod}
-                              </Badge>
-                            </td>
-                            <td className="py-3 px-4">
-                              <Badge variant={user.isVerified ? 'default' : 'destructive'}>
-                                {user.isVerified ? 'Activo' : 'Bloqueado'}
-                              </Badge>
-                            </td>
-                            <td className="py-3 px-4">
-                              <span className="font-medium text-gray-900">{user._count?.bookings || 0}</span>
-                            </td>
-                            <td className="py-3 px-4">
-                              <span className="text-sm text-gray-600">
-                                {user.lastLoginAt 
-                                  ? new Date(user.lastLoginAt).toLocaleDateString()
-                                  : 'Nunca'
-                                }
-                              </span>
-                            </td>
-                            <td className="py-3 px-4">
-                              <div className="flex items-center space-x-2">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => {
-                                    setSelectedUser(user)
-                                    setShowUserModal(true)
-                                  }}
-                                  className="hover:bg-blue-50 hover:text-blue-600"
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant={user.isVerified ? 'destructive' : 'default'}
-                                  onClick={() => toggleUserStatus(user.id, user.isVerified)}
-                                >
-                                  {user.isVerified ? <Ban className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    {filteredUsers.length === 0 && (
-                      <div className="text-center py-8 text-gray-500">
-                        {searchTerm ? 'No se encontraron usuarios que coincidan con la búsqueda' : 'No hay usuarios registrados'}
-                      </div>
-                    )}
-                  </div>
-                )}
+                   <div className="text-center py-12">
+                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+                     <p className="mt-4 text-gray-600 font-medium">Cargando usuarios...</p>
+                     <p className="text-sm text-gray-500">Obteniendo datos de la base de datos</p>
+                   </div>
+                 ) : (
+                   <div className="space-y-4">
+                     {/* Vista de tabla para desktop */}
+                     <div className="hidden lg:block overflow-x-auto">
+                       <table className="w-full">
+                         <thead>
+                           <tr className="border-b-2 border-gray-200 bg-gray-50/50">
+                             <th className="text-left py-4 px-6 font-semibold text-gray-700 uppercase text-xs tracking-wider">Usuario</th>
+                             <th className="text-left py-4 px-6 font-semibold text-gray-700 uppercase text-xs tracking-wider">Autenticación</th>
+                             <th className="text-left py-4 px-6 font-semibold text-gray-700 uppercase text-xs tracking-wider">Estado</th>
+                             <th className="text-left py-4 px-6 font-semibold text-gray-700 uppercase text-xs tracking-wider">Actividad</th>
+                             <th className="text-left py-4 px-6 font-semibold text-gray-700 uppercase text-xs tracking-wider">Último Login</th>
+                             <th className="text-left py-4 px-6 font-semibold text-gray-700 uppercase text-xs tracking-wider">Acciones</th>
+                           </tr>
+                         </thead>
+                         <tbody className="divide-y divide-gray-200">
+                           {filteredUsers.map((user, index) => (
+                             <tr key={user.id} className={`hover:bg-purple-50/50 transition-all duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}`}>
+                               <td className="py-4 px-6">
+                                 <div className="flex items-center space-x-3">
+                                   <div className="flex-shrink-0">
+                                     <div className="h-10 w-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+                                       {(user.name || user.email).charAt(0).toUpperCase()}
+                                     </div>
+                                   </div>
+                                   <div>
+                                     <div className="font-semibold text-gray-900">{user.name || 'Sin nombre'}</div>
+                                     <div className="text-sm text-gray-600">{user.email}</div>
+                                     {user.phone && (
+                                       <div className="text-xs text-gray-500 flex items-center mt-1">
+                                         <Phone className="w-3 h-3 mr-1" />
+                                         {user.phone}
+                                       </div>
+                                     )}
+                                   </div>
+                                 </div>
+                               </td>
+                               <td className="py-4 px-6">
+                                 <Badge variant={user.authMethod === 'GOOGLE' ? 'default' : 'secondary'} className="font-medium">
+                                   {user.authMethod === 'GOOGLE' ? (
+                                     <div className="flex items-center">
+                                       <svg className="w-3 h-3 mr-1" viewBox="0 0 24 24">
+                                         <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                         <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                         <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                         <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                       </svg>
+                                       Google
+                                     </div>
+                                   ) : (
+                                     <div className="flex items-center">
+                                       <Mail className="w-3 h-3 mr-1" />
+                                       Email
+                                     </div>
+                                   )}
+                                 </Badge>
+                               </td>
+                               <td className="py-4 px-6">
+                                 <Badge variant={user.isVerified ? 'default' : 'destructive'} className="font-medium">
+                                   <div className="flex items-center">
+                                     {user.isVerified ? (
+                                       <CheckCircle className="w-3 h-3 mr-1" />
+                                     ) : (
+                                       <XCircle className="w-3 h-3 mr-1" />
+                                     )}
+                                     {user.isVerified ? 'Activo' : 'Bloqueado'}
+                                   </div>
+                                 </Badge>
+                               </td>
+                               <td className="py-4 px-6">
+                                 <div className="flex items-center space-x-4 text-sm">
+                                   <div className="flex items-center text-blue-600">
+                                     <Car className="w-4 h-4 mr-1" />
+                                     <span className="font-semibold">{user._count?.bookings || 0}</span>
+                                   </div>
+                                   <div className="flex items-center text-green-600">
+                                     <Gift className="w-4 h-4 mr-1" />
+                                     <span className="font-semibold">{user._count?.pointsLedger || 0}</span>
+                                   </div>
+                                 </div>
+                               </td>
+                               <td className="py-4 px-6">
+                                 <div className="text-sm text-gray-600">
+                                   {user.lastLoginAt ? (
+                                     <div>
+                                       <div className="font-medium">{new Date(user.lastLoginAt).toLocaleDateString()}</div>
+                                       <div className="text-xs text-gray-500">{new Date(user.lastLoginAt).toLocaleTimeString()}</div>
+                                     </div>
+                                   ) : (
+                                     <span className="text-gray-400 italic">Nunca</span>
+                                   )}
+                                 </div>
+                               </td>
+                               <td className="py-4 px-6">
+                                 <div className="flex items-center space-x-2">
+                                   <Button
+                                     size="sm"
+                                     variant="outline"
+                                     onClick={() => {
+                                       setSelectedUser(user)
+                                       setShowUserModal(true)
+                                     }}
+                                     className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 transition-all duration-200"
+                                   >
+                                     <Eye className="w-4 h-4" />
+                                   </Button>
+                                   <Button
+                                     size="sm"
+                                     variant={user.isVerified ? 'destructive' : 'default'}
+                                     onClick={() => toggleUserStatus(user.id, user.isVerified)}
+                                     className="transition-all duration-200"
+                                   >
+                                     {user.isVerified ? <Ban className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                                   </Button>
+                                 </div>
+                               </td>
+                             </tr>
+                           ))}
+                         </tbody>
+                       </table>
+                     </div>
+
+                     {/* Vista de cards para móvil */}
+                     <div className="lg:hidden space-y-4">
+                       {filteredUsers.map((user) => (
+                         <Card key={user.id} className="border border-gray-200 hover:shadow-md transition-all duration-200">
+                           <CardContent className="p-4">
+                             <div className="flex items-start justify-between">
+                               <div className="flex items-center space-x-3 flex-1">
+                                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold">
+                                   {(user.name || user.email).charAt(0).toUpperCase()}
+                                 </div>
+                                 <div className="flex-1 min-w-0">
+                                   <div className="font-semibold text-gray-900 truncate">{user.name || 'Sin nombre'}</div>
+                                   <div className="text-sm text-gray-600 truncate">{user.email}</div>
+                                   {user.phone && (
+                                     <div className="text-xs text-gray-500 flex items-center mt-1">
+                                       <Phone className="w-3 h-3 mr-1" />
+                                       {user.phone}
+                                     </div>
+                                   )}
+                                 </div>
+                               </div>
+                               <div className="flex items-center space-x-2 ml-2">
+                                 <Button
+                                   size="sm"
+                                   variant="outline"
+                                   onClick={() => {
+                                     setSelectedUser(user)
+                                     setShowUserModal(true)
+                                   }}
+                                 >
+                                   <Eye className="w-4 h-4" />
+                                 </Button>
+                                 <Button
+                                   size="sm"
+                                   variant={user.isVerified ? 'destructive' : 'default'}
+                                   onClick={() => toggleUserStatus(user.id, user.isVerified)}
+                                 >
+                                   {user.isVerified ? <Ban className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                                 </Button>
+                               </div>
+                             </div>
+                             <div className="mt-3 flex flex-wrap gap-2">
+                               <Badge variant={user.authMethod === 'GOOGLE' ? 'default' : 'secondary'} className="text-xs">
+                                 {user.authMethod === 'GOOGLE' ? 'Google' : 'Email'}
+                               </Badge>
+                               <Badge variant={user.isVerified ? 'default' : 'destructive'} className="text-xs">
+                                 {user.isVerified ? 'Activo' : 'Bloqueado'}
+                               </Badge>
+                               <Badge variant="outline" className="text-xs">
+                                 {user._count?.bookings || 0} reservas
+                               </Badge>
+                             </div>
+                             {user.lastLoginAt && (
+                               <div className="mt-2 text-xs text-gray-500">
+                                 Último login: {new Date(user.lastLoginAt).toLocaleDateString()}
+                               </div>
+                             )}
+                           </CardContent>
+                         </Card>
+                       ))}
+                     </div>
+
+                     {filteredUsers.length === 0 && (
+                       <div className="text-center py-12">
+                         <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                         <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                           {searchTerm ? 'No se encontraron usuarios' : 'No hay usuarios registrados'}
+                         </h3>
+                         <p className="text-gray-500">
+                           {searchTerm 
+                             ? `No hay usuarios que coincidan con "${searchTerm}"` 
+                             : 'Los usuarios aparecerán aquí cuando se registren en la aplicación'
+                           }
+                         </p>
+                         {searchTerm && (
+                           <Button
+                             variant="outline"
+                             onClick={() => setSearchTerm('')}
+                             className="mt-4"
+                           >
+                             <XCircle className="w-4 h-4 mr-2" />
+                             Limpiar búsqueda
+                           </Button>
+                         )}
+                       </div>
+                     )}
+                   </div>
+                 )}
               </CardContent>
             </Card>
           </div>
