@@ -683,7 +683,7 @@ export default function PerfilPage() {
                       <Trophy className="w-8 h-8 text-green-500 mx-auto mb-2" />
                       <div className="text-2xl font-bold text-green-600">{calcularCO2Ahorrado()} kg</div>
                       <div className="text-sm text-gray-600">{t('profile.co2Saved')}</div>
-                      <div className="text-xs text-green-600 mt-1">🌱 {t('profile.treesEquivalent').replace('{count}', Math.floor(parseFloat(calcularCO2Ahorrado()) / 18.3).toString())}</div>
+                      <div className="text-xs text-green-600 mt-1">🌱 {t('profile.treesEquivalent').replace('{count}', (parseFloat(calcularCO2Ahorrado()) / 18.3).toFixed(1))}</div>
                     </div>
                   </div>
                   

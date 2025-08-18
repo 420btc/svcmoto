@@ -1,6 +1,24 @@
-# SVC MOTO - Plataforma de Movilidad Sostenible
+# 🏍️ SVC Moto - Sistema de Alquiler de Motos
 
 🏍️ **Alquiler de motos y patinetes eléctricos en Málaga**
+
+Este es un proyecto de [Next.js](https://nextjs.org) para el alquiler de motocicletas con sistema de verificación de códigos.
+
+## ✨ Funcionalidades Principales
+
+### 🔐 Sistema de Verificación de Códigos
+- **Generación automática** de códigos de 6 dígitos para cada reserva
+- **Panel de administración** para verificar códigos (contraseña: 420420.420)
+- **Sistema de puntos** que se otorgan al verificar reservas
+- **Historial completo** de reservas y verificaciones
+
+### 🎯 Características del Sistema
+- Autenticación con Google OAuth
+- Base de datos PostgreSQL (Neon)
+- Panel admin oculto y seguro
+- Integración con Mapbox para ubicaciones
+- Chatbot con OpenAI
+- Diseño responsive con Tailwind CSS
 
 Plataforma web completa de SVC MOTO, empresa líder en alquiler de vehículos eléctricos y servicios de reparación y mantenimiento en Málaga. Incluye sistema de usuarios, rutas turísticas interactivas, y experiencia multiidioma.
 
