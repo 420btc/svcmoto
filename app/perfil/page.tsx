@@ -500,34 +500,13 @@ export default function PerfilPage() {
   }
 
   // Función para borrar todo el historial
-  const handleDeleteHistory = async () => {
+  const handleDeleteHistory = () => {
     if (typeof window === 'undefined' || !user?.email) return
-    
-    try {
-      // Eliminar datos de la base de datos
-      const response = await fetch(`/api/users/delete-history?email=${encodeURIComponent(user.email)}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error('Error al eliminar historial de la base de datos')
-      }
-
-      const result = await response.json()
-      console.log('Historial eliminado de la base de datos:', result.message)
-
-    } catch (error) {
-      console.error('Error eliminando historial de la base de datos:', error)
-      // Continuar con la limpieza local aunque falle la base de datos
-    }
     
     const userHistoryKey = `rentalHistory_${user.email}`
     const userStatsKey = `userStats_${user.email}`
     
-    // Borrar historial y estadísticas del localStorage
+    // Borrar historial y estadísticas
     localStorage.removeItem(userHistoryKey)
     localStorage.removeItem(userStatsKey)
     
@@ -537,7 +516,6 @@ export default function PerfilPage() {
     
     // Limpiar datos de API
     setApiBookings([])
-    setApiServices([])
     
     // Desactivar actualizaciones automáticas
     setAutoUpdateEnabled(false)
@@ -547,9 +525,6 @@ export default function PerfilPage() {
     
     // Forzar actualización de estadísticas
     setStatsRefresh(prev => prev + 1)
-    
-    // Mostrar mensaje de éxito
-    alert('Historial eliminado correctamente de la base de datos y localStorage')
   }
 
   const stats = getStats()
