@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { User, Star, Calendar, MapPin, Edit, Save, X, Trophy, Gift, Menu, ArrowLeft, Home, Clock, Zap, CheckCircle, Key, Copy } from "lucide-react"
+import { User, Star, Calendar, MapPin, Edit, Save, X, Trophy, Gift, Menu, ArrowLeft, Home, Clock, Zap, CheckCircle, Key, Copy, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -73,6 +73,8 @@ export default function PerfilPage() {
   const [processingExpired, setProcessingExpired] = useState(false)
   const [servicios, setServicios] = useState<Servicio[]>([])
   const [loadingServices, setLoadingServices] = useState(false)
+  const [isRefreshingVerification, setIsRefreshingVerification] = useState(false)
+  const [lastVerificationCheck, setLastVerificationCheck] = useState<Date | null>(null)
   const [showServiceCompletionModal, setShowServiceCompletionModal] = useState(false)
   const [pendingServiceCompletion, setPendingServiceCompletion] = useState<any>(null)
   
@@ -324,9 +326,11 @@ export default function PerfilPage() {
     }
     
     // Calcular estadísticas desde API
+    // Asegurar que apiBookings sea un array válido
+    const validApiBookings = Array.isArray(apiBookings) ? apiBookings : []
     const apiStats = {
-      puntosTotales: apiBookings.reduce((total, booking) => total + (booking.pointsAwarded || 0), 0),
-      alquileresCompletados: apiBookings.filter(booking => booking.isVerified).length
+      puntosTotales: validApiBookings.reduce((total, booking) => total + (booking.pointsAwarded || 0), 0),
+      alquileresCompletados: validApiBookings.filter(booking => booking.isVerified).length
     }
     
     // Fallback a localStorage para compatibilidad
@@ -499,8 +503,31 @@ export default function PerfilPage() {
     return combinedHistory.sort((a, b) => new Date(b.fechaCreacion || 0) - new Date(a.fechaCreacion || 0))
   }
 
+  // Función para verificar estado de verificación de reservas
+  const checkVerificationStatus = async () => {
+    if (!user?.email || isRefreshingVerification) return
+    
+    setIsRefreshingVerification(true)
+    try {
+      const response = await fetch(`/api/bookings?userId=${user.email}`)
+      if (response.ok) {
+        const updatedBookings = await response.json()
+        // Asegurar que siempre sea un array
+        const bookingsArray = Array.isArray(updatedBookings) ? updatedBookings : []
+        setApiBookings(bookingsArray)
+        setLastVerificationCheck(new Date())
+      }
+    } catch (error) {
+      console.error('Error checking verification status:', error)
+      // En caso de error, mantener array vacío
+      setApiBookings([])
+    } finally {
+      setIsRefreshingVerification(false)
+    }
+  }
+
   // Función para borrar todo el historial
-  const handleDeleteHistory = () => {
+  const handleDeleteHistory = async () => {
     if (typeof window === 'undefined' || !user?.email) return
     
     const userHistoryKey = `rentalHistory_${user.email}`
@@ -659,7 +686,16 @@ export default function PerfilPage() {
     return () => clearInterval(interval)
   }, [alquileres, user?.email])
   
+  // Verificación automática cada 30 segundos para códigos de verificación
+  useEffect(() => {
+    if (!user?.email || !autoUpdateEnabled) return
 
+    const interval = setInterval(() => {
+      checkVerificationStatus()
+    }, 30000) // 30 segundos
+
+    return () => clearInterval(interval)
+  }, [user?.email, autoUpdateEnabled])
 
   const handleSave = () => {
     setUserInfo(editedInfo)
@@ -1381,20 +1417,38 @@ export default function PerfilPage() {
                                       </p>
                                     </div>
                                   </div>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => {
-                                      navigator.clipboard.writeText(alquiler.verificationCode || '')
-                                      // Aquí podrías agregar un toast de confirmación
-                                    }}
-                                    className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
-                                  >
-                                    <Copy className="w-4 h-4" />
-                                  </Button>
+                                  <div className="flex space-x-1">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => checkVerificationStatus()}
+                                      disabled={isRefreshingVerification}
+                                      className="border-green-500 text-green-500 hover:bg-green-500 hover:text-white p-1 h-8 w-8"
+                                      title="Actualizar estado de verificación"
+                                    >
+                                      <RefreshCw className={`w-3 h-3 ${isRefreshingVerification ? 'animate-spin' : ''}`} />
+                                    </Button>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(alquiler.verificationCode || '')
+                                        // Aquí podrías agregar un toast de confirmación
+                                      }}
+                                      className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white p-1 h-8 w-8"
+                                      title="Copiar código"
+                                    >
+                                      <Copy className="w-3 h-3" />
+                                    </Button>
+                                  </div>
                                 </div>
                                 <div className="mt-2 p-2 bg-blue-100 rounded text-xs text-blue-700">
                                   💡 Presenta este código en la tienda física para completar tu alquiler y recibir tus puntos.
+                                  {lastVerificationCheck && (
+                                    <div className="mt-1 text-xs text-gray-500">
+                                      🔄 Última verificación: {lastVerificationCheck.toLocaleTimeString()}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             )}
