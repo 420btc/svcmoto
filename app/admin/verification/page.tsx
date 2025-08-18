@@ -497,76 +497,138 @@ export default function AdminVerificationPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-orange-50">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-900 to-blue-800 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Shield className="w-10 h-10 mr-4 text-orange-400" />
-              <div>
-                <h1 className="bangers-regular text-3xl text-white drop-shadow-lg">Panel de Administración SVC MOTO</h1>
-                <p className="text-blue-200">Sistema de verificación y estadísticas</p>
+        <div className="max-w-7xl mx-auto px-4 py-4 md:py-6">
+          {/* Mobile Header */}
+          <div className="block md:hidden">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <Shield className="w-8 h-8 mr-3 text-orange-400" />
+                <div>
+                  <h1 className="bangers-regular text-xl text-white drop-shadow-lg">Panel Admin SVC MOTO</h1>
+                  <p className="text-blue-200 text-sm">Verificación y estadísticas</p>
+                </div>
               </div>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className="border-white text-white hover:bg-white hover:text-blue-900 shadow-lg"
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
             </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="flex items-center">
+            
+            {/* Mobile Navigation */}
+            <div className="flex flex-col space-y-2">
+              <Link href="/" className="w-full">
                 <Button
                   variant="outline"
-                  className="border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-white shadow-lg"
+                  className="w-full border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-white shadow-lg"
                 >
                   <Home className="w-4 h-4 mr-2" />
                   Menú Principal
                 </Button>
               </Link>
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-blue-900 shadow-lg"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Salir
-              </Button>
+              
+              <div className="flex space-x-2">
+                <Button
+                  onClick={() => setCurrentView('verification')}
+                  className={`flex-1 shadow-lg ${
+                    currentView === 'verification'
+                      ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                      : 'bg-white/20 text-white hover:bg-white/30'
+                  }`}
+                >
+                  <Search className="w-4 h-4 mr-1" />
+                  <span className="text-sm">Verificación</span>
+                </Button>
+                <Button
+                  onClick={() => setCurrentView('stats')}
+                  className={`flex-1 shadow-lg ${
+                    currentView === 'stats'
+                      ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                      : 'bg-white/20 text-white hover:bg-white/30'
+                  }`}
+                >
+                  <BarChart3 className="w-4 h-4 mr-1" />
+                  <span className="text-sm">Estadísticas</span>
+                </Button>
+              </div>
             </div>
           </div>
           
-          {/* Navigation Tabs */}
-          <div className="mt-6 flex space-x-4">
-            <Button
-              onClick={() => setCurrentView('verification')}
-              className={`shadow-lg ${
-                currentView === 'verification'
-                  ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                  : 'bg-white/20 text-white hover:bg-white/30'
-              }`}
-            >
-              <Search className="w-4 h-4 mr-2" />
-              Verificación
-            </Button>
-            <Button
-              onClick={() => setCurrentView('stats')}
-              className={`shadow-lg ${
-                currentView === 'stats'
-                  ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                  : 'bg-white/20 text-white hover:bg-white/30'
-              }`}
-            >
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Estadísticas
-            </Button>
+          {/* Desktop Header */}
+          <div className="hidden md:block">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Shield className="w-10 h-10 mr-4 text-orange-400" />
+                <div>
+                  <h1 className="bangers-regular text-3xl text-white drop-shadow-lg">Panel de Administración SVC MOTO</h1>
+                  <p className="text-blue-200">Sistema de verificación y estadísticas</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Link href="/" className="flex items-center">
+                  <Button
+                    variant="outline"
+                    className="border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-white shadow-lg"
+                  >
+                    <Home className="w-4 h-4 mr-2" />
+                    Menú Principal
+                  </Button>
+                </Link>
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="border-white text-white hover:bg-white hover:text-blue-900 shadow-lg"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Salir
+                </Button>
+              </div>
+            </div>
+            
+            {/* Desktop Navigation Tabs */}
+            <div className="mt-6 flex space-x-4">
+              <Button
+                onClick={() => setCurrentView('verification')}
+                className={`shadow-lg ${
+                  currentView === 'verification'
+                    ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                    : 'bg-white/20 text-white hover:bg-white/30'
+                }`}
+              >
+                <Search className="w-4 h-4 mr-2" />
+                Verificación
+              </Button>
+              <Button
+                onClick={() => setCurrentView('stats')}
+                className={`shadow-lg ${
+                  currentView === 'stats'
+                    ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                    : 'bg-white/20 text-white hover:bg-white/30'
+                }`}
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Estadísticas
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-6 min-h-[calc(100vh-200px)]">
         {currentView === 'verification' ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Verification Section */}
-            <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
-              <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-                <CardTitle className="flex items-center bangers-regular text-xl">
-                  <Search className="w-6 h-6 mr-2" />
-                  Verificar Código de Reserva
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
+              {/* Verification Section */}
+              <Card className="shadow-xl border-0 bg-white/95 backdrop-blur overflow-hidden py-0">
+                  <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white m-0 p-6 px-6">
+                    <CardTitle className="flex items-center bangers-regular text-xl m-0">
+                      <Search className="w-6 h-6 mr-2" />
+                      Verificar Código de Reserva
+                    </CardTitle>
+                  </CardHeader>
+                <CardContent className="p-6">
                 <form onSubmit={handleVerification} className="space-y-6">
                   <div className="space-y-3">
                     <label htmlFor="code" className="text-sm font-medium text-blue-900">
@@ -667,15 +729,15 @@ export default function AdminVerificationPage() {
             </Card>
 
             {/* Recent Verifications */}
-            <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
-              <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
-                <CardTitle className="flex items-center bangers-regular text-xl">
-                  <Clock className="w-6 h-6 mr-2" />
-                  Historial de Verificaciones
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4 max-h-[600px] overflow-y-auto">
+             <Card className="shadow-xl border-0 bg-white/95 backdrop-blur h-full flex flex-col overflow-hidden py-0">
+                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white m-0 p-6 px-6">
+                  <CardTitle className="flex items-center bangers-regular text-xl m-0">
+                    <Clock className="w-6 h-6 mr-2" />
+                    Historial de Verificaciones
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 flex-1 flex flex-col">
+                 <div className="space-y-4 flex-1 overflow-y-auto">
                   {recentVerifications.length ? (
                     recentVerifications.map((verification) => (
                       <div key={verification.id} className="bg-gradient-to-r from-blue-50 to-orange-50 rounded-xl p-4 shadow-lg border border-orange-200">
@@ -752,8 +814,8 @@ export default function AdminVerificationPage() {
           <div className="space-y-8">
             {/* Stats Overview Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="shadow-xl border-0 bg-gradient-to-br from-orange-500 to-orange-600 text-white">
-                <CardContent className="p-6">
+              <Card className="shadow-xl border-0 bg-gradient-to-br from-orange-500 to-orange-600 text-white overflow-hidden py-0">
+                  <CardContent className="p-6 m-0">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-orange-100 text-sm font-medium">Total Verificaciones</p>
@@ -766,8 +828,8 @@ export default function AdminVerificationPage() {
                 </CardContent>
               </Card>
               
-              <Card className="shadow-xl border-0 bg-gradient-to-br from-blue-600 to-blue-700 text-white">
-                <CardContent className="p-6">
+              <Card className="shadow-xl border-0 bg-gradient-to-br from-blue-600 to-blue-700 text-white overflow-hidden py-0">
+                  <CardContent className="p-6 m-0">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-blue-100 text-sm font-medium">Ingresos Totales</p>
@@ -780,8 +842,8 @@ export default function AdminVerificationPage() {
                 </CardContent>
               </Card>
               
-              <Card className="shadow-xl border-0 bg-gradient-to-br from-green-500 to-green-600 text-white">
-                <CardContent className="p-6">
+              <Card className="shadow-xl border-0 bg-gradient-to-br from-green-500 to-green-600 text-white overflow-hidden py-0">
+                  <CardContent className="p-6 m-0">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-green-100 text-sm font-medium">Puntos Otorgados</p>
@@ -798,13 +860,13 @@ export default function AdminVerificationPage() {
             {/* Charts Section */}
              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                {/* Line Chart - Verificaciones por día */}
-               <Card className="shadow-xl border-0 bg-gradient-to-br from-blue-50 to-blue-100">
-                 <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
-                   <CardTitle className="bangers-regular text-xl flex items-center">
-                     <TrendingUp className="w-6 h-6 mr-2" />
-                     Verificaciones por Día (Últimos 7 días)
-                   </CardTitle>
-                 </CardHeader>
+               <Card className="shadow-xl border-0 bg-gradient-to-br from-blue-50 to-blue-100 overflow-hidden py-0">
+                    <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white m-0 p-6 px-6">
+                      <CardTitle className="bangers-regular text-xl flex items-center m-0">
+                        <TrendingUp className="w-6 h-6 mr-2" />
+                        Verificaciones por Día (Últimos 7 días)
+                      </CardTitle>
+                    </CardHeader>
                  <CardContent className="p-6">
                    <div className="h-64 flex items-end justify-between space-x-3 bg-gradient-to-t from-gray-200 to-gray-50 rounded-lg p-4 border-2 border-gray-300">
                      {(() => {
@@ -864,13 +926,13 @@ export default function AdminVerificationPage() {
                </Card>
               
               {/* Donut Chart - Tipos de vehículos */}
-               <Card className="shadow-xl border-0 bg-gradient-to-br from-orange-50 to-orange-100">
-                 <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-                   <CardTitle className="bangers-regular text-xl flex items-center">
-                     <BarChart3 className="w-6 h-6 mr-2" />
-                     Distribución por Tipo de Vehículo
-                   </CardTitle>
-                 </CardHeader>
+               <Card className="shadow-xl border-0 bg-gradient-to-br from-orange-50 to-orange-100 overflow-hidden py-0">
+                    <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white m-0 p-6 px-6">
+                      <CardTitle className="bangers-regular text-xl flex items-center m-0">
+                        <BarChart3 className="w-6 h-6 mr-2" />
+                        Distribución por Tipo de Vehículo
+                      </CardTitle>
+                    </CardHeader>
                  <CardContent className="p-6">
                    <div className="flex items-center justify-center h-64">
                      {(() => {
