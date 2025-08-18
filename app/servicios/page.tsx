@@ -88,36 +88,86 @@ export default function ServiciosPage() {
     setShowServicioModal(true)
   }
 
-  const realizarSolicitud = () => {
+  const realizarSolicitud = async () => {
     if (!selectedServicio || !selectedHora || !formData.nombre || !formData.telefono) {
       alert(t('services.completeFields'))
       return
     }
 
-    const nuevaSolicitud: SolicitudServicio = {
-      id: Date.now().toString(),
-      servicioId: selectedServicio.id,
-      servicioNombre: selectedServicio.nombre,
-      fecha: selectedDate,
-      hora: selectedHora,
-      nombre: formData.nombre,
-      telefono: formData.telefono,
-      direccion: formData.direccion,
-      descripcionProblema: formData.descripcionProblema,
-      urgente: selectedServicio.urgente,
-      estado: 'pendiente'
-    }
+    try {
+      // Obtener el usuario actual
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+      if (!currentUser.email) {
+        alert('Debes estar logueado para solicitar un servicio')
+        return
+      }
 
-    const nuevasSolicitudes = [...solicitudes, nuevaSolicitud]
-    setSolicitudes(nuevasSolicitudes)
-    localStorage.setItem('solicitudesServicio', JSON.stringify(nuevasSolicitudes))
-    
-    setShowServicioModal(false)
-    setShowConfirmation(true)
-    
-    // Reset form
-    setSelectedServicio(null)
-    setSelectedHora('')
+      // Obtener el ID del usuario desde la API
+      const userResponse = await fetch(`/api/users?email=${encodeURIComponent(currentUser.email)}`)
+      if (!userResponse.ok) {
+        throw new Error('Usuario no encontrado')
+      }
+      const userData = await userResponse.json()
+
+      // Crear el servicio en la base de datos
+      const serviceData = {
+        userId: userData.user.id,
+        serviceType: selectedServicio.nombre,
+        vehicleType: selectedServicio.vehiculo || null,
+        description: `${formData.descripcionProblema || 'Servicio solicitado'} - Fecha preferida: ${selectedDate} ${selectedHora}`,
+        contactInfo: `${formData.nombre} - ${formData.telefono}${formData.direccion ? ` - ${formData.direccion}` : ''}`,
+        preferredDate: new Date(`${selectedDate}T${selectedHora}:00`).toISOString(),
+        estimatedPrice: parseFloat(selectedServicio.precio.replace(/[^0-9.]/g, '')) || null
+      }
+
+      console.log('Datos a enviar:', serviceData)
+      console.log('Usuario obtenido:', userData)
+
+      const response = await fetch('/api/services', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(serviceData)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error('Error de la API:', errorData)
+        throw new Error(`Error al crear el servicio: ${errorData.error || response.statusText}`)
+      }
+
+      const newService = await response.json()
+      
+      // También guardar en localStorage para compatibilidad
+      const nuevaSolicitud: SolicitudServicio = {
+        id: newService.id,
+        servicioId: selectedServicio.id,
+        servicioNombre: selectedServicio.nombre,
+        fecha: selectedDate,
+        hora: selectedHora,
+        nombre: formData.nombre,
+        telefono: formData.telefono,
+        direccion: formData.direccion,
+        descripcionProblema: formData.descripcionProblema,
+        urgente: selectedServicio.urgente,
+        estado: 'pendiente'
+      }
+
+      const nuevasSolicitudes = [...solicitudes, nuevaSolicitud]
+      setSolicitudes(nuevasSolicitudes)
+      localStorage.setItem('solicitudesServicio', JSON.stringify(nuevasSolicitudes))
+      
+      setShowServicioModal(false)
+      setShowConfirmation(true)
+      
+      // Reset form
+      setSelectedServicio(null)
+      setSelectedHora('')
+    } catch (error) {
+      console.error('Error al solicitar servicio:', error)
+      alert('Error al solicitar el servicio. Por favor, inténtalo de nuevo.')
+    }
     setFormData({
       nombre: user?.name || '',
       telefono: user?.phone || '',

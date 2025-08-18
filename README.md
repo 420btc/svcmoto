@@ -8,7 +8,7 @@ Este es un proyecto de [Next.js](https://nextjs.org) para el alquiler de motocic
 
 ### 🔐 Sistema de Verificación de Códigos
 - **Generación automática** de códigos de 6 dígitos para cada reserva
-- **Panel de administración** para verificar códigos (contraseña: 420420.420)
+- **Panel de administración** para verificar códigos 
 - **Sistema de puntos** que se otorgan al verificar reservas
 - **Historial completo** de reservas y verificaciones
 

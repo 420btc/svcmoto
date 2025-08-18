@@ -33,6 +33,18 @@ interface Alquiler {
   isVerified?: boolean
 }
 
+interface Servicio {
+  id: string
+  serviceType: string
+  vehicleType?: string
+  description: string
+  fecha: string
+  estado: "pending" | "confirmed" | "in_progress" | "completed" | "cancelled"
+  estimatedPrice?: number
+  finalPrice?: number
+  contactInfo: string
+}
+
 export default function PerfilPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
@@ -59,6 +71,8 @@ export default function PerfilPage() {
   const [showExpiredModal, setShowExpiredModal] = useState(false)
   const [expiredBooking, setExpiredBooking] = useState<any>(null)
   const [processingExpired, setProcessingExpired] = useState(false)
+  const [servicios, setServicios] = useState<Servicio[]>([])
+  const [loadingServices, setLoadingServices] = useState(false)
   
   // Función para reactivar actualizaciones automáticas (se puede llamar desde otras páginas)
   const reactivateAutoUpdate = () => {
@@ -208,10 +222,11 @@ export default function PerfilPage() {
     router.push('/')
   }
 
-  // Cargar bookings desde API cuando el usuario esté disponible
+  // Cargar bookings y servicios desde API cuando el usuario esté disponible
   useEffect(() => {
     if (user?.email && autoUpdateEnabled) {
       fetchBookingsFromAPI()
+      fetchServicesFromAPI()
     }
   }, [user?.email, autoUpdateEnabled])
   
@@ -228,6 +243,7 @@ export default function PerfilPage() {
     
     const interval = setInterval(() => {
       fetchBookingsFromAPI()
+      fetchServicesFromAPI()
     }, 30000) // 30 segundos
     
     return () => clearInterval(interval)
@@ -320,6 +336,41 @@ export default function PerfilPage() {
     return {
       puntosTotales: apiStats.puntosTotales > 0 ? apiStats.puntosTotales : localStats.puntosTotales,
       alquileresCompletados: apiStats.alquileresCompletados > 0 ? apiStats.alquileresCompletados : localStats.alquileresCompletados
+    }
+  }
+
+  const fetchServicesFromAPI = async () => {
+    if (!user?.email) return
+    
+    setLoadingServices(true)
+    try {
+      const response = await fetch(`/api/services?email=${encodeURIComponent(user.email)}`)
+      if (response.ok) {
+        const services = await response.json()
+        
+        // Convertir los servicios de la API al formato esperado
+        const formattedServices = services.map((service: any) => ({
+          id: service.id,
+          serviceType: service.serviceType,
+          vehicleType: service.vehicleType,
+          description: service.description,
+          fecha: new Date(service.createdAt).toLocaleDateString('es-ES', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          }),
+          estado: service.status.toLowerCase(),
+          estimatedPrice: service.estimatedPrice,
+          finalPrice: service.finalPrice,
+          contactInfo: service.contactInfo
+        }))
+        
+        setServicios(formattedServices)
+      }
+    } catch (error) {
+      console.error('Error al cargar servicios:', error)
+    } finally {
+      setLoadingServices(false)
     }
   }
 
@@ -978,7 +1029,7 @@ export default function PerfilPage() {
               <Card className="h-full shadow-lg">
                 <CardHeader>
                   <div className="relative">
-                    <CardTitle className="bangers-regular text-xl lg:text-2xl text-blue-900">{t('profile.rentalHistory')}</CardTitle>
+                    <CardTitle className="bangers-regular text-xl lg:text-2xl text-blue-900">Historial de Alquileres y Servicios</CardTitle>
                     {alquileres.length > 0 && (
                       <Button
                         variant="ghost"
@@ -1099,6 +1150,75 @@ export default function PerfilPage() {
                                 </div>
                               </div>
                             )}
+                          </div>
+                        ))}
+                        
+                        {/* Tarjetas de Servicios */}
+                        {servicios.map((servicio: any) => (
+                          <div key={servicio.id} className="bg-white border-2 border-blue-500 rounded-xl p-4 shadow-xl hover:shadow-2xl transition-all duration-200">
+                            {/* Header de la tarjeta */}
+                             <div className="mb-3">
+                               <div className="flex items-center space-x-2 mb-2">
+                                 <div className="bg-blue-500 p-2 rounded-full">
+                                   <Zap className="w-4 h-4 text-white" />
+                                 </div>
+                                 <div className="min-w-0 flex-1">
+                                   <h4 className="font-bold text-blue-900 text-base sm:text-lg truncate">{servicio.serviceType}</h4>
+                                   <p className="text-gray-500 text-xs truncate">ID: {servicio.id}</p>
+                                 </div>
+                               </div>
+                               {/* Badge centrado debajo del título */}
+                               <div className="flex justify-center">
+                                 <div className={`px-2 py-1 rounded-full ${
+                                   servicio.estado === 'completed' ? 'bg-green-500' :
+                                   servicio.estado === 'confirmed' ? 'bg-blue-500' :
+                                   servicio.estado === 'in_progress' ? 'bg-yellow-500' :
+                                   servicio.estado === 'cancelled' ? 'bg-red-500' :
+                                   'bg-gray-500'
+                                 }`}>
+                                   <span className="text-white text-xs font-semibold">
+                                     {servicio.estado === 'completed' ? 'Completado' :
+                                      servicio.estado === 'confirmed' ? 'Confirmado' :
+                                      servicio.estado === 'in_progress' ? 'En Progreso' :
+                                      servicio.estado === 'cancelled' ? 'Cancelado' :
+                                      'Pendiente'}
+                                   </span>
+                                 </div>
+                               </div>
+                             </div>
+                            
+                            {/* Información principal */}
+                            <div className="grid grid-cols-2 gap-3 mb-3">
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 shadow-lg">
+                                <div className="flex items-center space-x-2 mb-1">
+                                  <Calendar className="w-4 h-4 text-blue-500" />
+                                  <span className="text-blue-700 text-xs">Fecha</span>
+                                </div>
+                                <p className="font-bold text-blue-900 text-sm break-words">{servicio.fecha}</p>
+                              </div>
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 shadow-lg">
+                                <div className="flex items-center space-x-2 mb-1">
+                                  <Gift className="w-4 h-4 text-blue-500" />
+                                  <span className="text-blue-700 text-xs">Precio</span>
+                                </div>
+                                <p className="font-bold text-blue-900 text-sm">
+                                  {servicio.finalPrice ? `${servicio.finalPrice}€` : 
+                                   servicio.estimatedPrice ? `~${servicio.estimatedPrice}€` : 'Por determinar'}
+                                </p>
+                              </div>
+                            </div>
+                            
+                            {/* Descripción del servicio */}
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 shadow-lg mb-3">
+                              <div className="flex items-center space-x-2 mb-1">
+                                <Zap className="w-4 h-4 text-blue-500" />
+                                <span className="text-blue-700 text-xs font-medium">Descripción del Servicio</span>
+                              </div>
+                              <p className="text-blue-900 text-sm">{servicio.description}</p>
+                              {servicio.vehicleType && (
+                                <p className="text-blue-600 text-xs mt-1">Vehículo: {servicio.vehicleType}</p>
+                              )}
+                            </div>
                           </div>
                         ))}
                         
@@ -1550,6 +1670,8 @@ export default function PerfilPage() {
                 </CardContent>
               </Card>
             </div>
+
+
           </div>
         </div>
       </section>

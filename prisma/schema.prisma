@@ -26,6 +26,7 @@ model User {
 
   // Relations
   bookings     Booking[]
+  services     Service[]
   pointsLedger PointsLedger[]
   discounts    Discount[]
 
@@ -116,4 +117,36 @@ enum BookingStatus {
   COMPLETED_NO_VERIFICATION  // Completada sin verificación (sin puntos)
   CANCELLED                  // Cancelada
   EXPIRED                    // Expirada sin usar
+}
+
+model Service {
+  id              String        @id @default(cuid())
+  userId          String
+  serviceType     String        // "mantenimiento", "reparacion", "revision", etc.
+  vehicleType     String?       // Tipo de vehículo si aplica
+  description     String        // Descripción del servicio solicitado
+  contactInfo     String        // Email o teléfono de contacto
+  preferredDate   DateTime?     // Fecha preferida para el servicio
+  status          ServiceStatus @default(PENDING)
+  estimatedPrice  Float?        // Precio estimado del servicio
+  finalPrice      Float?        // Precio final del servicio
+  completedAt     DateTime?     // Fecha de completado
+  cancelledAt     DateTime?     // Fecha de cancelación
+  notes           String?       // Notas adicionales
+  emailSent       Boolean       @default(false) // Si se envió email de confirmación
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("services")
+}
+
+enum ServiceStatus {
+  PENDING     // Servicio solicitado, esperando confirmación
+  CONFIRMED   // Servicio confirmado
+  IN_PROGRESS // Servicio en progreso
+  COMPLETED   // Servicio completado
+  CANCELLED   // Servicio cancelado
 }
