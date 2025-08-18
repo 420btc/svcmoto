@@ -103,6 +103,26 @@ export default function AdminVerificationPage() {
     if (savedAuth === 'true') {
       setIsAuthenticated(true)
     }
+    
+    // Clear any existing sample data
+    const existingData = localStorage.getItem('adminAllVerifications')
+    if (existingData) {
+      try {
+        const data = JSON.parse(existingData)
+        // Remove any data with sample- prefix
+        const realData = data.filter((item: any) => !item.id.startsWith('sample-'))
+        localStorage.setItem('adminAllVerifications', JSON.stringify(realData))
+        setAllVerifications(realData)
+      } catch (error) {
+        console.error('Error cleaning sample data:', error)
+        localStorage.removeItem('adminAllVerifications')
+        setAllVerifications([])
+      }
+    }
+    
+    // Clear any cached stats to force recalculation
+    localStorage.removeItem('adminStats')
+    localStorage.removeItem('adminRecentVerifications')
   }, [])
 
   // Load recent verifications and stats on authentication
@@ -193,13 +213,20 @@ export default function AdminVerificationPage() {
   }
 
   const generateLocalStats = () => {
-    const saved = localStorage.getItem('adminAllVerifications')
-    if (saved) {
-      const verifications = JSON.parse(saved)
-      const stats = calculateStatsFromVerifications(verifications)
-      setAdminStats(stats)
-      localStorage.setItem('adminStats', JSON.stringify(stats))
+    let verifications = allVerifications
+    
+    // If no verifications in state, try to load from localStorage
+    if (verifications.length === 0) {
+      const saved = localStorage.getItem('adminAllVerifications')
+      if (saved) {
+        verifications = JSON.parse(saved)
+        setAllVerifications(verifications)
+      }
     }
+    
+    const stats = calculateStatsFromVerifications(verifications)
+    setAdminStats(stats)
+    localStorage.setItem('adminStats', JSON.stringify(stats))
   }
 
   const calculateStatsFromVerifications = (verifications: RecentVerification[]): AdminStats => {
@@ -769,85 +796,171 @@ export default function AdminVerificationPage() {
             </div>
             
             {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Line Chart - Verificaciones por día */}
-              <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
-                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
-                  <CardTitle className="bangers-regular text-xl">Verificaciones por Día (Últimos 7 días)</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="h-64 flex items-end justify-between space-x-2">
-                    {(adminStats?.verificationsByDay || []).map((day, index) => {
-                      const maxCount = Math.max(...(adminStats?.verificationsByDay || []).map(d => d.count))
-                      const height = maxCount > 0 ? (day.count / maxCount) * 200 : 0
-                      return (
-                        <div key={index} className="flex flex-col items-center flex-1">
-                          <div 
-                            className="bg-gradient-to-t from-orange-500 to-orange-400 rounded-t-lg w-full transition-all duration-500 hover:from-orange-600 hover:to-orange-500"
-                            style={{ height: `${height}px`, minHeight: '20px' }}
-                          ></div>
-                          <div className="mt-2 text-center">
-                            <p className="text-sm font-bold text-blue-900">{day.count}</p>
-                            <p className="text-xs text-gray-600">{new Date(day.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })}</p>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+               {/* Line Chart - Verificaciones por día */}
+               <Card className="shadow-xl border-0 bg-gradient-to-br from-blue-50 to-blue-100">
+                 <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
+                   <CardTitle className="bangers-regular text-xl flex items-center">
+                     <TrendingUp className="w-6 h-6 mr-2" />
+                     Verificaciones por Día (Últimos 7 días)
+                   </CardTitle>
+                 </CardHeader>
+                 <CardContent className="p-6">
+                   <div className="h-64 flex items-end justify-between space-x-3 bg-gradient-to-t from-gray-200 to-gray-50 rounded-lg p-4 border-2 border-gray-300">
+                     {(() => {
+                       const stats = adminStats || calculateStatsFromVerifications(allVerifications)
+                       const days = stats.verificationsByDay || []
+                       
+                       if (days.length === 0) {
+                         return (
+                           <div className="flex items-center justify-center w-full h-full">
+                             <div className="text-center">
+                               <BarChart3 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                               <p className="text-gray-500">No hay datos de verificaciones</p>
+                             </div>
+                           </div>
+                         )
+                       }
+                       
+                       const maxCount = Math.max(...days.map(d => d.count), 1)
+                       
+                       return days.map((day, index) => {
+                         const height = (day.count / maxCount) * 180
+                         const colors = [
+                           'from-red-600 to-red-700 border-red-800',
+                           'from-orange-600 to-orange-700 border-orange-800', 
+                           'from-yellow-600 to-yellow-700 border-yellow-800',
+                           'from-green-600 to-green-700 border-green-800',
+                           'from-blue-600 to-blue-700 border-blue-800',
+                           'from-indigo-600 to-indigo-700 border-indigo-800',
+                           'from-purple-600 to-purple-700 border-purple-800'
+                         ]
+                         
+                         return (
+                           <div key={index} className="flex flex-col items-center flex-1 group">
+                             <div className="relative">
+                               <div 
+                                 className={`bg-gradient-to-t ${colors[index]} rounded-t-lg w-full transition-all duration-500 hover:scale-110 shadow-xl group-hover:shadow-2xl cursor-pointer border-2`}
+                                 style={{ height: `${Math.max(height, 25)}px`, minHeight: '25px' }}
+                                 title={`${day.count} verificaciones`}
+                               ></div>
+                               <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-sm px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                                 {day.count}
+                               </div>
+                             </div>
+                             <div className="mt-3 text-center">
+                               <p className="text-lg font-bold text-blue-900 bg-white rounded px-2 py-1 shadow-sm">{day.count}</p>
+                               <p className="text-sm text-gray-700 font-medium">{new Date(day.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })}</p>
+                             </div>
+                           </div>
+                         )
+                       })
+                     })()} 
+                   </div>
+                   <div className="mt-4 text-center">
+                     <p className="text-sm text-gray-600">Promedio: {Math.round((adminStats?.verificationsByDay || []).reduce((sum, d) => sum + d.count, 0) / Math.max((adminStats?.verificationsByDay || []).length, 1))} verificaciones/día</p>
+                   </div>
+                 </CardContent>
+               </Card>
               
               {/* Donut Chart - Tipos de vehículos */}
-              <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
-                <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-                  <CardTitle className="bangers-regular text-xl">Distribución por Tipo de Vehículo</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-center h-64">
-                    <div className="relative w-48 h-48">
-                      {/* Simple donut chart representation */}
-                      <div className="absolute inset-0 rounded-full border-8 border-orange-200"></div>
-                      {(adminStats?.vehicleTypeStats || []).map((vehicle, index) => {
-                        const colors = ['border-orange-500', 'border-blue-500', 'border-green-500', 'border-purple-500']
-                        const rotation = index * (360 / (adminStats?.vehicleTypeStats.length || 1))
-                        return (
-                          <div 
-                            key={index}
-                            className={`absolute inset-0 rounded-full border-8 ${colors[index % colors.length]}`}
-                            style={{ 
-                              transform: `rotate(${rotation}deg)`,
-                              clipPath: `polygon(50% 50%, 50% 0%, ${50 + vehicle.percentage}% 0%, 50% 50%)`
-                            }}
-                          ></div>
-                        )
-                      })}
-                      <div className="absolute inset-6 bg-white rounded-full flex items-center justify-center">
-                        <div className="text-center">
-                          <p className="text-2xl font-bold text-blue-900">{allVerifications.length}</p>
-                          <p className="text-xs text-gray-600">Total</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-4 space-y-2">
-                    {(adminStats?.vehicleTypeStats || []).map((vehicle, index) => {
-                      const colors = ['bg-orange-500', 'bg-blue-500', 'bg-green-500', 'bg-purple-500']
-                      return (
-                        <div key={index} className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <div className={`w-4 h-4 rounded-full ${colors[index % colors.length]}`}></div>
-                            <span className="text-sm font-medium text-blue-900">{vehicle.type}</span>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-sm font-bold text-blue-900">{vehicle.count}</span>
-                            <span className="text-xs text-gray-600 ml-1">({vehicle.percentage}%)</span>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
+               <Card className="shadow-xl border-0 bg-gradient-to-br from-orange-50 to-orange-100">
+                 <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
+                   <CardTitle className="bangers-regular text-xl flex items-center">
+                     <BarChart3 className="w-6 h-6 mr-2" />
+                     Distribución por Tipo de Vehículo
+                   </CardTitle>
+                 </CardHeader>
+                 <CardContent className="p-6">
+                   <div className="flex items-center justify-center h-64">
+                     {(() => {
+                       const stats = adminStats || calculateStatsFromVerifications(allVerifications)
+                       const vehicleStats = stats.vehicleTypeStats || []
+                       
+                       if (vehicleStats.length === 0) {
+                         return (
+                           <div className="text-center">
+                             <BarChart3 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                             <p className="text-gray-500">No hay datos de vehículos</p>
+                           </div>
+                         )
+                       }
+                       
+                       const total = vehicleStats.reduce((sum, v) => sum + v.count, 0)
+                       
+                       return (
+                         <div className="relative w-56 h-56">
+                           {/* Outer ring with segments */}
+                           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+                             {vehicleStats.map((vehicle, index) => {
+                               const colors = ['#f97316', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444']
+                               const strokeColor = colors[index % colors.length]
+                               const radius = 80
+                               const circumference = 2 * Math.PI * radius
+                               const strokeDasharray = (vehicle.count / total) * circumference
+                               const strokeDashoffset = -vehicleStats.slice(0, index).reduce((sum, v) => sum + (v.count / total) * circumference, 0)
+                               
+                               return (
+                                 <circle
+                                   key={index}
+                                   cx="100"
+                                   cy="100"
+                                   r={radius}
+                                   fill="none"
+                                   stroke={strokeColor}
+                                   strokeWidth="20"
+                                   strokeDasharray={`${strokeDasharray} ${circumference}`}
+                                   strokeDashoffset={strokeDashoffset}
+                                   className="transition-all duration-500 hover:stroke-[25] cursor-pointer"
+                                   style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))' }}
+                                 />
+                               )
+                             })}
+                           </svg>
+                           
+                           {/* Center content */}
+                           <div className="absolute inset-0 flex items-center justify-center">
+                             <div className="text-center bg-white rounded-full w-24 h-24 flex flex-col items-center justify-center shadow-lg">
+                               <p className="text-2xl font-bold text-blue-900">{total}</p>
+                               <p className="text-xs text-gray-600">Total</p>
+                             </div>
+                           </div>
+                         </div>
+                       )
+                     })()} 
+                   </div>
+                   
+                   <div className="mt-6 space-y-3">
+                     {(() => {
+                       const stats = adminStats || calculateStatsFromVerifications(allVerifications)
+                       const vehicleStats = stats.vehicleTypeStats || []
+                       
+                       if (vehicleStats.length === 0) {
+                         return (
+                           <div className="text-center py-8">
+                             <p className="text-gray-500">No hay datos para mostrar</p>
+                           </div>
+                         )
+                       }
+                       
+                       const colors = ['bg-orange-500', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-red-500']
+                       
+                       return vehicleStats.map((vehicle, index) => (
+                         <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                           <div className="flex items-center space-x-3">
+                             <div className={`w-5 h-5 rounded-full ${colors[index % colors.length]} shadow-sm`}></div>
+                             <span className="text-sm font-medium text-blue-900">{vehicle.type}</span>
+                           </div>
+                           <div className="text-right">
+                             <span className="text-lg font-bold text-blue-900">{vehicle.count}</span>
+                             <span className="text-sm text-gray-600 ml-2">({vehicle.percentage}%)</span>
+                           </div>
+                         </div>
+                       ))
+                     })()} 
+                   </div>
+                 </CardContent>
+               </Card>
             </div>
           </div>
         )}
