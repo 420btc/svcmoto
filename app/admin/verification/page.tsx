@@ -441,13 +441,13 @@ export default function AdminVerificationPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 to-blue-800 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md shadow-2xl border-0">
-          <CardHeader className="text-center bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-            <CardTitle className="flex items-center justify-center text-2xl bangers-regular">
+        <Card className="w-full max-w-md shadow-2xl border-0 py-0 overflow-hidden">
+          <CardHeader className="text-center bg-gradient-to-r from-orange-500 to-orange-600 text-white m-0 p-6">
+            <CardTitle className="flex items-center justify-center text-2xl bangers-regular m-0">
               <Shield className="w-8 h-8 mr-2" />
               Panel Admin
             </CardTitle>
-            <p className="text-orange-100">Verificación de Reservas SVC MOTO</p>
+            <p className="text-orange-100 m-0">Verificación de Reservas SVC MOTO</p>
           </CardHeader>
           <CardContent className="p-6">
             <form onSubmit={handleAuth} className="space-y-4">
@@ -868,61 +868,186 @@ export default function AdminVerificationPage() {
                       </CardTitle>
                     </CardHeader>
                  <CardContent className="p-6">
-                   <div className="h-64 flex items-end justify-between space-x-3 bg-gradient-to-t from-gray-200 to-gray-50 rounded-lg p-4 border-2 border-gray-300">
-                     {(() => {
-                       const stats = adminStats || calculateStatsFromVerifications(allVerifications)
-                       const days = stats.verificationsByDay || []
-                       
-                       if (days.length === 0) {
-                         return (
-                           <div className="flex items-center justify-center w-full h-full">
-                             <div className="text-center">
-                               <BarChart3 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                               <p className="text-gray-500">No hay datos de verificaciones</p>
-                             </div>
-                           </div>
-                         )
-                       }
-                       
-                       const maxCount = Math.max(...days.map(d => d.count), 1)
-                       
-                       return days.map((day, index) => {
-                         const height = (day.count / maxCount) * 180
-                         const colors = [
-                           'from-red-600 to-red-700 border-red-800',
-                           'from-orange-600 to-orange-700 border-orange-800', 
-                           'from-yellow-600 to-yellow-700 border-yellow-800',
-                           'from-green-600 to-green-700 border-green-800',
-                           'from-blue-600 to-blue-700 border-blue-800',
-                           'from-indigo-600 to-indigo-700 border-indigo-800',
-                           'from-purple-600 to-purple-700 border-purple-800'
-                         ]
-                         
-                         return (
-                           <div key={index} className="flex flex-col items-center flex-1 group">
-                             <div className="relative">
-                               <div 
-                                 className={`bg-gradient-to-t ${colors[index]} rounded-t-lg w-full transition-all duration-500 hover:scale-110 shadow-xl group-hover:shadow-2xl cursor-pointer border-2`}
-                                 style={{ height: `${Math.max(height, 25)}px`, minHeight: '25px' }}
-                                 title={`${day.count} verificaciones`}
-                               ></div>
-                               <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-sm px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
-                                 {day.count}
-                               </div>
-                             </div>
-                             <div className="mt-3 text-center">
-                               <p className="text-lg font-bold text-blue-900 bg-white rounded px-2 py-1 shadow-sm">{day.count}</p>
-                               <p className="text-sm text-gray-700 font-medium">{new Date(day.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })}</p>
-                             </div>
-                           </div>
-                         )
-                       })
-                     })()} 
-                   </div>
-                   <div className="mt-4 text-center">
-                     <p className="text-sm text-gray-600">Promedio: {Math.round((adminStats?.verificationsByDay || []).reduce((sum, d) => sum + d.count, 0) / Math.max((adminStats?.verificationsByDay || []).length, 1))} verificaciones/día</p>
-                   </div>
-                 </CardContent>
+                    <div className="h-80 bg-gradient-to-t from-gray-100 to-white rounded-lg p-6 border-2 border-gray-300 relative">
+                      {(() => {
+                        const stats = adminStats || calculateStatsFromVerifications(allVerifications)
+                        let days = stats.verificationsByDay || []
+                        
+                        // Generate 7 days of data (last 7 days)
+                        const today = new Date()
+                        const last7Days = []
+                        for (let i = 6; i >= 0; i--) {
+                          const date = new Date(today)
+                          date.setDate(date.getDate() - i)
+                          const dateStr = date.toISOString().split('T')[0]
+                          const existingDay = days.find(d => d.date === dateStr)
+                          last7Days.push({
+                            date: dateStr,
+                            count: existingDay ? existingDay.count : 0,
+                            dayName: date.toLocaleDateString('es-ES', { weekday: 'short' })
+                          })
+                        }
+                        
+                        if (last7Days.every(d => d.count === 0)) {
+                          return (
+                            <div className="flex items-center justify-center w-full h-full">
+                              <div className="text-center">
+                                <TrendingUp className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                                <p className="text-gray-500">No hay datos de verificaciones</p>
+                              </div>
+                            </div>
+                          )
+                        }
+                        
+                        const maxCount = Math.max(...last7Days.map(d => d.count), 1)
+                        const chartHeight = 200
+                        const chartWidth = 500
+                        
+                        return (
+                          <div className="w-full h-full flex flex-col">
+                            {/* Chart Area */}
+                            <div className="flex-1 relative">
+                              <svg width="100%" height={chartHeight} viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="overflow-visible">
+                                {/* Grid lines */}
+                                {[0, 1, 2, 3, 4].map(i => {
+                                  const y = (i / 4) * (chartHeight - 40) + 20
+                                  const value = Math.round(maxCount - (i / 4) * maxCount)
+                                  return (
+                                    <g key={i}>
+                                      <line 
+                                        x1="40" 
+                                        y1={y} 
+                                        x2={chartWidth - 20} 
+                                        y2={y} 
+                                        stroke="#e5e7eb" 
+                                        strokeWidth="1"
+                                        strokeDasharray="5,5"
+                                      />
+                                      <text 
+                                        x="35" 
+                                        y={y + 4} 
+                                        textAnchor="end" 
+                                        className="text-xs fill-gray-600"
+                                      >
+                                        {value}
+                                      </text>
+                                    </g>
+                                  )
+                                })}
+                                
+                                {/* Line chart */}
+                                <g>
+                                  {/* Line path */}
+                                  <path
+                                    d={last7Days.map((day, index) => {
+                                      const x = 40 + (index * (chartWidth - 60) / 6)
+                                      const y = chartHeight - 40 - (day.count / maxCount) * (chartHeight - 60)
+                                      return `${index === 0 ? 'M' : 'L'} ${x} ${y}`
+                                    }).join(' ')}
+                                    stroke="url(#lineGradient)"
+                                    strokeWidth="3"
+                                    fill="none"
+                                    className="drop-shadow-sm"
+                                  />
+                                  
+                                  {/* Area under the line */}
+                                  <path
+                                    d={[
+                                      `M 40 ${chartHeight - 40}`,
+                                      ...last7Days.map((day, index) => {
+                                        const x = 40 + (index * (chartWidth - 60) / 6)
+                                        const y = chartHeight - 40 - (day.count / maxCount) * (chartHeight - 60)
+                                        return `L ${x} ${y}`
+                                      }),
+                                      `L ${40 + (6 * (chartWidth - 60) / 6)} ${chartHeight - 40}`,
+                                      'Z'
+                                    ].join(' ')}
+                                    fill="url(#areaGradient)"
+                                    opacity="0.3"
+                                  />
+                                  
+                                  {/* Data points */}
+                                  {last7Days.map((day, index) => {
+                                    const x = 40 + (index * (chartWidth - 60) / 6)
+                                    const y = chartHeight - 40 - (day.count / maxCount) * (chartHeight - 60)
+                                    return (
+                                      <g key={index}>
+                                        {/* Point shadow */}
+                                        <circle
+                                          cx={x + 1}
+                                          cy={y + 1}
+                                          r="6"
+                                          fill="rgba(0,0,0,0.2)"
+                                        />
+                                        {/* Main point */}
+                                        <circle
+                                          cx={x}
+                                          cy={y}
+                                          r="6"
+                                          fill="#f97316"
+                                          stroke="white"
+                                          strokeWidth="3"
+                                          className="cursor-pointer hover:r-8 transition-all duration-200"
+                                        />
+                                        {/* Value label */}
+                                        <text
+                                          x={x}
+                                          y={y - 15}
+                                          textAnchor="middle"
+                                          className="text-sm font-bold fill-blue-900 bg-white"
+                                        >
+                                          {day.count}
+                                        </text>
+                                      </g>
+                                    )
+                                  })}
+                                </g>
+                                
+                                {/* Gradients */}
+                                <defs>
+                                  <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="#3b82f6" />
+                                    <stop offset="50%" stopColor="#f97316" />
+                                    <stop offset="100%" stopColor="#10b981" />
+                                  </linearGradient>
+                                  <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stopColor="#3b82f6" />
+                                    <stop offset="100%" stopColor="#f97316" />
+                                  </linearGradient>
+                                </defs>
+                              </svg>
+                            </div>
+                            
+                            {/* X-axis labels */}
+                            <div className="flex justify-between px-10 mt-4">
+                              {last7Days.map((day, index) => (
+                                <div key={index} className="text-center">
+                                  <p className="text-sm font-bold text-blue-900">{day.dayName}</p>
+                                  <p className="text-xs text-gray-600">{new Date(day.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })}</p>
+                                </div>
+                              ))}
+                            </div>
+                            
+                            {/* Statistics */}
+                            <div className="mt-4 flex justify-center space-x-8 text-sm">
+                              <div className="text-center">
+                                <p className="text-gray-600">Promedio</p>
+                                <p className="font-bold text-blue-900">{Math.round(last7Days.reduce((sum, d) => sum + d.count, 0) / 7)} verificaciones/día</p>
+                              </div>
+                              <div className="text-center">
+                                <p className="text-gray-600">Máximo</p>
+                                <p className="font-bold text-green-600">{maxCount} verificaciones</p>
+                              </div>
+                              <div className="text-center">
+                                <p className="text-gray-600">Total Semanal</p>
+                                <p className="font-bold text-orange-600">{last7Days.reduce((sum, d) => sum + d.count, 0)} verificaciones</p>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })()} 
+                    </div>
+                  </CardContent>
                </Card>
               
               {/* Donut Chart - Tipos de vehículos */}
