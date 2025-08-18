@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -48,6 +51,63 @@ export async function GET(request: NextRequest) {
       throw new Error('Failed to fetch user data');
     }
 
+    // Buscar usuario existente por email o googleId
+    let user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: userData.email },
+          { googleId: userData.id }
+        ]
+      }
+    });
+
+    let isNewUser = false;
+    let authAction = 'login';
+
+    if (user) {
+      // Usuario existente - actualizar datos y última conexión
+      if (!user.googleId) {
+        // Usuario registrado con email, ahora vincula con Google
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            googleId: userData.id,
+            picture: userData.picture,
+            authMethod: 'GOOGLE',
+            isVerified: true,
+            lastLoginAt: new Date(),
+            name: user.name || userData.name // Mantener nombre existente si lo hay
+          }
+        });
+        authAction = 'linked';
+      } else {
+        // Usuario ya registrado con Google - solo actualizar última conexión
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            lastLoginAt: new Date(),
+            picture: userData.picture // Actualizar foto de perfil
+          }
+        });
+        authAction = 'login';
+      }
+    } else {
+      // Nuevo usuario - crear registro
+      user = await prisma.user.create({
+        data: {
+          email: userData.email,
+          name: userData.name,
+          googleId: userData.id,
+          picture: userData.picture,
+          authMethod: 'GOOGLE',
+          isVerified: true,
+          lastLoginAt: new Date()
+        }
+      });
+      isNewUser = true;
+      authAction = 'register';
+    }
+
     // Crear HTML para guardar datos en localStorage y redirigir
     const html = `
       <!DOCTYPE html>
@@ -59,15 +119,21 @@ export async function GET(request: NextRequest) {
           <script>
             // Guardar datos del usuario en localStorage
             localStorage.setItem('user', JSON.stringify({
-              email: '${userData.email}',
-              name: '${userData.name}',
-              picture: '${userData.picture}',
+              id: '${user.id}',
+              email: '${user.email}',
+              name: '${user.name || ''}',
+              picture: '${user.picture || ''}',
               isAuthenticated: true,
-              provider: 'google'
+              provider: 'google',
+              authMethod: '${user.authMethod}',
+              isVerified: ${user.isVerified},
+              createdAt: '${user.createdAt.toISOString()}'
             }));
             
-            // Marcar que el usuario acaba de conectarse
+            // Marcar que el usuario acaba de conectarse y el tipo de acción
             localStorage.setItem('justConnected', 'true');
+            localStorage.setItem('authAction', '${authAction}');
+            localStorage.setItem('isNewUser', '${isNewUser}');
             
             // Redirigir al perfil del usuario
             window.location.href = '/perfil';

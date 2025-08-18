@@ -12,18 +12,28 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  phone     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  phone       String?
+  googleId    String?  @unique // Google OAuth ID
+  picture     String?  // Google profile picture URL
+  authMethod  AuthMethod @default(EMAIL) // Método de autenticación usado
+  isVerified  Boolean  @default(false) // Si el email ha sido verificado
+  lastLoginAt DateTime? // Última vez que inició sesión
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
   bookings     Booking[]
   pointsLedger PointsLedger[]
 
   @@map("users")
+}
+
+enum AuthMethod {
+  EMAIL
+  GOOGLE
 }
 
 model Booking {
