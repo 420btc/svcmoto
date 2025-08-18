@@ -73,6 +73,8 @@ export default function PerfilPage() {
   const [processingExpired, setProcessingExpired] = useState(false)
   const [servicios, setServicios] = useState<Servicio[]>([])
   const [loadingServices, setLoadingServices] = useState(false)
+  const [showServiceCompletionModal, setShowServiceCompletionModal] = useState(false)
+  const [pendingServiceCompletion, setPendingServiceCompletion] = useState<any>(null)
   
   // Función para reactivar actualizaciones automáticas (se puede llamar desde otras páginas)
   const reactivateAutoUpdate = () => {
@@ -349,21 +351,38 @@ export default function PerfilPage() {
         const services = await response.json()
         
         // Convertir los servicios de la API al formato esperado
-        const formattedServices = services.map((service: any) => ({
-          id: service.id,
-          serviceType: service.serviceType,
-          vehicleType: service.vehicleType,
-          description: service.description,
-          fecha: new Date(service.createdAt).toLocaleDateString('es-ES', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-          }),
-          estado: service.status.toLowerCase(),
-          estimatedPrice: service.estimatedPrice,
-          finalPrice: service.finalPrice,
-          contactInfo: service.contactInfo
-        }))
+        const formattedServices = services.map((service: any) => {
+          let estado = service.status.toLowerCase()
+          
+          // Verificar si el servicio ha llegado a su fecha/hora programada
+          if (service.preferredDate && (estado === 'confirmed' || estado === 'in_progress')) {
+            const preferredDate = new Date(service.preferredDate)
+            const now = new Date()
+            
+            // Si ha llegado la fecha/hora del servicio, mostrar modal de confirmación
+            if (now.getTime() >= preferredDate.getTime() && !showServiceCompletionModal) {
+              setPendingServiceCompletion(service)
+              setShowServiceCompletionModal(true)
+            }
+          }
+          
+          return {
+            id: service.id,
+            serviceType: service.serviceType,
+            vehicleType: service.vehicleType,
+            description: service.description,
+            fecha: new Date(service.createdAt).toLocaleDateString('es-ES', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            }),
+            estado: estado,
+            estimatedPrice: service.estimatedPrice,
+            finalPrice: service.finalPrice,
+            contactInfo: service.contactInfo,
+            preferredDate: service.preferredDate
+          }
+        })
         
         setServicios(formattedServices)
       }
@@ -371,6 +390,41 @@ export default function PerfilPage() {
       console.error('Error al cargar servicios:', error)
     } finally {
       setLoadingServices(false)
+    }
+  }
+
+  const updateServiceStatus = async (serviceId: string, status: string) => {
+    try {
+      await fetch('/api/services', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: serviceId,
+          status: status
+        })
+      })
+    } catch (error) {
+      console.error('Error al actualizar estado del servicio:', error)
+    }
+  }
+
+  const handleServiceCompletion = async (completed: boolean) => {
+    if (pendingServiceCompletion) {
+      if (completed) {
+        await updateServiceStatus(pendingServiceCompletion.id, 'COMPLETED')
+        // Actualizar el estado local
+        setServicios(prev => prev.map(s => 
+          s.id === pendingServiceCompletion.id 
+            ? { ...s, estado: 'completed' }
+            : s
+        ))
+      }
+      setShowServiceCompletionModal(false)
+      setPendingServiceCompletion(null)
+      // Recargar servicios para reflejar cambios
+      fetchServicesFromAPI()
     }
   }
 
@@ -1189,16 +1243,16 @@ export default function PerfilPage() {
                             
                             {/* Información principal */}
                             <div className="grid grid-cols-2 gap-3 mb-3">
-                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 shadow-lg">
+                              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 shadow-lg">
                                 <div className="flex items-center space-x-2 mb-1">
-                                  <Calendar className="w-4 h-4 text-blue-500" />
+                                  <Calendar className="w-4 h-4 text-orange-500" />
                                   <span className="text-blue-700 text-xs">Fecha</span>
                                 </div>
                                 <p className="font-bold text-blue-900 text-sm break-words">{servicio.fecha}</p>
                               </div>
-                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 shadow-lg">
+                              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 shadow-lg">
                                 <div className="flex items-center space-x-2 mb-1">
-                                  <Gift className="w-4 h-4 text-blue-500" />
+                                  <Gift className="w-4 h-4 text-orange-500" />
                                   <span className="text-blue-700 text-xs">Precio</span>
                                 </div>
                                 <p className="font-bold text-blue-900 text-sm">
@@ -1209,9 +1263,9 @@ export default function PerfilPage() {
                             </div>
                             
                             {/* Descripción del servicio */}
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 shadow-lg mb-3">
+                            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 shadow-lg mb-3">
                               <div className="flex items-center space-x-2 mb-1">
-                                <Zap className="w-4 h-4 text-blue-500" />
+                                <Zap className="w-4 h-4 text-orange-500" />
                                 <span className="text-blue-700 text-xs font-medium">Descripción del Servicio</span>
                               </div>
                               <p className="text-blue-900 text-sm">{servicio.description}</p>
@@ -2111,6 +2165,58 @@ export default function PerfilPage() {
               <p className="text-xs text-gray-500 mt-3">
                 Esta confirmación es importante para mantener estadísticas precisas.
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Confirmación de Finalización de Servicio */}
+      {showServiceCompletionModal && pendingServiceCompletion && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 rounded-t-2xl">
+              <div className="flex items-center space-x-3">
+                <div className="bg-white/20 p-2 rounded-full">
+                  <CheckCircle className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="bangers-regular text-xl text-white drop-shadow-lg">Finalización de Servicio</h2>
+                  <p className="text-blue-100 text-sm">Confirma si el servicio se completó</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-6">
+              <div className="text-center mb-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                  <h3 className="font-bold text-blue-900 mb-2">{pendingServiceCompletion.serviceType}</h3>
+                  <p className="text-sm text-blue-700 mb-2">{pendingServiceCompletion.description}</p>
+                  {pendingServiceCompletion.vehicleType && (
+                    <p className="text-xs text-blue-600">Vehículo: {pendingServiceCompletion.vehicleType}</p>
+                  )}
+                </div>
+                
+                <p className="text-gray-700 mb-4">
+                  Ha llegado la fecha y hora programada para este servicio.
+                  <br />
+                  <strong>¿Se completó el servicio correctamente?</strong>
+                </p>
+              </div>
+              
+              <div className="flex space-x-3">
+                <Button
+                  onClick={() => handleServiceCompletion(false)}
+                  className="flex-1 bg-gray-500 hover:bg-gray-600 text-white"
+                >
+                  No completado
+                </Button>
+                <Button
+                  onClick={() => handleServiceCompletion(true)}
+                  className="flex-1 bg-green-500 hover:bg-green-600 text-white"
+                >
+                  ✓ Completado
+                </Button>
+              </div>
             </div>
           </div>
         </div>
