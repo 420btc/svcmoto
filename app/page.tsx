@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Phone, MapPin, Clock, Star, Zap, Shield, Wrench, Menu, X, ArrowLeft, Home as HomeIcon } from "lucide-react"
+import { Phone, MapPin, Clock, Star, Zap, Shield, Wrench, Menu, X, ArrowLeft, Home as HomeIcon, ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -605,7 +605,7 @@ export default function Home() {
             <div>
               <h2 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contactSection.title')}</h2>
               <div className="space-y-6">
-                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
+                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24 md:shadow-lg">
                   <MapPin className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
                     <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contactSection.location')}</h3>
@@ -614,7 +614,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
+                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24 md:shadow-lg">
                   <Phone className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
                     <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contactSection.phone')}</h3>
@@ -623,7 +623,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24">
+                <div className="flex items-start space-x-4 md:bg-white/30 md:rounded-lg md:p-4 md:backdrop-blur-md md:border md:border-white/20 md:h-24 md:shadow-lg">
                   <Clock className="w-6 h-6 text-orange-500 mt-1" />
                   <div>
                     <h3 className="text-lg font-semibold text-white md:drop-shadow-md">{t('contactSection.schedule')}</h3>
@@ -644,29 +644,44 @@ export default function Home() {
               <h3 className="bangers-regular text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contactSection.servicesTitle')}</h3>
               <div className="space-y-6">
                 <Link href="/alquiler" className="block">
-                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
-                    <Zap className="w-6 h-6 text-orange-500 mt-1" />
-                    <div>
+                  <div className="flex items-center space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24 relative shadow-lg">
+                    <Zap className="w-6 h-6 text-orange-500" />
+                    <div className="flex-1">
                       <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contactSection.service1.title')}</h4>
                       <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contactSection.service1.description')}</p>
+                    </div>
+                    <div className="hidden md:flex items-center justify-center">
+                      <div className="bg-orange-500 hover:bg-orange-600 rounded-full p-2 transition-colors shadow-lg">
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </div>
                     </div>
                   </div>
                 </Link>
                 <Link href="/alquiler" className="block">
-                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
-                    <Zap className="w-6 h-6 text-orange-500 mt-1" />
-                    <div>
+                  <div className="flex items-center space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24 relative shadow-lg">
+                    <Zap className="w-6 h-6 text-orange-500" />
+                    <div className="flex-1">
                       <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contactSection.service2.title')}</h4>
                       <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contactSection.service2.description')}</p>
+                    </div>
+                    <div className="hidden md:flex items-center justify-center">
+                      <div className="bg-orange-500 hover:bg-orange-600 rounded-full p-2 transition-colors shadow-lg">
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </div>
                     </div>
                   </div>
                 </Link>
                 <Link href="/servicios" className="block">
-                  <div className="flex items-start space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24">
-                    <Wrench className="w-6 h-6 text-orange-500 mt-1" />
-                    <div>
+                  <div className="flex items-center space-x-4 bg-white/30 rounded-lg p-4 hover:bg-white/40 transition-colors cursor-pointer backdrop-blur-md border border-white/20 h-24 relative shadow-lg">
+                    <Wrench className="w-6 h-6 text-orange-500" />
+                    <div className="flex-1">
                       <h4 className="text-lg font-semibold text-white mb-2 drop-shadow-md" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>{t('contactSection.service3.title')}</h4>
                       <p className="text-white text-sm drop-shadow-sm" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.6)'}}>{t('contactSection.service3.description')}</p>
+                    </div>
+                    <div className="hidden md:flex items-center justify-center">
+                      <div className="bg-orange-500 hover:bg-orange-600 rounded-full p-2 transition-colors shadow-lg">
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -740,21 +755,36 @@ export default function Home() {
               <h3 className="bangers-regular text-4xl text-white mb-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('contactSection.servicesTitle')}</h3>
               <div className="space-y-4">
                 <Link href="/alquiler" className="block">
-                  <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
+                  <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer shadow-lg">
                     <h4 className="text-lg font-semibold text-white mb-2">{t('contactSection.service1.title')}</h4>
-                    <p className="text-gray-300 text-sm">{t('contactSection.service1.description')}</p>
+                    <p className="text-gray-300 text-sm mb-4">{t('contactSection.service1.description')}</p>
+                    <div className="flex justify-center">
+                      <div className="bg-orange-500 hover:bg-orange-600 rounded-full p-2 transition-colors shadow-lg">
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
                   </div>
                 </Link>
                 <Link href="/alquiler" className="block">
-                  <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
+                  <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer shadow-lg">
                     <h4 className="text-lg font-semibold text-white mb-2">{t('contactSection.service2.title')}</h4>
-                    <p className="text-gray-300 text-sm">{t('contactSection.service2.description')}</p>
+                    <p className="text-gray-300 text-sm mb-4">{t('contactSection.service2.description')}</p>
+                    <div className="flex justify-center">
+                      <div className="bg-orange-500 hover:bg-orange-600 rounded-full p-2 transition-colors shadow-lg">
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
                   </div>
                 </Link>
                 <Link href="/servicios" className="block">
-                  <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer">
+                  <div className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer shadow-lg">
                     <h4 className="text-lg font-semibold text-white mb-2">{t('contactSection.service3.title')}</h4>
-                    <p className="text-gray-300 text-sm">{t('contactSection.service3.description')}</p>
+                    <p className="text-gray-300 text-sm mb-4">{t('contactSection.service3.description')}</p>
+                    <div className="flex justify-center">
+                      <div className="bg-orange-500 hover:bg-orange-600 rounded-full p-2 transition-colors shadow-lg">
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
                   </div>
                 </Link>
               </div>
