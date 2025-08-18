@@ -40,6 +40,9 @@ model Booking {
   pointsAwarded     Int?          // Puntos otorgados al completar
   estimatedKm       Float?        // Kilómetros estimados del viaje
   duration          Float?        // Duración en horas
+  completedAt       DateTime?     // Fecha de completado
+  cancelledAt       DateTime?     // Fecha de cancelación
+  notes             String?       // Notas adicionales (ej: razón de cancelación)
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 
@@ -67,9 +70,10 @@ model PointsLedger {
 }
 
 enum BookingStatus {
-  PENDING    // Reserva creada, esperando verificación
-  VERIFIED   // Verificada por admin, lista para usar
-  COMPLETED  // Completada y puntos otorgados
-  CANCELLED  // Cancelada
-  EXPIRED    // Expirada sin usar
+  PENDING                    // Reserva creada, esperando verificación
+  VERIFIED                   // Verificada por admin, lista para usar
+  COMPLETED                  // Completada y puntos otorgados
+  COMPLETED_NO_VERIFICATION  // Completada sin verificación (sin puntos)
+  CANCELLED                  // Cancelada
+  EXPIRED                    // Expirada sin usar
 }

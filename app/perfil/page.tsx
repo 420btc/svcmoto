@@ -52,6 +52,9 @@ export default function PerfilPage() {
   const [loadingBookings, setLoadingBookings] = useState(false)
   const [statsRefresh, setStatsRefresh] = useState(0)
   const [autoUpdateEnabled, setAutoUpdateEnabled] = useState(true)
+  const [showExpiredModal, setShowExpiredModal] = useState(false)
+  const [expiredBooking, setExpiredBooking] = useState<any>(null)
+  const [processingExpired, setProcessingExpired] = useState(false)
   
   // Función para reactivar actualizaciones automáticas (se puede llamar desde otras páginas)
   const reactivateAutoUpdate = () => {
@@ -70,6 +73,81 @@ export default function PerfilPage() {
       }
     }
   }, [])
+  
+  // Función para verificar reservas expiradas sin verificación
+  const checkExpiredBookings = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/admin/complete-without-verification?userId=${userId}`)
+      if (response.ok) {
+        const data = await response.json()
+        const expiredBookings = data.expiredBookings || []
+        
+        // Filtrar reservas que han expirado hace más de 1 hora (para dar margen)
+        const significantlyExpired = expiredBookings.filter((booking: any) => 
+          booking.hoursExpired >= 1
+        )
+        
+        if (significantlyExpired.length > 0) {
+          // Verificar si ya se mostró el modal para esta reserva
+          const bookingToShow = significantlyExpired[0] // Mostrar la más reciente
+          const modalShownKey = `expiredModal_${bookingToShow.id}`
+          const alreadyShown = localStorage.getItem(modalShownKey)
+          
+          if (!alreadyShown && !showExpiredModal) {
+            setExpiredBooking(bookingToShow)
+            setShowExpiredModal(true)
+            // Marcar como mostrado para no repetir
+            localStorage.setItem(modalShownKey, 'true')
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error checking expired bookings:', error)
+    }
+  }
+  
+  // Función para manejar la confirmación de reserva expirada
+  const handleExpiredBookingConfirmation = async (userConfirmed: boolean) => {
+    if (!expiredBooking) return
+    
+    setProcessingExpired(true)
+    try {
+      const response = await fetch('/api/admin/complete-without-verification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          bookingId: expiredBooking.id,
+          userConfirmed: userConfirmed,
+          reason: 'user_confirmation_post_expiry'
+        })
+      })
+      
+      if (response.ok) {
+        // Actualizar datos
+        await fetchBookingsFromAPI()
+        
+        // Cerrar modal
+        setShowExpiredModal(false)
+        setExpiredBooking(null)
+        
+        // Mostrar mensaje de confirmación
+        if (userConfirmed) {
+          alert('Reserva marcada como realizada. No se otorgarán puntos por no haber verificado el código.')
+        } else {
+          alert('Reserva marcada como no realizada.')
+        }
+      } else {
+        alert('Error al procesar la confirmación. Inténtalo de nuevo.')
+      }
+    } catch (error) {
+      console.error('Error processing expired booking:', error)
+      alert('Error de conexión. Inténtalo de nuevo.')
+    } finally {
+      setProcessingExpired(false)
+    }
+  }
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -250,6 +328,9 @@ export default function PerfilPage() {
         if (bookingsResponse.ok) {
           const bookingsData = await bookingsResponse.json()
           setApiBookings(bookingsData.bookings || [])
+          
+          // Verificar reservas expiradas sin verificación
+          await checkExpiredBookings(userData.user.id)
         }
       }
     } catch (error) {
@@ -1572,6 +1653,69 @@ export default function PerfilPage() {
                   Sí, Borrar Todo
                 </Button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Modal de Confirmación de Reserva Expirada */}
+      {showExpiredModal && expiredBooking && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="w-8 h-8 text-orange-500" />
+              </div>
+              
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Reserva Expirada
+              </h3>
+              
+              <div className="bg-gray-50 rounded-lg p-4 mb-4 text-left">
+                <p className="text-sm text-gray-600 mb-2">
+                  <strong>Vehículo:</strong> {expiredBooking.vehicleType}
+                </p>
+                <p className="text-sm text-gray-600 mb-2">
+                  <strong>Fecha:</strong> {new Date(expiredBooking.startAt).toLocaleDateString()}
+                </p>
+                <p className="text-sm text-gray-600 mb-2">
+                  <strong>Hora:</strong> {new Date(expiredBooking.startAt).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - {new Date(expiredBooking.endAt).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <strong>Código:</strong> {expiredBooking.verificationCode}
+                </p>
+              </div>
+              
+              <p className="text-gray-700 mb-6">
+                Esta reserva ha expirado sin verificación. ¿Se realizó el alquiler?
+              </p>
+              
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6">
+                <p className="text-sm text-yellow-800">
+                  <strong>Importante:</strong> Si confirmas que se realizó, no recibirás puntos por no haber verificado el código a tiempo.
+                </p>
+              </div>
+              
+              <div className="flex space-x-3">
+                <Button
+                  onClick={() => handleExpiredBookingConfirmation(false)}
+                  disabled={processingExpired}
+                  className="flex-1 bg-red-500 hover:bg-red-600 text-white"
+                >
+                  {processingExpired ? 'Procesando...' : 'No se realizó'}
+                </Button>
+                <Button
+                  onClick={() => handleExpiredBookingConfirmation(true)}
+                  disabled={processingExpired}
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+                >
+                  {processingExpired ? 'Procesando...' : 'Sí se realizó'}
+                </Button>
+              </div>
+              
+              <p className="text-xs text-gray-500 mt-3">
+                Esta confirmación es importante para mantener estadísticas precisas.
+              </p>
             </div>
           </div>
         </div>
