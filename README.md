@@ -47,6 +47,187 @@ NEXTAUTH_SECRET=your-nextauth-secret
 ### ⚠️ **Importante**: 
 Si falta `POSTGRES_PRISMA_URL`, la aplicación no funcionará. Esta variable debe estar configurada exactamente con ese nombre en Vercel.
 
+## 🗄️ Base de Datos - Neon PostgreSQL
+
+### ¿Qué es Neon?
+**Neon** es una plataforma de base de datos PostgreSQL serverless que ofrece:
+- **Escalado automático**: Se adapta automáticamente a la carga de trabajo
+- **Branching**: Permite crear ramas de la base de datos para desarrollo
+- **Conexiones pooling**: Optimiza las conexiones para mejor rendimiento
+- **Backup automático**: Respaldos automáticos y recuperación point-in-time
+- **Serverless**: Solo pagas por lo que usas, ideal para aplicaciones Next.js
+
+### Configuración de Neon
+1. **Crear cuenta** en [neon.tech](https://neon.tech)
+2. **Crear proyecto** PostgreSQL
+3. **Obtener URLs** de conexión:
+   - `POSTGRES_PRISMA_URL`: Para Prisma (con pooling)
+   - `POSTGRES_URL_NON_POOLING`: Para conexiones directas
+4. **Configurar variables** en Vercel/local
+
+### Estructura de la Base de Datos
+
+Nuestra aplicación utiliza **6 tablas principales** con relaciones bien definidas:
+
+#### 📋 **Tabla: users**
+**Propósito**: Almacena información de usuarios registrados
+```sql
+- id (String): ID único del usuario (CUID)
+- email (String): Email único del usuario
+- name (String?): Nombre del usuario (opcional)
+- phone (String?): Teléfono del usuario (opcional)
+- googleId (String?): ID de Google OAuth (único)
+- picture (String?): URL de foto de perfil de Google
+- authMethod (AuthMethod): EMAIL | GOOGLE
+- isVerified (Boolean): Si el email está verificado
+- lastLoginAt (DateTime?): Última fecha de login
+- createdAt/updatedAt (DateTime): Timestamps
+```
+**Relaciones**: 
+- Uno a muchos con `bookings`, `services`, `pointsLedger`, `discounts`
+
+#### 🏍️ **Tabla: bookings**
+**Propósito**: Gestiona reservas de vehículos (motos/patinetes)
+```sql
+- id (String): ID único de la reserva
+- userId (String): Referencia al usuario
+- vehicleType (String): "moto", "patinete", etc.
+- vehicleId (String): ID específico del vehículo
+- startAt/endAt (DateTime): Fechas de inicio y fin
+- totalPrice (Float): Precio total de la reserva
+- status (BookingStatus): Estado de la reserva
+- verificationCode (String?): Código de 6 dígitos único
+- isVerified (Boolean): Si fue verificado por admin
+- pointsAwarded (Int?): Puntos otorgados al completar
+- estimatedKm/duration (Float?): Datos del viaje
+- completedAt/cancelledAt (DateTime?): Fechas de estado
+- notes (String?): Notas adicionales
+```
+**Estados posibles**:
+- `PENDING`: Reserva creada, esperando verificación
+- `VERIFIED`: Verificada por admin, lista para usar
+- `COMPLETED`: Completada y puntos otorgados
+- `COMPLETED_NO_VERIFICATION`: Completada sin verificación
+- `CANCELLED`: Cancelada
+- `EXPIRED`: Expirada sin usar
+
+#### 🎯 **Tabla: points_ledger**
+**Propósito**: Registro contable de puntos (ganados/gastados)
+```sql
+- id (String): ID único del registro
+- userId (String): Referencia al usuario
+- bookingId (String?): Reserva relacionada (opcional)
+- discountId (String?): Descuento relacionado (opcional)
+- points (Int): Puntos (+ganados / -gastados)
+- reason (String): "rental_completion", "bonus", "redemption"
+- description (String?): Descripción adicional
+- createdAt (DateTime): Fecha del movimiento
+```
+**Casos de uso**:
+- **+12 puntos**: Por cada euro gastado
+- **+100 puntos**: Bonus por completar alquiler
+- **+200 puntos**: Por reseña positiva
+- **-1875 puntos**: Canje por descuento 5€
+
+#### 🎫 **Tabla: discounts**
+**Propósito**: Códigos de descuento generados con puntos
+```sql
+- id (String): ID único del descuento
+- userId (String): Usuario que generó el descuento
+- pointsUsed (Int): Puntos gastados para generarlo
+- discountAmount (Float): Cantidad del descuento en euros
+- discountCode (String): Código único de 6 dígitos
+- status (DiscountStatus): Estado del descuento
+- validatedAt (DateTime?): Fecha de validación
+- validatedBy (String?): Admin que validó
+- expiresAt (DateTime): Fecha de expiración
+```
+**Estados posibles**:
+- `PENDING`: Generado, esperando validación
+- `VALIDATED`: Validado en tienda física
+- `EXPIRED`: Expirado
+- `CANCELLED`: Cancelado
+
+#### 🛠️ **Tabla: services**
+**Propósito**: Solicitudes de servicios técnicos (reparación/mantenimiento)
+```sql
+- id (String): ID único del servicio
+- userId (String): Usuario que solicita
+- serviceType (String): "mantenimiento", "reparacion", etc.
+- vehicleType (String?): Tipo de vehículo
+- description (String): Descripción del problema/servicio
+- contactInfo (String): Email/teléfono de contacto
+- preferredDate (DateTime?): Fecha preferida
+- status (ServiceStatus): Estado del servicio
+- estimatedPrice/finalPrice (Float?): Precios
+- completedAt/cancelledAt (DateTime?): Fechas
+- notes (String?): Notas del técnico
+- emailSent (Boolean): Si se envió confirmación
+```
+**Estados posibles**:
+- `PENDING`: Solicitado, esperando confirmación
+- `CONFIRMED`: Confirmado
+- `IN_PROGRESS`: En progreso
+- `COMPLETED`: Completado
+- `CANCELLED`: Cancelado
+
+### 🔄 Flujo de Datos Principal
+
+1. **Usuario se registra** → Se crea en `users`
+2. **Hace una reserva** → Se crea en `bookings` con `verificationCode`
+3. **Admin verifica** → `booking.status` = `VERIFIED`
+4. **Usuario completa viaje** → `booking.status` = `COMPLETED`
+5. **Sistema otorga puntos** → Se crean registros en `points_ledger`
+6. **Usuario canjea puntos** → Se crea `discount` y registro negativo en `points_ledger`
+7. **Usuario usa descuento** → `discount.status` = `VALIDATED`
+
+### 🔧 Comandos Útiles de Prisma
+
+```bash
+# Generar cliente Prisma
+npx prisma generate
+
+# Aplicar migraciones
+npx prisma db push
+
+# Ver base de datos
+npx prisma studio
+
+# Reset completo (¡CUIDADO!)
+npx prisma db reset
+
+# Crear migración
+npx prisma migrate dev --name nombre_migracion
+```
+
+### 📊 Consultas Comunes
+
+```typescript
+// Obtener puntos totales de un usuario
+const totalPoints = await prisma.pointsLedger.aggregate({
+  where: { userId },
+  _sum: { points: true }
+})
+
+// Historial de reservas completadas
+const completedBookings = await prisma.booking.findMany({
+  where: { 
+    userId,
+    status: { in: ['COMPLETED', 'VERIFIED'] }
+  },
+  include: { pointsLedger: true }
+})
+
+// Descuentos válidos del usuario
+const validDiscounts = await prisma.discount.findMany({
+  where: {
+    userId,
+    status: 'PENDING',
+    expiresAt: { gt: new Date() }
+  }
+})
+```
+
 ---
 
 **🚀 Deploy actualizado - Variables de entorno configuradas correctamente**
