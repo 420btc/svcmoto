@@ -1,13 +1,42 @@
 "use client"
 
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 
 export default function WhatsAppButton() {
+  const [showWhatsApp, setShowWhatsApp] = useState(false)
+
   const handleWhatsAppClick = () => {
     const phoneNumber = "34607228882" // Número con código de país
     const message = "Hola! Me gustaría obtener más información sobre sus servicios."
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
+  }
+
+  useEffect(() => {
+    // Verificar si la intro ya se mostró
+    const introShown = sessionStorage.getItem("svc-intro-shown")
+    
+    if (introShown) {
+      // Si la intro ya se mostró, mostrar WhatsApp al instante
+      setShowWhatsApp(true)
+    } else {
+      // Si no se ha mostrado la intro, esperar a que termine
+      const checkIntro = setInterval(() => {
+        const introShownCheck = sessionStorage.getItem("svc-intro-shown")
+        if (introShownCheck) {
+          setShowWhatsApp(true)
+          clearInterval(checkIntro)
+        }
+      }, 100)
+      
+      return () => clearInterval(checkIntro)
+    }
+  }, [])
+
+  // No mostrar WhatsApp si showWhatsApp es false
+  if (!showWhatsApp) {
+    return null
   }
 
   return (
