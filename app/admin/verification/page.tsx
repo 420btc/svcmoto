@@ -94,8 +94,11 @@ export default function AdminVerificationPage() {
   const [recentVerifications, setRecentVerifications] = useState<RecentVerification[]>([])
   const [loading, setLoading] = useState(false)
   const [adminStats, setAdminStats] = useState<AdminStats | null>(null)
-  const [currentView, setCurrentView] = useState<'verification' | 'stats'>('verification')
+  const [currentView, setCurrentView] = useState<'verification' | 'stats' | 'discounts'>('verification')
   const [allVerifications, setAllVerifications] = useState<RecentVerification[]>([])
+  const [discountCode, setDiscountCode] = useState('')
+  const [discountResult, setDiscountResult] = useState<any>(null)
+  const [isValidatingDiscount, setIsValidatingDiscount] = useState(false)
 
   // Load authentication state from localStorage
   useEffect(() => {
@@ -298,6 +301,45 @@ export default function AdminVerificationPage() {
     setAdminStats(null)
     setAllVerifications([])
     localStorage.setItem('adminAuthenticated', 'false')
+  }
+
+  // Validar código de descuento
+  const handleDiscountValidation = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!discountCode.trim()) return
+
+    setIsValidatingDiscount(true)
+    setDiscountResult(null)
+
+    try {
+      const response = await fetch('/api/discounts/validate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          discountCode: discountCode.trim(),
+          adminId: 'admin'
+        })
+      })
+
+      const data = await response.json()
+      setDiscountResult({
+        success: response.ok,
+        ...data
+      })
+
+      if (response.ok) {
+        setDiscountCode('')
+      }
+    } catch (error) {
+      setDiscountResult({
+        success: false,
+        error: 'Error de conexión'
+      })
+    }
+
+    setIsValidatingDiscount(false)
   }
 
   const handleVerification = async (e: React.FormEvent) => {
@@ -530,28 +572,39 @@ export default function AdminVerificationPage() {
                 </Button>
               </Link>
               
-              <div className="flex space-x-2">
+              <div className="grid grid-cols-3 gap-2">
                 <Button
                   onClick={() => setCurrentView('verification')}
-                  className={`flex-1 shadow-lg ${
+                  className={`shadow-lg ${
                     currentView === 'verification'
                       ? 'bg-orange-500 hover:bg-orange-600 text-white'
                       : 'bg-white/20 text-white hover:bg-white/30'
                   }`}
                 >
                   <Search className="w-4 h-4 mr-1" />
-                  <span className="text-sm">Verificación</span>
+                  <span className="text-xs">Verificar</span>
                 </Button>
                 <Button
                   onClick={() => setCurrentView('stats')}
-                  className={`flex-1 shadow-lg ${
+                  className={`shadow-lg ${
                     currentView === 'stats'
                       ? 'bg-orange-500 hover:bg-orange-600 text-white'
                       : 'bg-white/20 text-white hover:bg-white/30'
                   }`}
                 >
                   <BarChart3 className="w-4 h-4 mr-1" />
-                  <span className="text-sm">Estadísticas</span>
+                  <span className="text-xs">Stats</span>
+                </Button>
+                <Button
+                  onClick={() => setCurrentView('discounts')}
+                  className={`shadow-lg ${
+                    currentView === 'discounts'
+                      ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                      : 'bg-white/20 text-white hover:bg-white/30'
+                  }`}
+                >
+                  <Gift className="w-4 h-4 mr-1" />
+                  <span className="text-xs">Descuentos</span>
                 </Button>
               </div>
             </div>
@@ -612,6 +665,17 @@ export default function AdminVerificationPage() {
                 <BarChart3 className="w-4 h-4 mr-2" />
                 Estadísticas
               </Button>
+              <Button
+                onClick={() => setCurrentView('discounts')}
+                className={`shadow-lg ${
+                  currentView === 'discounts'
+                    ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                    : 'bg-white/20 text-white hover:bg-white/30'
+                }`}
+              >
+                <Gift className="w-4 h-4 mr-2" />
+                Descuentos
+              </Button>
             </div>
           </div>
         </div>
@@ -666,7 +730,7 @@ export default function AdminVerificationPage() {
                         {verificationResult.success ? (
                           <CheckCircle className="h-6 w-6 text-green-600 mt-0.5" />
                         ) : (
-                          <XCircle className="h-6 w-6 text-red-600 mt-0.5" />
+                           <XCircle className="h-6 w-6 text-red-600 mt-0.5" />
                         )}
                         <div className="ml-4 flex-1">
                           <AlertDescription className={`text-base ${
@@ -809,7 +873,7 @@ export default function AdminVerificationPage() {
               </CardContent>
             </Card>
           </div>
-        ) : (
+        ) : currentView === 'stats' ? (
           /* Statistics View */
           <div className="space-y-8">
             {/* Stats Overview Cards */}
@@ -1149,6 +1213,109 @@ export default function AdminVerificationPage() {
                  </CardContent>
                </Card>
             </div>
+          </div>
+        ) : currentView === 'discounts' ? (
+          <div className="max-w-2xl mx-auto">
+            <Card className="shadow-xl border-0 bg-white/95 backdrop-blur overflow-hidden py-0">
+              <CardHeader className="bg-gradient-to-r from-green-500 to-green-600 text-white m-0 p-6">
+                <CardTitle className="flex items-center bangers-regular text-xl m-0">
+                  <Gift className="w-6 h-6 mr-2" />
+                  Validar Código de Descuento
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <form onSubmit={handleDiscountValidation} className="space-y-6">
+                  <div className="space-y-3">
+                    <label htmlFor="discountCode" className="text-sm font-medium text-blue-900">
+                      Código de Descuento (6 dígitos)
+                    </label>
+                    <Input
+                      id="discountCode"
+                      type="text"
+                      value={discountCode}
+                      onChange={(e) => setDiscountCode(e.target.value)}
+                      placeholder="123456"
+                      maxLength={6}
+                      className="text-center text-xl font-mono border-2 border-green-200 focus:border-green-500 focus:ring-green-500 py-4"
+                    />
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-green-500 hover:bg-green-600 text-white shadow-lg bangers-regular text-lg py-3" 
+                    disabled={isValidatingDiscount || !discountCode.trim()}
+                  >
+                    {isValidatingDiscount ? 'Validando...' : 'Validar Descuento'}
+                  </Button>
+                </form>
+
+                {/* Resultado de la validación */}
+                {discountResult && (
+                  <div className="mt-6">
+                    {discountResult.success ? (
+                      <Alert className="border-green-200 bg-green-50">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <AlertDescription className="text-green-800">
+                          <div className="space-y-3">
+                            <div className="font-semibold text-lg">✅ Descuento Validado Exitosamente</div>
+                            
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                              <div>
+                                <span className="font-medium">Código:</span>
+                                <div className="text-lg font-mono bg-white p-2 rounded border">
+                                  {discountResult.discount.discountCode}
+                                </div>
+                              </div>
+                              <div>
+                                <span className="font-medium">Descuento:</span>
+                                <div className="text-2xl font-bold text-green-600">
+                                  {discountResult.discount.discountAmount}€
+                                </div>
+                              </div>
+                              <div>
+                                <span className="font-medium">Cliente:</span>
+                                <div>{discountResult.discount.user.name}</div>
+                                <div className="text-xs text-gray-600">{discountResult.discount.user.email}</div>
+                              </div>
+                              <div>
+                                <span className="font-medium">Puntos usados:</span>
+                                <div className="text-lg font-semibold">{discountResult.discount.pointsUsed}</div>
+                              </div>
+                            </div>
+                            
+                            <div className="bg-green-100 p-3 rounded-lg border border-green-300">
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-green-800">Aplicar {discountResult.discount.discountAmount}€ de descuento</div>
+                                <div className="text-sm text-green-600">El descuento ha sido marcado como usado</div>
+                              </div>
+                            </div>
+                          </div>
+                        </AlertDescription>
+                      </Alert>
+                    ) : (
+                      <Alert className="border-red-200 bg-red-50">
+                        <XCircle className="h-4 w-4 text-red-600" />
+                        <AlertDescription className="text-red-800">
+                          <div className="font-semibold">Error al validar descuento</div>
+                          <div className="mt-2">{discountResult.error}</div>
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </div>
+                )}
+
+                {/* Instrucciones */}
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <h3 className="font-semibold text-blue-900 mb-2">Instrucciones:</h3>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• El cliente debe presentar el código de 6 dígitos</li>
+                    <li>• Una vez validado, el descuento se marca como usado</li>
+                    <li>• El descuento se aplica automáticamente al total</li>
+                    <li>• Los códigos expirados o ya usados no se pueden validar</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
       </div>

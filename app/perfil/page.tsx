@@ -47,6 +47,10 @@ export default function PerfilPage() {
   const [countdowns, setCountdowns] = useState<{[key: string]: {time: number, type: string}}>({})
   const [showPointsModal, setShowPointsModal] = useState(false)
   const [showDeleteHistoryModal, setShowDeleteHistoryModal] = useState(false)
+  const [showDiscountModal, setShowDiscountModal] = useState(false)
+  const [discounts, setDiscounts] = useState<any[]>([])
+  const [discountTiers, setDiscountTiers] = useState<any[]>([])
+  const [loadingDiscount, setLoadingDiscount] = useState(false)
   // Obtener historial desde la API
   const [apiBookings, setApiBookings] = useState([])
   const [loadingBookings, setLoadingBookings] = useState(false)
@@ -241,6 +245,12 @@ export default function PerfilPage() {
     }
     const userData = JSON.parse(savedUser)
     setUser(userData)
+    
+    // Cargar descuentos del usuario
+    if (userData.id) {
+      loadUserDiscounts(userData.id)
+    }
+    loadDiscountTiers()
     
     // Cargar datos del perfil específicos del usuario desde localStorage
     const userProfileKey = `userProfile_${userData.email}`
@@ -454,6 +464,64 @@ export default function PerfilPage() {
     } else {
       return `${seconds}s`
     }
+  }
+
+  // Cargar descuentos del usuario
+  const loadUserDiscounts = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/discounts/user?userId=${userId}`)
+      if (response.ok) {
+        const data = await response.json()
+        setDiscounts(data.discounts)
+      }
+    } catch (error) {
+      console.error('Error loading discounts:', error)
+    }
+  }
+
+  // Cargar tiers de descuento disponibles
+  const loadDiscountTiers = async () => {
+    try {
+      const response = await fetch('/api/discounts/generate')
+      if (response.ok) {
+        const data = await response.json()
+        setDiscountTiers(data.tiers)
+      }
+    } catch (error) {
+      console.error('Error loading discount tiers:', error)
+    }
+  }
+
+  // Generar código de descuento
+  const generateDiscount = async (pointsToUse: number) => {
+    if (!user?.id) return
+    
+    setLoadingDiscount(true)
+    try {
+      const response = await fetch('/api/discounts/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          pointsToUse
+        })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        alert(`¡Descuento generado! Código: ${data.discount.discountCode}`)
+        loadUserDiscounts(user.id) // Recargar descuentos
+        setShowDiscountModal(false)
+      } else {
+        alert(data.error || 'Error generando descuento')
+      }
+    } catch (error) {
+      alert('Error de conexión')
+    }
+    setLoadingDiscount(false)
   }
   
   // Efecto para manejar countdowns
@@ -826,19 +894,19 @@ export default function PerfilPage() {
                     <h4 className="font-semibold text-blue-900 mb-2">{t('profile.nextReward')}</h4>
                     <div className="bg-gray-200 rounded-full h-2 mb-2">
                       <div className="bg-orange-500 h-2 rounded-full" style={{
-                        width: `${stats.puntosTotales >= 6000 ? 100 :
-                                 stats.puntosTotales >= 4000 ? (stats.puntosTotales / 6000) * 100 :
-                                 stats.puntosTotales >= 2500 ? (stats.puntosTotales / 4000) * 100 :
-                                 stats.puntosTotales >= 1500 ? (stats.puntosTotales / 2500) * 100 :
-                                 (stats.puntosTotales / 1500) * 100}%`
+                        width: `${stats.puntosTotales >= 7500 ? 100 :
+                                 stats.puntosTotales >= 5000 ? (stats.puntosTotales / 7500) * 100 :
+                                 stats.puntosTotales >= 3125 ? (stats.puntosTotales / 5000) * 100 :
+                                 stats.puntosTotales >= 1875 ? (stats.puntosTotales / 3125) * 100 :
+                                 (stats.puntosTotales / 1875) * 100}%`
                       }}></div>
                     </div>
                     <p className="text-sm text-gray-600">
-                      {stats.puntosTotales >= 6000 ? t('profile.allRewardsUnlocked') :
-                       stats.puntosTotales >= 4000 ? t('profile.pointsForPremiumFree').replace('{points}', (6000 - stats.puntosTotales).toString()) :
-                       stats.puntosTotales >= 2500 ? t('profile.pointsForFree').replace('{points}', (4000 - stats.puntosTotales).toString()) :
-                       stats.puntosTotales >= 1500 ? t('profile.pointsFor10Discount').replace('{points}', (2500 - stats.puntosTotales).toString()) :
-                       t('profile.pointsFor5Discount').replace('{points}', (1500 - stats.puntosTotales).toString())}
+                      {stats.puntosTotales >= 7500 ? t('profile.allRewardsUnlocked') :
+                       stats.puntosTotales >= 5000 ? t('profile.pointsForPremiumFree').replace('{points}', (7500 - stats.puntosTotales).toString()) :
+                       stats.puntosTotales >= 3125 ? t('profile.pointsForFree').replace('{points}', (5000 - stats.puntosTotales).toString()) :
+                       stats.puntosTotales >= 1875 ? t('profile.pointsFor10Discount').replace('{points}', (3125 - stats.puntosTotales).toString()) :
+                       t('profile.pointsFor5Discount').replace('{points}', (1875 - stats.puntosTotales).toString())}
                     </p>
                   </div>
                 </CardContent>
@@ -859,7 +927,7 @@ export default function PerfilPage() {
                         <div className="text-sm text-gray-600">{t('profile.nextRentalDiscount')}</div>
                       </div>
                       <Badge className="bg-orange-500 text-white">
-                        1500 puntos
+                        1875 puntos
                       </Badge>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg shadow-lg">
@@ -868,7 +936,7 @@ export default function PerfilPage() {
                         <div className="text-sm text-gray-600">{t('profile.nextRentalDiscount')}</div>
                       </div>
                       <Badge className="bg-orange-500 text-white">
-                        2500 puntos
+                        3125 puntos
                       </Badge>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg shadow-lg">
@@ -877,7 +945,7 @@ export default function PerfilPage() {
                         <div className="text-sm text-gray-600">{t('profile.oneHourScooter')}</div>
                       </div>
                       <Badge className="bg-orange-500 text-white">
-                        4000 puntos
+                        5000 puntos
                       </Badge>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg shadow-lg">
@@ -886,7 +954,7 @@ export default function PerfilPage() {
                         <div className="text-sm text-gray-600">{t('profile.twoHoursBike')}</div>
                       </div>
                       <Badge className="bg-orange-500 text-white">
-                        6000 puntos
+                        7500 puntos
                       </Badge>
                     </div>
                   </div>
@@ -895,7 +963,7 @@ export default function PerfilPage() {
                     <div className="text-base lg:text-lg text-blue-900">
                       <strong className="bangers-regular">{t('profile.howToEarnPoints')}</strong>
                       <ul className="mt-2 space-y-1">
-                        <li>• <span className="text-orange-500 font-bold">15</span> puntos por cada euro gastado</li>
+                        <li>• <span className="text-orange-500 font-bold">12</span> puntos por cada euro gastado</li>
                         <li>• <span className="text-orange-500 font-bold">100</span> puntos extra por completar un alquiler</li>
                         <li>• <span className="text-orange-500 font-bold">200</span> puntos por reseña positiva</li>
                       </ul>
@@ -938,6 +1006,103 @@ export default function PerfilPage() {
                   ) : (
                     <>
                       <div className="space-y-4 max-h-[720px] overflow-y-auto scrollbar-hide">
+                        {/* Tarjetas de Descuento */}
+                        {discounts.map((discount) => (
+                          <div key={`discount-${discount.id}`} className={`border-2 rounded-xl p-4 shadow-xl hover:shadow-2xl transition-all duration-200 ${
+                            discount.status === 'VALIDATED' 
+                              ? 'bg-green-50 border-green-500' 
+                              : discount.status === 'EXPIRED'
+                              ? 'bg-red-50 border-red-500'
+                              : 'bg-blue-50 border-blue-500'
+                          }`}>
+                            {/* Header de la tarjeta de descuento */}
+                            <div className="mb-3">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <div className={`p-2 rounded-full ${
+                                  discount.status === 'VALIDATED' 
+                                    ? 'bg-green-500' 
+                                    : discount.status === 'EXPIRED'
+                                    ? 'bg-red-500'
+                                    : 'bg-blue-500'
+                                }`}>
+                                  <Gift className="w-4 h-4 text-white" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <h4 className="font-bold text-blue-900 text-base sm:text-lg">Código de Descuento</h4>
+                                  <p className="text-gray-500 text-xs">Código: {discount.discountCode}</p>
+                                </div>
+                                <Badge className={`text-xs ${
+                                  discount.status === 'VALIDATED' 
+                                    ? 'bg-green-500 text-white' 
+                                    : discount.status === 'EXPIRED'
+                                    ? 'bg-red-500 text-white'
+                                    : 'bg-blue-500 text-white'
+                                }`}>
+                                  {discount.status === 'VALIDATED' ? 'USADO' : 
+                                   discount.status === 'EXPIRED' ? 'EXPIRADO' : 'VÁLIDO'}
+                                </Badge>
+                              </div>
+                            </div>
+
+                            {/* Detalles del descuento */}
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                              <div className="flex items-center space-x-2">
+                                <Calendar className="w-4 h-4 text-gray-500" />
+                                <div>
+                                  <span className="text-gray-500">Generado:</span>
+                                  <span className="ml-1 font-medium">{new Date(discount.createdAt).toLocaleDateString()}</span>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Gift className="w-4 h-4 text-gray-500" />
+                                <div>
+                                  <span className="text-gray-500">Descuento:</span>
+                                  <span className="ml-1 font-bold text-green-600">{discount.discountAmount}€</span>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Star className="w-4 h-4 text-gray-500" />
+                                <div>
+                                  <span className="text-gray-500">Puntos usados:</span>
+                                  <span className="ml-1 font-medium">{discount.pointsUsed}</span>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Clock className="w-4 h-4 text-gray-500" />
+                                <div>
+                                  <span className="text-gray-500">Expira:</span>
+                                  <span className="ml-1 font-medium">{new Date(discount.expiresAt).toLocaleDateString()}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Código para mostrar en tienda */}
+                            {discount.status === 'PENDING' && (
+                              <div className="mt-4 p-3 bg-blue-100 rounded-lg border border-blue-300">
+                                <div className="text-center">
+                                  <p className="text-sm text-blue-800 mb-2">Presenta este código en tienda:</p>
+                                  <div className="bg-white p-3 rounded-lg border-2 border-blue-500">
+                                    <span className="text-2xl font-bold text-blue-900 tracking-wider">{discount.discountCode}</span>
+                                  </div>
+                                  <p className="text-xs text-blue-600 mt-2">Válido hasta {new Date(discount.expiresAt).toLocaleDateString()}</p>
+                                </div>
+                              </div>
+                            )}
+
+                            {discount.status === 'VALIDATED' && (
+                              <div className="mt-4 p-3 bg-green-100 rounded-lg border border-green-300">
+                                <div className="text-center">
+                                  <p className="text-sm text-green-800">✅ Descuento aplicado exitosamente</p>
+                                  {discount.validatedAt && (
+                                    <p className="text-xs text-green-600">Usado el {new Date(discount.validatedAt).toLocaleDateString()}</p>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                        
+                        {/* Tarjetas de Alquileres */}
                         {alquileres.map((alquiler: any) => (
                           <div key={alquiler.id} className="bg-white border-2 border-orange-500 rounded-xl p-4 shadow-xl hover:shadow-2xl transition-all duration-200">
                             {/* Header de la tarjeta */}
@@ -1428,6 +1593,92 @@ export default function PerfilPage() {
                 </div>
               </div>
 
+              {/* Botones de Canje */}
+              <div className="mb-8">
+                <h3 className="bangers-regular text-xl text-blue-900 mb-4">🎁 Canjear Puntos por Descuentos</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                  {discountTiers.map((tier, index) => {
+                    const canAfford = stats.puntosTotales >= tier.points
+                    const getRewardInfo = () => {
+                      if (tier.type === 'free_scooter') {
+                        return { emoji: '🛴', title: 'Alquiler Gratis', subtitle: '1 hora de patinete' }
+                      } else if (tier.type === 'premium_free') {
+                        return { emoji: '🏍️', title: 'Alquiler Premium Gratis', subtitle: '2 horas de moto eléctrica' }
+                      } else {
+                        return { emoji: '🎫', title: `Descuento ${tier.discount}€`, subtitle: 'En tu próximo alquiler' }
+                      }
+                    }
+                    const rewardInfo = getRewardInfo()
+                    
+                    return (
+                      <div key={index} className={`rounded-xl p-4 border-2 shadow-lg transition-all ${
+                        canAfford 
+                          ? 'bg-green-50 border-green-300 hover:bg-green-100 cursor-pointer' 
+                          : 'bg-gray-50 border-gray-300 opacity-60'
+                      }`}>
+                        <div className="text-center">
+                          <div className="text-2xl mb-2">{rewardInfo.emoji}</div>
+                          <div className="font-bold text-lg text-blue-900">{rewardInfo.title}</div>
+                          <div className="text-xs text-gray-600 mb-2">{rewardInfo.subtitle}</div>
+                          <div className="text-sm text-gray-600 mb-3">{tier.points} puntos</div>
+                          <Button
+                            onClick={() => canAfford && generateDiscount(tier.points)}
+                            disabled={!canAfford || loadingDiscount}
+                            className={`w-full text-sm ${
+                              canAfford 
+                                ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                          >
+                            {loadingDiscount ? 'Generando...' : canAfford ? 'Canjear' : 'Insuficientes'}
+                          </Button>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                
+                {/* Mis Descuentos */}
+                {discounts.length > 0 && (
+                  <div className="mb-6">
+                    <h4 className="font-bold text-blue-900 mb-3">Mis Códigos de Descuento</h4>
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      {discounts.map((discount) => (
+                        <div key={discount.id} className={`p-3 rounded-lg border-2 ${
+                          discount.status === 'VALIDATED' 
+                            ? 'bg-green-50 border-green-300' 
+                            : discount.status === 'EXPIRED'
+                            ? 'bg-red-50 border-red-300'
+                            : 'bg-blue-50 border-blue-300'
+                        }`}>
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <div className="font-bold text-lg">{discount.discountCode}</div>
+                              <div className="text-sm text-gray-600">{discount.discountAmount}€ descuento</div>
+                            </div>
+                            <div className="text-right">
+                              <div className={`px-2 py-1 rounded text-xs font-bold ${
+                                discount.status === 'VALIDATED' 
+                                  ? 'bg-green-500 text-white' 
+                                  : discount.status === 'EXPIRED'
+                                  ? 'bg-red-500 text-white'
+                                  : 'bg-blue-500 text-white'
+                              }`}>
+                                {discount.status === 'VALIDATED' ? 'Usado' : 
+                                 discount.status === 'EXPIRED' ? 'Expirado' : 'Válido'}
+                              </div>
+                              <div className="text-xs text-gray-500 mt-1">
+                                {new Date(discount.expiresAt).toLocaleDateString()}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Cómo Ganar Puntos */}
               <div className="mb-8">
                  <h3 className="bangers-regular text-xl text-blue-900 mb-4">💰 Cómo Ganar Puntos</h3>
@@ -1435,7 +1686,7 @@ export default function PerfilPage() {
                   <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 shadow-lg">
                     <div className="flex items-center space-x-3">
                       <div className="bg-blue-500 p-2 rounded-full">
-                        <span className="text-white text-sm font-bold">15</span>
+                        <span className="text-white text-sm font-bold">12</span>
                       </div>
                       <div>
                         <div className="font-semibold text-blue-900">Por cada euro gastado</div>
@@ -1475,14 +1726,14 @@ export default function PerfilPage() {
                 <div className="space-y-4">
                   {/* Descuento 5€ */}
                   <div className={`rounded-xl p-4 border-2 shadow-lg ${
-                    stats.puntosTotales >= 1500 
+                    stats.puntosTotales >= 1875 
                       ? 'bg-green-50 border-green-300' 
                       : 'bg-gray-50 border-gray-300'
                   }`}>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-3">
                         <div className={`text-2xl ${
-                          stats.puntosTotales >= 1500 ? '' : 'grayscale'
+                          stats.puntosTotales >= 1875 ? '' : 'grayscale'
                         }`}>🎫</div>
                         <div>
                           <div className="font-bold text-blue-900">Descuento 5€</div>
@@ -1490,41 +1741,41 @@ export default function PerfilPage() {
                         </div>
                       </div>
                       <div className={`px-3 py-1 rounded-full text-sm font-bold ${
-                        stats.puntosTotales >= 1500 
+                        stats.puntosTotales >= 1875 
                           ? 'bg-green-500 text-white' 
                           : 'bg-orange-500 text-white'
                       }`}>
-                        {stats.puntosTotales >= 1500 ? '✓ Desbloqueado' : '1500 puntos'}
+                        {stats.puntosTotales >= 1875 ? '✓ Desbloqueado' : '1875 puntos'}
                       </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
                         className={`h-2 rounded-full transition-all duration-500 ${
-                          stats.puntosTotales >= 1500 ? 'bg-green-500' : 'bg-orange-500'
+                          stats.puntosTotales >= 1875 ? 'bg-green-500' : 'bg-orange-500'
                         }`}
                         style={{
-                          width: `${Math.min((stats.puntosTotales / 1500) * 100, 100)}%`
+                          width: `${Math.min((stats.puntosTotales / 1875) * 100, 100)}%`
                         }}
                       ></div>
                     </div>
                     <div className="text-xs text-gray-600 mt-1">
-                      {stats.puntosTotales >= 1500 
+                      {stats.puntosTotales >= 1875 
                         ? 'Recompensa disponible' 
-                        : `${1500 - stats.puntosTotales} puntos restantes`
+                        : `${1875 - stats.puntosTotales} puntos restantes`
                       }
                     </div>
                   </div>
 
                   {/* Descuento 10€ */}
                   <div className={`rounded-xl p-4 border-2 shadow-lg ${
-                    stats.puntosTotales >= 2500 
+                    stats.puntosTotales >= 3125 
                       ? 'bg-green-50 border-green-300' 
                       : 'bg-gray-50 border-gray-300'
                   }`}>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-3">
                         <div className={`text-2xl ${
-                          stats.puntosTotales >= 2500 ? '' : 'grayscale'
+                          stats.puntosTotales >= 3125 ? '' : 'grayscale'
                         }`}>🎟️</div>
                         <div>
                           <div className="font-bold text-blue-900">Descuento 10€</div>
@@ -1532,11 +1783,11 @@ export default function PerfilPage() {
                         </div>
                       </div>
                       <div className={`px-3 py-1 rounded-full text-sm font-bold ${
-                        stats.puntosTotales >= 2500 
+                        stats.puntosTotales >= 3125 
                           ? 'bg-green-500 text-white' 
                           : 'bg-orange-500 text-white'
                       }`}>
-                        {stats.puntosTotales >= 2500 ? '✓ Desbloqueado' : '2500 puntos'}
+                        {stats.puntosTotales >= 3125 ? '✓ Desbloqueado' : '3125 puntos'}
                       </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -1559,14 +1810,14 @@ export default function PerfilPage() {
 
                   {/* Alquiler Gratis */}
                   <div className={`rounded-xl p-4 border-2 shadow-lg ${
-                    stats.puntosTotales >= 4000 
+                    stats.puntosTotales >= 5000 
                       ? 'bg-green-50 border-green-300' 
                       : 'bg-gray-50 border-gray-300'
                   }`}>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-3">
                         <div className={`text-2xl ${
-                          stats.puntosTotales >= 4000 ? '' : 'grayscale'
+                          stats.puntosTotales >= 5000 ? '' : 'grayscale'
                         }`}>🆓</div>
                         <div>
                           <div className="font-bold text-blue-900">Alquiler Gratis</div>
@@ -1574,41 +1825,41 @@ export default function PerfilPage() {
                         </div>
                       </div>
                       <div className={`px-3 py-1 rounded-full text-sm font-bold ${
-                        stats.puntosTotales >= 4000 
+                        stats.puntosTotales >= 5000 
                           ? 'bg-green-500 text-white' 
                           : 'bg-orange-500 text-white'
                       }`}>
-                        {stats.puntosTotales >= 4000 ? '✓ Desbloqueado' : '4000 puntos'}
+                        {stats.puntosTotales >= 5000 ? '✓ Desbloqueado' : '5000 puntos'}
                       </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
                         className={`h-2 rounded-full transition-all duration-500 ${
-                          stats.puntosTotales >= 4000 ? 'bg-green-500' : 'bg-orange-500'
+                          stats.puntosTotales >= 5000 ? 'bg-green-500' : 'bg-orange-500'
                         }`}
                         style={{
-                          width: `${Math.min((stats.puntosTotales / 4000) * 100, 100)}%`
+                          width: `${Math.min((stats.puntosTotales / 5000) * 100, 100)}%`
                         }}
                       ></div>
                     </div>
                     <div className="text-xs text-gray-600 mt-1">
-                      {stats.puntosTotales >= 4000 
+                      {stats.puntosTotales >= 5000 
                         ? 'Recompensa disponible' 
-                        : `${4000 - stats.puntosTotales} puntos restantes`
+                        : `${5000 - stats.puntosTotales} puntos restantes`
                       }
                     </div>
                   </div>
 
                   {/* Alquiler Premium Gratis */}
                   <div className={`rounded-xl p-4 border-2 shadow-lg ${
-                    stats.puntosTotales >= 6000 
+                    stats.puntosTotales >= 7500 
                       ? 'bg-green-50 border-green-300' 
                       : 'bg-gray-50 border-gray-300'
                   }`}>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-3">
                         <div className={`text-2xl ${
-                          stats.puntosTotales >= 6000 ? '' : 'grayscale'
+                          stats.puntosTotales >= 7500 ? '' : 'grayscale'
                         }`}>👑</div>
                         <div>
                           <div className="font-bold text-blue-900">Alquiler Premium Gratis</div>
@@ -1616,27 +1867,27 @@ export default function PerfilPage() {
                         </div>
                       </div>
                       <div className={`px-3 py-1 rounded-full text-sm font-bold ${
-                        stats.puntosTotales >= 6000 
+                        stats.puntosTotales >= 7500 
                           ? 'bg-green-500 text-white' 
                           : 'bg-orange-500 text-white'
                       }`}>
-                        {stats.puntosTotales >= 6000 ? '✓ Desbloqueado' : '6000 puntos'}
+                        {stats.puntosTotales >= 7500 ? '✓ Desbloqueado' : '7500 puntos'}
                       </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
                         className={`h-2 rounded-full transition-all duration-500 ${
-                          stats.puntosTotales >= 6000 ? 'bg-green-500' : 'bg-orange-500'
+                          stats.puntosTotales >= 7500 ? 'bg-green-500' : 'bg-orange-500'
                         }`}
                         style={{
-                          width: `${Math.min((stats.puntosTotales / 6000) * 100, 100)}%`
+                          width: `${Math.min((stats.puntosTotales / 7500) * 100, 100)}%`
                         }}
                       ></div>
                     </div>
                     <div className="text-xs text-gray-600 mt-1">
-                      {stats.puntosTotales >= 6000 
+                      {stats.puntosTotales >= 7500 
                         ? 'Recompensa disponible' 
-                        : `${6000 - stats.puntosTotales} puntos restantes`
+                        : `${7500 - stats.puntosTotales} puntos restantes`
                       }
                     </div>
                   </div>

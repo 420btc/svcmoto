@@ -27,6 +27,7 @@ model User {
   // Relations
   bookings     Booking[]
   pointsLedger PointsLedger[]
+  discounts    Discount[]
 
   @@map("users")
 }
@@ -67,16 +68,45 @@ model PointsLedger {
   id          String   @id @default(cuid())
   userId      String
   bookingId   String?
+  discountId  String?  // ID del descuento si los puntos fueron gastados en un descuento
   points      Int      // Puede ser positivo (ganados) o negativo (gastados)
   reason      String   // "rental_completion", "bonus", "redemption", etc.
   description String?
   createdAt   DateTime @default(now())
 
   // Relations
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  booking Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  booking  Booking?  @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  discount Discount? @relation(fields: [discountId], references: [id], onDelete: SetNull)
 
   @@map("points_ledger")
+}
+
+model Discount {
+  id              String        @id @default(cuid())
+  userId          String
+  pointsUsed      Int           // Puntos gastados para generar el descuento
+  discountAmount  Float         // Cantidad del descuento en euros
+  discountCode    String        @unique // Código único de 6 dígitos
+  status          DiscountStatus @default(PENDING)
+  validatedAt     DateTime?     // Fecha de validación
+  validatedBy     String?       // ID del admin que validó
+  expiresAt       DateTime      // Fecha de expiración
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pointsLedger PointsLedger[] // Registro de puntos gastados
+
+  @@map("discounts")
+}
+
+enum DiscountStatus {
+  PENDING    // Descuento generado, esperando validación
+  VALIDATED  // Descuento validado en tienda
+  EXPIRED    // Descuento expirado
+  CANCELLED  // Descuento cancelado
 }
 
 enum BookingStatus {

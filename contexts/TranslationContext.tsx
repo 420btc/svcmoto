@@ -319,7 +319,7 @@ const translations = {
     'profile.oneHourScooter': '1 hora de patinete',
     'profile.twoHoursBike': '2 horas de moto eléctrica',
     'profile.howToEarnPoints': '¿Cómo ganar puntos?',
-    'profile.pointsPerEuro': '15 puntos por cada euro gastado',
+    'profile.pointsPerEuro': '12 puntos por cada euro gastado',
     'profile.pointsPerRental': '100 puntos extra por completar un alquiler',
     'profile.pointsPerReview': '200 puntos por reseña positiva',
     'profile.pointsPerReferral': '500 puntos por referir a un amigo',

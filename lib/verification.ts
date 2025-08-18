@@ -52,8 +52,8 @@ export function formatVerificationCode(code: string): string {
  * @returns number - Puntos a otorgar
  */
 export function calculatePoints(totalPrice: number): number {
-  const pointsPerEuro = parseInt(process.env.POINTS_PER_EURO || '10')
-  const completionBonus = parseInt(process.env.COMPLETION_BONUS_POINTS || '50')
+  const pointsPerEuro = parseInt(process.env.POINTS_PER_EURO || '12')  // Reducido de 15 a 12 puntos por euro
+  const completionBonus = parseInt(process.env.COMPLETION_BONUS_POINTS || '40')  // Reducido de 50 a 40 puntos
   
   const basePoints = Math.floor(totalPrice * pointsPerEuro)
   return basePoints + completionBonus
