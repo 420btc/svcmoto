@@ -1317,7 +1317,7 @@ export default function AdminVerificationPage() {
               </CardContent>
             </Card>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   )
