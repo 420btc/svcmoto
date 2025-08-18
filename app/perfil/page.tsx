@@ -14,6 +14,13 @@ import { useRouter } from "next/navigation"
 import { useTranslation } from "@/contexts/TranslationContext"
 import { LanguageToggle } from "@/components/LanguageToggle"
 
+// Declaración global para TypeScript
+declare global {
+  interface Window {
+    reactivateProfileUpdates?: () => void
+  }
+}
+
 interface Alquiler {
   id: string
   vehiculo: string
@@ -44,6 +51,25 @@ export default function PerfilPage() {
   const [apiBookings, setApiBookings] = useState([])
   const [loadingBookings, setLoadingBookings] = useState(false)
   const [statsRefresh, setStatsRefresh] = useState(0)
+  const [autoUpdateEnabled, setAutoUpdateEnabled] = useState(true)
+  
+  // Función para reactivar actualizaciones automáticas (se puede llamar desde otras páginas)
+  const reactivateAutoUpdate = () => {
+    setAutoUpdateEnabled(true)
+    fetchBookingsFromAPI()
+  }
+  
+  // Exponer función globalmente para que otras páginas puedan usarla
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.reactivateProfileUpdates = reactivateAutoUpdate
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        delete window.reactivateProfileUpdates
+      }
+    }
+  }, [])
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -102,10 +128,10 @@ export default function PerfilPage() {
 
   // Cargar bookings desde API cuando el usuario esté disponible
   useEffect(() => {
-    if (user?.email) {
+    if (user?.email && autoUpdateEnabled) {
       fetchBookingsFromAPI()
     }
-  }, [user?.email])
+  }, [user?.email, autoUpdateEnabled])
   
   // Forzar actualización de estadísticas cuando cambien los apiBookings
   useEffect(() => {
@@ -116,14 +142,14 @@ export default function PerfilPage() {
   
   // Actualizar datos automáticamente cada 30 segundos
   useEffect(() => {
-    if (!user?.email) return
+    if (!user?.email || !autoUpdateEnabled) return
     
     const interval = setInterval(() => {
       fetchBookingsFromAPI()
     }, 30000) // 30 segundos
     
     return () => clearInterval(interval)
-  }, [user?.email])
+  }, [user?.email, autoUpdateEnabled])
   
   // Verificar autenticación desde localStorage
   useEffect(() => {
@@ -289,11 +315,17 @@ export default function PerfilPage() {
     localStorage.removeItem('rentalHistory')
     localStorage.removeItem('userStats')
     
+    // Limpiar datos de API
+    setApiBookings([])
+    
+    // Desactivar actualizaciones automáticas
+    setAutoUpdateEnabled(false)
+    
     // Cerrar modal
     setShowDeleteHistoryModal(false)
     
-    // Forzar re-render
-    window.location.reload()
+    // Forzar actualización de estadísticas
+    setStatsRefresh(prev => prev + 1)
   }
 
   const stats = getStats()

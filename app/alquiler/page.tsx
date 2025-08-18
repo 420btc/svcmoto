@@ -268,6 +268,11 @@ export default function AlquilerPage() {
       localStorage.setItem(userHistoryKey, JSON.stringify(newHistory))
       localStorage.setItem('rentalHistory', JSON.stringify(newHistory)) // Compatibilidad
       
+      // Reactivar actualizaciones automáticas en el perfil si están desactivadas
+      if (typeof window !== 'undefined' && window.reactivateProfileUpdates) {
+        window.reactivateProfileUpdates()
+      }
+      
     } catch (error) {
       console.error('Error al crear la reserva:', error)
       alert('Error al crear la reserva. Por favor, inténtalo de nuevo.')
