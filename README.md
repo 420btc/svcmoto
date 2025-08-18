@@ -20,6 +20,37 @@ Este es un proyecto de [Next.js](https://nextjs.org) para el alquiler de motocic
 - Chatbot con OpenAI
 - Diseño responsive con Tailwind CSS
 
+## 🔄 Variables de Entorno Requeridas
+
+### **Para que funcione correctamente en Vercel, asegúrate de tener estas variables:**
+
+```env
+# Base de datos PostgreSQL (Neon)
+POSTGRES_PRISMA_URL=postgres://...
+POSTGRES_URL_NON_POOLING=postgresql://...
+
+# Autenticación Google
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_CLIENT_SECRET=your-secret
+
+# OpenAI para chatbot
+OPENAI_API_KEY=your-api-key
+
+# Mapbox para mapas
+NEXT_PUBLIC_MAPBOX_TOKEN=your-token
+
+# JWT y seguridad
+JWT_SECRET=your-jwt-secret
+NEXTAUTH_SECRET=your-nextauth-secret
+```
+
+### ⚠️ **Importante**: 
+Si falta `POSTGRES_PRISMA_URL`, la aplicación no funcionará. Esta variable debe estar configurada exactamente con ese nombre en Vercel.
+
+---
+
+**🚀 Deploy actualizado - Variables de entorno configuradas correctamente**
+
 Plataforma web completa de SVC MOTO, empresa líder en alquiler de vehículos eléctricos y servicios de reparación y mantenimiento en Málaga. Incluye sistema de usuarios, rutas turísticas interactivas, y experiencia multiidioma.
 
 ## 📋 Descripción
