@@ -218,7 +218,7 @@ export default function ServiciosPage() {
                      onClick={signOut}
                      variant="outline" 
                      size="sm"
-                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-xs"
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-xs shadow-lg"
                    >
                      {t('nav.signOut')}
                    </Button>
@@ -227,7 +227,7 @@ export default function ServiciosPage() {
                  <Button 
                    onClick={signIn}
                    size="sm"
-                   className="bg-orange-500 hover:bg-orange-600 text-white text-xs"
+                   className="bg-orange-500 hover:bg-orange-600 text-white text-xs shadow-lg"
                  >
                    {t('nav.signIn')}
                  </Button>
@@ -261,7 +261,7 @@ export default function ServiciosPage() {
                    <Button 
                      onClick={signOut}
                      variant="outline" 
-                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white shadow-lg"
                    >
                      {t('nav.signOut')}
                    </Button>
@@ -269,7 +269,7 @@ export default function ServiciosPage() {
                ) : (
                  <Button 
                    onClick={signIn}
-                   className="bg-orange-500 hover:bg-orange-600 text-white"
+                   className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
                  >
                    {t('nav.signIn')}
                  </Button>
@@ -334,7 +334,7 @@ export default function ServiciosPage() {
                           setMobileMenuOpen(false)
                         }}
                         variant="outline"
-                        className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full"
+                        className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full shadow-lg"
                       >
                         {t('nav.signOut')}
                       </Button>
@@ -345,7 +345,7 @@ export default function ServiciosPage() {
                         signIn()
                         setMobileMenuOpen(false)
                       }}
-                      className="bg-orange-500 hover:bg-orange-600 text-white w-full"
+                      className="bg-orange-500 hover:bg-orange-600 text-white w-full shadow-lg"
                     >
                       {t('nav.signIn')}
                     </Button>
@@ -394,7 +394,7 @@ export default function ServiciosPage() {
               return (
                 <Card
                   key={servicio.id}
-                  className="border-2 border-gray-200 hover:border-orange-500 transition-colors relative"
+                  className="border-2 border-gray-200 hover:border-orange-500 transition-colors relative shadow-lg"
                 >
                   {servicio.urgente && (
                     <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white">{t('services.expressService')}</Badge>
@@ -443,7 +443,7 @@ export default function ServiciosPage() {
 
                     <Button 
                       onClick={() => abrirModalServicio(servicio)}
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
                     >
                       {t('services.request')} {servicio.nombre}
                     </Button>
@@ -508,7 +508,7 @@ export default function ServiciosPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="bg-white/10 backdrop-blur border-white/20">
+            <Card className="bg-white/10 backdrop-blur border-white/20 shadow-lg">
               <CardContent className="p-6 text-center">
                 <Shield className="w-12 h-12 text-orange-500 mx-auto mb-4" />
                 <h3 className="bangers-regular text-xl font-bold text-white mb-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('services.qualityGuarantee')}</h3>
@@ -549,13 +549,13 @@ export default function ServiciosPage() {
             {t('services.needHelpSubtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white">
+            <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg">
               {t('services.call')}
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white bg-transparent"
+              className="border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white bg-transparent shadow-lg"
             >
               {t('services.requestQuote')}
             </Button>
@@ -824,7 +824,7 @@ export default function ServiciosPage() {
       {/* Modal de Confirmación */}
       {showConfirmation && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="w-96 mx-4">
+          <Card className="w-96 mx-4 shadow-lg">
             <CardHeader className="text-center">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               <CardTitle className="text-2xl text-green-600">{t('serviceModal.requestSent')}</CardTitle>
@@ -834,7 +834,7 @@ export default function ServiciosPage() {
               <p className="text-sm text-gray-600 mb-4">{t('serviceModal.contactSoon')}</p>
               <Button 
                 onClick={() => setShowConfirmation(false)}
-                className="bg-orange-500 hover:bg-orange-600 text-white"
+                className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
               >
                 {t('serviceModal.continue')}
               </Button>
@@ -860,7 +860,7 @@ export default function ServiciosPage() {
                   href="https://wa.me/34607228882"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors inline-flex items-center justify-center"
+                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors inline-flex items-center justify-center shadow-lg"
                   title="Contactar por WhatsApp"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -873,7 +873,7 @@ export default function ServiciosPage() {
                     href="https://www.carlosfr.es"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer inline-block"
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer inline-block shadow-lg"
                   >
                     Carlosfr.es
                   </a>

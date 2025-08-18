@@ -383,7 +383,7 @@ export default function AlquilerPage() {
                      onClick={signOut}
                      variant="outline" 
                      size="sm"
-                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-xs"
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-xs shadow-lg"
                    >
                      {t('nav.signOut')}
                    </Button>
@@ -392,7 +392,7 @@ export default function AlquilerPage() {
                  <Button 
                    onClick={signIn}
                    size="sm"
-                   className="bg-orange-500 hover:bg-orange-600 text-white text-xs"
+                   className="bg-orange-500 hover:bg-orange-600 text-white text-xs shadow-lg"
                  >
                    {t('nav.signIn')}
                  </Button>
@@ -426,7 +426,7 @@ export default function AlquilerPage() {
                    <Button 
                      onClick={signOut}
                      variant="outline" 
-                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white shadow-lg"
                    >
                      {t('nav.signOut')}
                    </Button>
@@ -434,7 +434,7 @@ export default function AlquilerPage() {
                ) : (
                  <Button 
                    onClick={signIn}
-                   className="bg-orange-500 hover:bg-orange-600 text-white"
+                   className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
                  >
                    {t('nav.signIn')}
                  </Button>
@@ -499,7 +499,7 @@ export default function AlquilerPage() {
                           setMobileMenuOpen(false)
                         }}
                         variant="outline"
-                        className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full"
+                        className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full shadow-lg"
                       >
                         {t('nav.signOut')}
                       </Button>
@@ -510,7 +510,7 @@ export default function AlquilerPage() {
                         signIn()
                         setMobileMenuOpen(false)
                       }}
-                      className="bg-orange-500 hover:bg-orange-600 text-white w-full"
+                      className="bg-orange-500 hover:bg-orange-600 text-white w-full shadow-lg"
                     >
                       {t('nav.signIn')}
                     </Button>
@@ -542,7 +542,7 @@ export default function AlquilerPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {motos.map((moto) => (
-              <Card key={moto.id} className="border-2 border-gray-200 hover:border-orange-500 transition-colors">
+              <Card key={moto.id} className="border-2 border-gray-200 hover:border-orange-500 transition-colors shadow-lg">
                 <CardHeader>
                   <div className="flex justify-between items-start mb-4">
                     <div>
@@ -637,7 +637,7 @@ export default function AlquilerPage() {
 
                   <Button 
                     onClick={() => abrirModalReserva(moto)}
-                    className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
                   >
                     {t('rental.reserve')} {moto.nombre}
                   </Button>
@@ -692,13 +692,13 @@ export default function AlquilerPage() {
             {t('rental.readySubtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-blue-900 hover:bg-blue-800 text-white">
+            <Button size="lg" className="bg-blue-900 hover:bg-blue-800 text-white shadow-lg">
               {t('rental.call')}
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-orange-500 bg-transparent"
+              className="border-white text-white hover:bg-white hover:text-orange-500 bg-transparent shadow-lg"
             >
               {t('rental.whatsapp')}
             </Button>
@@ -911,7 +911,7 @@ export default function AlquilerPage() {
       {/* Modal de Confirmación */}
       {showConfirmation && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="w-96 mx-4">
+          <Card className="w-96 mx-4 shadow-lg">
             <CardHeader className="text-center">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               <CardTitle className="text-2xl text-green-600">{t('rental.reservationConfirmed')}</CardTitle>
@@ -920,7 +920,7 @@ export default function AlquilerPage() {
               <p className="mb-4">{t('rental.reservationSuccess')}</p>
               <Button 
                 onClick={() => setShowConfirmation(false)}
-                className="bg-orange-500 hover:bg-orange-600 text-white"
+                className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
               >
                 {t('rental.continue')}
               </Button>
@@ -946,7 +946,7 @@ export default function AlquilerPage() {
                   href="https://wa.me/34607228882"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors inline-flex items-center justify-center"
+                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors inline-flex items-center justify-center shadow-lg"
                   title="Contactar por WhatsApp"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -959,7 +959,7 @@ export default function AlquilerPage() {
                     href="https://www.carlosfr.es"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer inline-block"
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer inline-block shadow-lg"
                   >
                     Carlosfr.es
                   </a>

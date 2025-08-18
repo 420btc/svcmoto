@@ -409,7 +409,7 @@ export default function ContactoPage() {
                      onClick={signOut}
                      variant="outline" 
                      size="sm"
-                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-xs"
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-xs shadow-lg"
                    >
                      {t('nav.signOut')}
                    </Button>
@@ -418,7 +418,7 @@ export default function ContactoPage() {
                  <Button 
                    onClick={signIn}
                    size="sm"
-                   className="bg-orange-500 hover:bg-orange-600 text-white text-xs"
+                   className="bg-orange-500 hover:bg-orange-600 text-white text-xs shadow-lg"
                  >
                    {t('nav.signIn')}
                  </Button>
@@ -452,7 +452,7 @@ export default function ContactoPage() {
                    <Button 
                      onClick={signOut}
                      variant="outline" 
-                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                     className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white shadow-lg"
                    >
                      {t('nav.signOut')}
                    </Button>
@@ -460,7 +460,7 @@ export default function ContactoPage() {
                ) : (
                  <Button 
                    onClick={signIn}
-                   className="bg-orange-500 hover:bg-orange-600 text-white"
+                   className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
                  >
                    {t('nav.signIn')}
                  </Button>
@@ -523,7 +523,7 @@ export default function ContactoPage() {
                           setMobileMenuOpen(false)
                         }}
                         variant="outline"
-                        className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full"
+                        className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white w-full shadow-lg"
                       >
                         {t('contact.signOut')}
                       </Button>
@@ -534,7 +534,7 @@ export default function ContactoPage() {
                         signIn()
                         setMobileMenuOpen(false)
                       }}
-                      className="bg-orange-500 hover:bg-orange-600 text-white w-full"
+                      className="bg-orange-500 hover:bg-orange-600 text-white w-full shadow-lg"
                     >
                       {t('contact.signIn')}
                     </Button>
@@ -567,7 +567,7 @@ export default function ContactoPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
-              <Card>
+              <Card className="shadow-lg">
                 <CardHeader>
                   <CardTitle className="bangers-regular text-2xl sm:text-3xl text-blue-900">{t('contact.sendMessage')}</CardTitle>
                   <p className="text-gray-600">{t('contact.formSubtitle')}</p>
@@ -647,7 +647,7 @@ export default function ContactoPage() {
                       />
                     </div>
 
-                    <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+                    <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white shadow-lg">
                       {t('contact.sendButton')}
                     </Button>
                   </form>
@@ -657,7 +657,7 @@ export default function ContactoPage() {
 
             {/* Contact Info */}
             <div>
-              <Card>
+              <Card className="shadow-lg">
                 <CardHeader>
                   <CardTitle className="bangers-regular text-2xl sm:text-3xl text-blue-900">{t('contact.contactInfo')}</CardTitle>
                 </CardHeader>
@@ -709,19 +709,19 @@ export default function ContactoPage() {
           {/* Quick Contact - Full Width */}
           <div className="mt-12">
             <div>
-              <Card>
+              <Card className="shadow-lg">
                 <CardHeader>
                   <CardTitle className="bangers-regular text-2xl sm:text-3xl text-blue-900 text-center">{t('contact.quickContact')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-md mx-auto">
-                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
+                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white shadow-lg">
                       <Phone className="w-4 h-4 mr-2" />
                       {t('contact.whatsappButton')}
                     </Button>
                     <Button
                       variant="outline"
-                      className="w-full border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white bg-transparent"
+                      className="w-full border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white bg-transparent shadow-lg"
                     >
                       <Phone className="w-4 h-4 mr-2" />
                       {t('contact.callNow')}
@@ -760,14 +760,14 @@ export default function ContactoPage() {
                      }, 200)
                    }
                 }}
-                className="bg-orange-500 hover:bg-orange-600 text-white"
+                className="bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
               >
                 <span className="mr-2">🗺️</span>
                 Ver Rutas
               </Button>
               <Button 
                 asChild
-                className="bg-blue-500 hover:bg-blue-600 text-white"
+                className="bg-blue-500 hover:bg-blue-600 text-white shadow-lg"
               >
                 <a 
                   href="https://www.google.com/local/place/fid/0xd72f7a34cd172ef:0x9e529a00319757e7/photosphere?iu=https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid%3DjzqsEBo9Wc18V7gLt5plMw%26cb_client%3Dsearch.gws-prod.gps%26yaw%3D176.95654%26pitch%3D0%26thumbfov%3D100%26w%3D0%26h%3D0&ik=CAISFmp6cXNFQm85V2MxOFY3Z0x0NXBsTXc%3D&sa=X&ved=2ahUKEwjLv4K-p5CPAxWFTaQEHcfrLH4Qpx96BAhWEBA"
@@ -855,7 +855,7 @@ export default function ContactoPage() {
               rel="noopener noreferrer"
               className="block transition-transform hover:scale-105"
             >
-              <Card className="cursor-pointer hover:shadow-xl transition-shadow">
+              <Card className="cursor-pointer hover:shadow-xl transition-shadow shadow-lg">
                 <CardHeader>
                   <CardTitle className="bangers-regular text-2xl sm:text-3xl text-blue-900 text-center">Ver Reseñas</CardTitle>
                 </CardHeader>
@@ -892,7 +892,7 @@ export default function ContactoPage() {
                       <span className="ml-2 text-lg font-bold text-gray-800">5.0</span>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">Basado en 7 reseñas</p>
-                    <div className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    <div className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg">
                       Ver todas las reseñas
                     </div>
                   </div>
@@ -921,7 +921,7 @@ export default function ContactoPage() {
                   href="https://wa.me/34607228882"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors inline-flex items-center justify-center"
+                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors inline-flex items-center justify-center shadow-lg"
                   title="Contactar por WhatsApp"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -934,7 +934,7 @@ export default function ContactoPage() {
                     href="https://www.carlosfr.es"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer inline-block"
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer inline-block shadow-lg"
                   >
                     Carlosfr.es
                   </a>
@@ -950,7 +950,7 @@ export default function ContactoPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Link 
             href="/admin/verification"
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium"
+            className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium shadow-lg"
           >
             Panel Admin
           </Link>
