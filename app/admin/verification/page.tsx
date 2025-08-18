@@ -25,7 +25,12 @@ import {
   Calendar,
   Phone,
   Mail,
-  MapPin
+  MapPin,
+  Users,
+  DollarSign,
+  Edit,
+  Trash2,
+  Ban
 } from 'lucide-react'
 import { formatVerificationCode, isValidVerificationCode } from '@/lib/verification'
 import Link from 'next/link'
@@ -83,6 +88,33 @@ interface AdminStats {
   recentActivity: RecentVerification[]
 }
 
+interface DashboardStats {
+  totalUsers: number
+  totalBookings: number
+  totalRevenue: number
+  activeBookings: number
+  pendingVerifications: number
+  completedBookings: number
+  monthlyGrowth: number
+  recentUsers: UserData[]
+}
+
+interface UserData {
+  id: string
+  email: string
+  name?: string
+  phone?: string
+  authMethod: string
+  isVerified: boolean
+  lastLoginAt?: string
+  createdAt: string
+  _count: {
+    bookings: number
+    services: number
+    pointsLedger: number
+  }
+}
+
 export default function AdminVerificationPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
@@ -98,6 +130,11 @@ export default function AdminVerificationPage() {
   const [allVerifications, setAllVerifications] = useState<RecentVerification[]>([])
   const [discountCode, setDiscountCode] = useState('')
   const [discountResult, setDiscountResult] = useState<any>(null)
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null)
+  const [users, setUsers] = useState<UserData[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedUser, setSelectedUser] = useState<UserData | null>(null)
+  const [showUserModal, setShowUserModal] = useState(false)
   const [isValidatingDiscount, setIsValidatingDiscount] = useState(false)
 
   // Load authentication state from localStorage
@@ -272,6 +309,54 @@ export default function AdminVerificationPage() {
     }
   }
 
+  // Obtener datos del dashboard
+  const fetchDashboardData = async () => {
+    setLoading(true)
+    try {
+      // Obtener estadísticas generales
+      const statsResponse = await fetch('/api/admin/dashboard-stats')
+      if (statsResponse.ok) {
+        const statsData = await statsResponse.json()
+        setDashboardStats(statsData)
+      }
+
+      // Obtener usuarios
+      const usersResponse = await fetch('/api/admin/users')
+      if (usersResponse.ok) {
+        const usersData = await usersResponse.json()
+        setUsers(usersData.users || usersData)
+      }
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Filtrar usuarios por búsqueda
+  const filteredUsers = users.filter(user => 
+    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.phone?.includes(searchTerm)
+  )
+
+  // Bloquear/desbloquear usuario
+  const toggleUserStatus = async (userId: string, currentStatus: boolean) => {
+    try {
+      const response = await fetch(`/api/admin/users/${userId}/toggle-status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isVerified: !currentStatus })
+      })
+      
+      if (response.ok) {
+        fetchDashboardData() // Refrescar datos
+      }
+    } catch (error) {
+      console.error('Error toggling user status:', error)
+    }
+  }
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault()
     setAuthError('')
@@ -290,6 +375,9 @@ export default function AdminVerificationPage() {
     setAuthError('')
     localStorage.setItem('adminAuthenticated', 'true')
     localStorage.setItem('adminLoginTime', new Date().toISOString())
+    
+    // Cargar datos del dashboard
+    fetchDashboardData()
   }
 
   const handleLogout = () => {
@@ -1213,6 +1301,118 @@ export default function AdminVerificationPage() {
                  </CardContent>
                </Card>
             </div>
+
+            {/* Gestión de Usuarios */}
+            <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
+              <CardHeader className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+                <div className="flex justify-between items-center">
+                  <CardTitle className="flex items-center bangers-regular text-xl">
+                    <Users className="w-6 h-6 mr-2" />
+                    Usuarios Registrados
+                  </CardTitle>
+                  <div className="flex items-center space-x-2">
+                    <div className="relative">
+                      <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <Input
+                        placeholder="Buscar usuarios..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 w-64 bg-white text-gray-900"
+                      />
+                    </div>
+                    <Button onClick={fetchDashboardData} variant="outline" size="sm" className="bg-white text-purple-600 hover:bg-purple-50">
+                      Actualizar
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                {loading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
+                    <p className="mt-2 text-gray-600">Cargando usuarios...</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Usuario</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Método Auth</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Estado</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Reservas</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Último Login</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredUsers.map((user) => (
+                          <tr key={user.id} className="border-b hover:bg-gray-50 transition-colors">
+                            <td className="py-3 px-4">
+                              <div>
+                                <div className="font-medium text-gray-900">{user.name || 'Sin nombre'}</div>
+                                <div className="text-sm text-gray-600">{user.email}</div>
+                                {user.phone && (
+                                  <div className="text-sm text-gray-500">{user.phone}</div>
+                                )}
+                              </div>
+                            </td>
+                            <td className="py-3 px-4">
+                              <Badge variant={user.authMethod === 'GOOGLE' ? 'default' : 'secondary'}>
+                                {user.authMethod}
+                              </Badge>
+                            </td>
+                            <td className="py-3 px-4">
+                              <Badge variant={user.isVerified ? 'default' : 'destructive'}>
+                                {user.isVerified ? 'Activo' : 'Bloqueado'}
+                              </Badge>
+                            </td>
+                            <td className="py-3 px-4">
+                              <span className="font-medium text-gray-900">{user._count?.bookings || 0}</span>
+                            </td>
+                            <td className="py-3 px-4">
+                              <span className="text-sm text-gray-600">
+                                {user.lastLoginAt 
+                                  ? new Date(user.lastLoginAt).toLocaleDateString()
+                                  : 'Nunca'
+                                }
+                              </span>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="flex items-center space-x-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => {
+                                    setSelectedUser(user)
+                                    setShowUserModal(true)
+                                  }}
+                                  className="hover:bg-blue-50 hover:text-blue-600"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant={user.isVerified ? 'destructive' : 'default'}
+                                  onClick={() => toggleUserStatus(user.id, user.isVerified)}
+                                >
+                                  {user.isVerified ? <Ban className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {filteredUsers.length === 0 && (
+                      <div className="text-center py-8 text-gray-500">
+                        {searchTerm ? 'No se encontraron usuarios que coincidan con la búsqueda' : 'No hay usuarios registrados'}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         ) : currentView === 'discounts' ? (
           <div className="max-w-2xl mx-auto">
@@ -1319,6 +1519,79 @@ export default function AdminVerificationPage() {
           </div>
         ) : null}
       </div>
+
+      {/* Modal de Detalles de Usuario */}
+      {showUserModal && selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <CardHeader className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+              <div className="flex justify-between items-center">
+                <CardTitle>Detalles del Usuario</CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowUserModal(false)}
+                  className="text-white hover:bg-white/20"
+                >
+                  <XCircle className="w-4 h-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Nombre</label>
+                    <p className="font-medium">{selectedUser.name || 'Sin nombre'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Email</label>
+                    <p className="font-medium">{selectedUser.email}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Teléfono</label>
+                    <p className="font-medium">{selectedUser.phone || 'No proporcionado'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Método de Autenticación</label>
+                    <Badge variant={selectedUser.authMethod === 'GOOGLE' ? 'default' : 'secondary'}>
+                      {selectedUser.authMethod}
+                    </Badge>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Estado</label>
+                    <Badge variant={selectedUser.isVerified ? 'default' : 'destructive'}>
+                      {selectedUser.isVerified ? 'Activo' : 'Bloqueado'}
+                    </Badge>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Fecha de Registro</label>
+                    <p className="font-medium">{new Date(selectedUser.createdAt).toLocaleDateString()}</p>
+                  </div>
+                </div>
+                
+                <div className="border-t pt-4">
+                  <h4 className="font-medium mb-2">Estadísticas de Actividad</h4>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-blue-600">{selectedUser._count?.bookings || 0}</p>
+                      <p className="text-sm text-gray-600">Reservas</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-green-600">{selectedUser._count?.services || 0}</p>
+                      <p className="text-sm text-gray-600">Servicios</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-purple-600">{selectedUser._count?.pointsLedger || 0}</p>
+                      <p className="text-sm text-gray-600">Puntos</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
