@@ -1074,6 +1074,18 @@ export default function PerfilPage() {
                       </ul>
                     </div>
                   </div>
+                  
+                  <div className="mt-4 p-3 bg-red-50 rounded-lg shadow-lg border border-red-200">
+                     <div className="text-base lg:text-lg text-red-900">
+                       <strong className="bangers-regular">⚠️ Importante para Recibir Puntos</strong>
+                       <ul className="mt-2 space-y-1">
+                         <li>• <span className="text-red-600 font-bold">Verificación</span> obligatoria para recibir puntos</li>
+                         <li>• <span className="text-red-600 font-bold">Código de 6 dígitos</span> al finalizar alquiler</li>
+                         <li>• <span className="text-red-600 font-bold">Tienda física</span> para canjear descuentos</li>
+                         <li>• <span className="text-red-600 font-bold">Sin verificación</span> = Sin puntos ganados</li>
+                       </ul>
+                     </div>
+                   </div>
                 </CardContent>
               </Card>
             </div>
@@ -1895,6 +1907,85 @@ export default function PerfilPage() {
                     </div>
                   </div>
 
+                </div>
+              </div>
+
+              {/* Sistema de Verificación */}
+              <div className="mb-8">
+                <h3 className="bangers-regular text-xl text-blue-900 mb-4">🔐 Sistema de Verificación</h3>
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl p-6 border border-blue-200 shadow-lg">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Código de 6 Dígitos */}
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <div className="bg-blue-500 p-2 rounded-full">
+                          <Key className="w-5 h-5 text-white" />
+                        </div>
+                        <h4 className="font-bold text-blue-900">Código de Verificación</h4>
+                      </div>
+                      <div className="space-y-2 text-sm text-gray-700">
+                        <p>• Al finalizar tu alquiler, recibes un <strong>código de 6 dígitos</strong></p>
+                        <p>• Este código confirma que completaste el servicio correctamente</p>
+                        <p>• <strong>¡Importante!</strong> Debes verificarlo para recibir tus puntos</p>
+                        <p>• Sin verificación = Sin puntos ganados</p>
+                      </div>
+                    </div>
+
+                    {/* Tienda Física */}
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <div className="bg-orange-500 p-2 rounded-full">
+                          <MapPin className="w-5 h-5 text-white" />
+                        </div>
+                        <h4 className="font-bold text-orange-900">Tienda Física</h4>
+                      </div>
+                      <div className="space-y-2 text-sm text-gray-700">
+                        <p>• Visita nuestra tienda en <strong>Málaga Centro</strong></p>
+                        <p>• Presenta tu código de descuento al personal</p>
+                        <p>• Canjea puntos por productos y accesorios</p>
+                        <p>• Recibe asesoramiento personalizado</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Proceso de Verificación */}
+                  <div className="mt-6 pt-6 border-t border-blue-200">
+                    <h4 className="font-bold text-blue-900 mb-4 flex items-center">
+                      <CheckCircle className="w-5 h-5 mr-2" />
+                      Proceso de Verificación
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="text-center">
+                        <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2 text-sm font-bold">1</div>
+                        <div className="text-xs text-gray-600">Finaliza tu alquiler</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2 text-sm font-bold">2</div>
+                        <div className="text-xs text-gray-600">Recibe código de 6 dígitos</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2 text-sm font-bold">3</div>
+                        <div className="text-xs text-gray-600">Verifica en tu perfil</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2 text-sm font-bold">✓</div>
+                        <div className="text-xs text-gray-600">Recibe tus puntos</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Advertencia */}
+                  <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="bg-yellow-500 p-1 rounded-full mt-0.5">
+                        <span className="text-white text-xs font-bold">!</span>
+                      </div>
+                      <div className="text-sm">
+                        <p className="font-semibold text-yellow-800 mb-1">Tiempo Límite de Verificación</p>
+                        <p className="text-yellow-700">Tienes <strong>24 horas</strong> para verificar tu código después de finalizar el alquiler. Pasado este tiempo, no podrás reclamar los puntos de esa reserva.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
