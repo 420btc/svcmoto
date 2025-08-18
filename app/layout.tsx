@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Analytics } from '@vercel/analytics/react'
 import ChatBot from "@/components/ChatBot"
+import WhatsAppButton from "@/components/WhatsAppButton"
 import { TranslationProvider } from "@/contexts/TranslationContext"
 
 import "./globals.css"
@@ -94,7 +95,8 @@ html {
       <body>
         <TranslationProvider>
           {children}
-          <ChatBot />
+          <WhatsAppButton />
+        <ChatBot />
         </TranslationProvider>
         <Analytics />
       </body>
