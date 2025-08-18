@@ -813,8 +813,8 @@ export default function PerfilPage() {
                                  <div className="bg-orange-500 p-2 rounded-full">
                                    <Zap className="w-4 h-4 text-white" />
                                  </div>
-                                 <div className="min-w-0">
-                                   <h4 className="font-bold text-blue-900 text-lg truncate">{alquiler.vehiculo}</h4>
+                                 <div className="min-w-0 flex-1">
+                                   <h4 className="font-bold text-blue-900 text-base sm:text-lg truncate">{alquiler.vehiculo}</h4>
                                    <p className="text-gray-500 text-xs truncate">ID: {alquiler.id}</p>
                                  </div>
                                </div>
@@ -842,7 +842,7 @@ export default function PerfilPage() {
                                   <Calendar className="w-4 h-4 text-orange-500" />
                                   <span className="text-blue-700 text-xs">{t('profile.date')}</span>
                                 </div>
-                                <p className="font-bold text-blue-900">{alquiler.fecha}</p>
+                                <p className="font-bold text-blue-900 text-sm break-words">{alquiler.fecha}</p>
                               </div>
                               <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
                                 <div className="flex items-center space-x-2 mb-1">
@@ -879,7 +879,7 @@ export default function PerfilPage() {
                                     <Key className="w-4 h-4 text-blue-500" />
                                     <div>
                                       <p className="text-blue-700 text-xs font-medium">Código de Verificación</p>
-                                      <p className="font-bold text-blue-900 text-lg font-mono tracking-wider">{alquiler.verificationCode}</p>
+                                      <p className="font-bold text-blue-900 text-base font-mono tracking-wider break-all">{alquiler.verificationCode}</p>
                                       <p className="text-blue-600 text-xs">
                                         {alquiler.isVerified ? '✅ Verificado por el administrador' : '⏳ Pendiente de verificación'}
                                       </p>

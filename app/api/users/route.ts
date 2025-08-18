@@ -17,7 +17,14 @@ const userSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
+    console.log('POST /api/users - Body received:', body)
+    
     const validatedData = userSchema.parse(body)
+    console.log('POST /api/users - Validated data:', validatedData)
+    
+    // Verificar conexión a la base de datos
+    await prisma.$connect()
+    console.log('POST /api/users - Database connected successfully')
     
     // Buscar si el usuario ya existe
     const existingUser = await prisma.user.findUnique({
@@ -25,6 +32,7 @@ export async function POST(request: NextRequest) {
         email: validatedData.email
       }
     })
+    console.log('POST /api/users - Existing user found:', !!existingUser)
     
     let user
     
@@ -62,7 +70,13 @@ export async function POST(request: NextRequest) {
     })
     
   } catch (error) {
-    console.error('Error managing user:', error)
+    console.error('Error en POST /api/users:', error)
+    console.error('Error details:', {
+      name: error?.name,
+      message: error?.message,
+      code: error?.code,
+      stack: error?.stack
+    })
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -71,8 +85,23 @@ export async function POST(request: NextRequest) {
       )
     }
     
+    // Error específico de Prisma
+    if (error?.code) {
+      return NextResponse.json(
+        { 
+          error: 'Error de base de datos', 
+          code: error.code,
+          message: error.message 
+        },
+        { status: 500 }
+      )
+    }
+    
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
+      { 
+        error: 'Error interno del servidor',
+        message: error?.message || 'Error desconocido'
+      },
       { status: 500 }
     )
   } finally {
