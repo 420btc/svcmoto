@@ -607,7 +607,7 @@ export default function PerfilPage() {
     <div className="min-h-screen bg-gray-50 pt-16">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-xl shadow-sm border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-full xl:max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 xl:px-16">
           <div className="flex items-center h-16">
             {/* Logo - Left Column */}
             <div className="flex items-center w-1/4">
@@ -748,7 +748,7 @@ export default function PerfilPage() {
 
       {/* Header */}
       <section className="bg-gradient-to-r from-blue-900 to-blue-800 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-full xl:max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 xl:px-16">
           <div className="flex items-center mb-6">
             <User className="w-8 h-8 text-white mr-4" />
             <h1 className="bangers-regular text-5xl md:text-6xl text-white drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>{t('profile.title')}</h1>
@@ -761,8 +761,8 @@ export default function PerfilPage() {
 
       {/* Profile Content */}
       <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-6 xl:gap-8">
             
             {/* Información Personal */}
             <div className="lg:col-span-1">
@@ -984,7 +984,7 @@ export default function PerfilPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowDeleteHistoryModal(true)}
-                        className="absolute top-8 right-0 p-1 hover:bg-red-100 text-red-600 hover:text-red-700 text-lg"
+                        className="absolute top-0 sm:top-2 right-0 p-1 hover:bg-red-100 text-red-600 hover:text-red-700 text-lg"
                       >
                         🗑️
                       </Button>
@@ -1079,7 +1079,7 @@ export default function PerfilPage() {
                             {/* Código para mostrar en tienda */}
                             {discount.status === 'PENDING' && (
                               <div className="mt-4 p-3 bg-blue-100 rounded-lg border border-blue-300">
-                                <div className="text-center">
+                                <div className="text-center flex flex-col h-full justify-between">
                                   <p className="text-sm text-blue-800 mb-2">Presenta este código en tienda:</p>
                                   <div className="bg-white p-3 rounded-lg border-2 border-blue-500">
                                     <span className="text-2xl font-bold text-blue-900 tracking-wider">{discount.discountCode}</span>
@@ -1091,7 +1091,7 @@ export default function PerfilPage() {
 
                             {discount.status === 'VALIDATED' && (
                               <div className="mt-4 p-3 bg-green-100 rounded-lg border border-green-300">
-                                <div className="text-center">
+                                <div className="text-center flex flex-col h-full justify-between">
                                   <p className="text-sm text-green-800">✅ Descuento aplicado exitosamente</p>
                                   {discount.validatedAt && (
                                     <p className="text-xs text-green-600">Usado el {new Date(discount.validatedAt).toLocaleDateString()}</p>
@@ -1596,7 +1596,7 @@ export default function PerfilPage() {
               {/* Botones de Canje */}
               <div className="mb-8">
                 <h3 className="bangers-regular text-xl text-blue-900 mb-4">🎁 Canjear Puntos por Descuentos</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4 lg:gap-6 xl:gap-8 mb-6">
                   {discountTiers.map((tier, index) => {
                     const canAfford = stats.puntosTotales >= tier.points
                     const getRewardInfo = () => {
@@ -1611,16 +1611,18 @@ export default function PerfilPage() {
                     const rewardInfo = getRewardInfo()
                     
                     return (
-                      <div key={index} className={`rounded-xl p-4 border-2 shadow-lg transition-all ${
+                      <div key={index} className={`rounded-xl p-6 lg:p-8 xl:p-10 2xl:p-12 border-2 shadow-lg transition-all w-full h-full flex flex-col ${
                         canAfford 
                           ? 'bg-green-50 border-green-300 hover:bg-green-100 cursor-pointer' 
                           : 'bg-gray-50 border-gray-300 opacity-60'
                       }`}>
-                        <div className="text-center">
-                          <div className="text-2xl mb-2">{rewardInfo.emoji}</div>
-                          <div className="font-bold text-lg text-blue-900">{rewardInfo.title}</div>
-                          <div className="text-xs text-gray-600 mb-2">{rewardInfo.subtitle}</div>
-                          <div className="text-sm text-gray-600 mb-3">{tier.points} puntos</div>
+                        <div className="text-center flex flex-col h-full justify-between">
+                          <div>
+                            <div className="text-2xl mb-2">{rewardInfo.emoji}</div>
+                            <div className="font-bold text-lg text-blue-900">{rewardInfo.title}</div>
+                            <div className="text-xs text-gray-600 mb-2">{rewardInfo.subtitle}</div>
+                            <div className="text-sm text-gray-600 mb-3">{tier.points} puntos</div>
+                          </div>
                           <Button
                             onClick={() => canAfford && generateDiscount(tier.points)}
                             disabled={!canAfford || loadingDiscount}
