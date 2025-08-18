@@ -40,6 +40,10 @@ export default function PerfilPage() {
   const [countdowns, setCountdowns] = useState<{[key: string]: {time: number, type: string}}>({})
   const [showPointsModal, setShowPointsModal] = useState(false)
   const [showDeleteHistoryModal, setShowDeleteHistoryModal] = useState(false)
+  // Obtener historial desde la API
+  const [apiBookings, setApiBookings] = useState([])
+  const [loadingBookings, setLoadingBookings] = useState(false)
+  const [statsRefresh, setStatsRefresh] = useState(0)
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -48,13 +52,11 @@ export default function PerfilPage() {
     // Estimación: 0.15 kg CO2/km ahorrado vs coche convencional
     if (typeof window === 'undefined' || !user?.email) return '0.0'
     
-    // Buscar en el historial de alquileres, no en las reservas
-    const userHistoryKey = `rentalHistory_${user.email}`
-    const savedHistory = localStorage.getItem(userHistoryKey)
-    const history = savedHistory ? JSON.parse(savedHistory) : []
+    // Usar función que combina API y localStorage
+    const history = getRentalHistory()
     
     const totalKm = history.reduce((total: number, alquiler: any) => {
-      if (alquiler.estado === 'completada' || alquiler.estado === 'completado') {
+      if (alquiler.estado === 'completada' || alquiler.estado === 'completado' || alquiler.estado === 'COMPLETED' || alquiler.estado === 'verificado') {
         // Estimar 15 km por hora de duración
         const duracionHoras = parseInt(alquiler.duracion?.toString().replace(/[^0-9]/g, '')) || 1
         return total + (duracionHoras * 15)
@@ -67,13 +69,11 @@ export default function PerfilPage() {
   const calcularKmTotales = () => {
     if (typeof window === 'undefined' || !user?.email) return 0
     
-    // Buscar en el historial de alquileres, no en las reservas
-    const userHistoryKey = `rentalHistory_${user.email}`
-    const savedHistory = localStorage.getItem(userHistoryKey)
-    const history = savedHistory ? JSON.parse(savedHistory) : []
+    // Usar función que combina API y localStorage
+    const history = getRentalHistory()
     
     return history.reduce((total: number, alquiler: any) => {
-      if (alquiler.estado === 'completada' || alquiler.estado === 'completado') {
+      if (alquiler.estado === 'completada' || alquiler.estado === 'completado' || alquiler.estado === 'COMPLETED' || alquiler.estado === 'verificado') {
         // Estimar 15 km por hora de duración
         const duracionHoras = parseInt(alquiler.duracion?.toString().replace(/[^0-9]/g, '')) || 1
         return total + (duracionHoras * 15)
@@ -85,12 +85,10 @@ export default function PerfilPage() {
   const calcularTotalAlquileres = () => {
     if (typeof window === 'undefined' || !user?.email) return 0
     
-    // Buscar en el historial de alquileres, no en las reservas
-    const userHistoryKey = `rentalHistory_${user.email}`
-    const savedHistory = localStorage.getItem(userHistoryKey)
-    const history = savedHistory ? JSON.parse(savedHistory) : []
+    // Usar función que combina API y localStorage
+    const history = getRentalHistory()
     
-    return history.filter((alquiler: any) => alquiler.estado === 'completada' || alquiler.estado === 'completado').length
+    return history.filter((alquiler: any) => alquiler.estado === 'completada' || alquiler.estado === 'completado' || alquiler.estado === 'COMPLETED' || alquiler.estado === 'verificado').length
   }
   
   const signIn = () => router.push('/handler/sign-in')
@@ -107,6 +105,24 @@ export default function PerfilPage() {
     if (user?.email) {
       fetchBookingsFromAPI()
     }
+  }, [user?.email])
+  
+  // Forzar actualización de estadísticas cuando cambien los apiBookings
+  useEffect(() => {
+    if (apiBookings.length > 0) {
+      setStatsRefresh(prev => prev + 1)
+    }
+  }, [apiBookings])
+  
+  // Actualizar datos automáticamente cada 30 segundos
+  useEffect(() => {
+    if (!user?.email) return
+    
+    const interval = setInterval(() => {
+      fetchBookingsFromAPI()
+    }, 30000) // 30 segundos
+    
+    return () => clearInterval(interval)
   }, [user?.email])
   
   // Verificar autenticación desde localStorage
@@ -193,10 +209,6 @@ export default function PerfilPage() {
     }
   }
 
-  // Obtener historial desde la API
-  const [apiBookings, setApiBookings] = useState([])
-  const [loadingBookings, setLoadingBookings] = useState(false)
-  
   const fetchBookingsFromAPI = async () => {
     if (!user?.email) return
     
@@ -236,7 +248,7 @@ export default function PerfilPage() {
       duracion: `${booking.duration || 1} hora${(booking.duration || 1) > 1 ? 's' : ''}`,
       precio: `${booking.totalPrice}€`,
       puntos: booking.pointsAwarded || 0,
-      estado: booking.isVerified ? 'verificado' : 'pendiente',
+      estado: booking.status === 'COMPLETED' ? 'verificado' : (booking.isVerified ? 'verificado' : 'pendiente'),
       fechaCreacion: booking.createdAt,
       fechaFinalizacion: booking.endAt,
       verificationCode: booking.verificationCode,
