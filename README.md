@@ -228,6 +228,51 @@ const validDiscounts = await prisma.discount.findMany({
 })
 ```
 
+### 🗑️ Endpoints de Eliminación
+
+La aplicación incluye endpoints API para eliminar datos de la base de datos:
+
+#### **DELETE /api/users/delete-history**
+**Propósito**: Elimina todo el historial de un usuario
+```typescript
+// Elimina:
+// - Todas las reservas (bookings)
+// - Todos los servicios (services) 
+// - Todos los puntos (points_ledger)
+// - Todos los descuentos (discounts)
+
+// Parámetros:
+// ?email=usuario@email.com
+```
+
+#### **DELETE /api/bookings/delete**
+**Propósito**: Elimina una reserva específica
+```typescript
+// Elimina:
+// - La reserva específica
+// - Los puntos relacionados con esa reserva
+
+// Parámetros:
+// ?id=booking_id&email=usuario@email.com
+```
+
+#### **DELETE /api/services/delete**
+**Propósito**: Elimina un servicio específico
+```typescript
+// Elimina:
+// - El servicio específico
+
+// Parámetros:
+// ?id=service_id&email=usuario@email.com
+```
+
+### ⚠️ **Importante sobre Eliminación**
+- **Cascada**: Los endpoints respetan las relaciones de foreign keys
+- **Seguridad**: Verifican que el usuario sea propietario de los datos
+- **Orden**: Eliminan en el orden correcto para evitar errores de referencia
+- **Transacciones**: Usan transacciones para mantener consistencia
+- **Backup**: ⚠️ **No hay recuperación** - los datos se eliminan permanentemente
+
 ---
 
 **🚀 Deploy actualizado - Variables de entorno configuradas correctamente**
