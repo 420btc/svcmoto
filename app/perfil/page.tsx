@@ -56,7 +56,8 @@ export default function PerfilPage() {
   })
   const [editedInfo, setEditedInfo] = useState(userInfo)
   const [isEditing, setIsEditing] = useState(false)
-  const [countdowns, setCountdowns] = useState<{[key: string]: {time: number, type: string}}>({})
+  const [countdowns, setCountdowns] = useState<{[key: string]: {time: number, type: string}}>({}) 
+  const [serviceCountdowns, setServiceCountdowns] = useState<{[key: string]: string}>({})
   const [showPointsModal, setShowPointsModal] = useState(false)
   const [showDeleteHistoryModal, setShowDeleteHistoryModal] = useState(false)
   const [showDiscountModal, setShowDiscountModal] = useState(false)
@@ -466,23 +467,48 @@ export default function PerfilPage() {
     }
     
     // Convertir bookings de API al formato esperado
-    const apiHistory = apiBookings.map(booking => ({
-      id: booking.id,
-      vehiculo: booking.vehicleType,
-      fecha: new Date(booking.startAt).toLocaleDateString(),
-      horaInicio: new Date(booking.startAt).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-      duracion: `${booking.duration || 1} hora${(booking.duration || 1) > 1 ? 's' : ''}`,
-      precio: `${booking.totalPrice}€`,
-      puntos: booking.pointsAwarded || 0,
-      estado: booking.status === 'COMPLETED' ? 'verificado' : 
-              booking.status === 'COMPLETED_NO_VERIFICATION' ? 'completado_sin_verificacion' :
-              booking.status === 'CANCELLED' ? 'cancelado' :
-              booking.isVerified ? 'verificado' : 'pendiente',
-      fechaCreacion: booking.createdAt,
-      fechaFinalizacion: booking.endAt,
-      verificationCode: booking.verificationCode,
-      isVerified: booking.isVerified
-    }))
+    const apiHistory = apiBookings.map(booking => {
+      // Determinar el estado basado en la fecha/hora actual
+      const now = new Date()
+      const startTime = new Date(booking.startAt)
+      const endTime = new Date(booking.endAt)
+      
+      let estado = 'pendiente'
+      
+      if (booking.status === 'COMPLETED') {
+        estado = 'completado'
+      } else if (booking.status === 'COMPLETED_NO_VERIFICATION') {
+        estado = 'completado'
+      } else if (booking.status === 'CANCELLED') {
+        estado = 'cancelado'
+      } else {
+        // Determinar si está en curso basándose en la fecha/hora
+        if (now >= startTime && now < endTime) {
+          estado = 'en_curso'
+        } else if (now >= endTime) {
+          estado = 'completado' // Alquiler finalizado
+        } else {
+          estado = 'pendiente' // Aún no ha comenzado
+        }
+      }
+      
+      return {
+        id: booking.id,
+        vehiculo: booking.vehicleType,
+        fecha: new Date(booking.startAt).toLocaleDateString(),
+        horaInicio: new Date(booking.startAt).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+        duracion: `${booking.duration || 1} hora${(booking.duration || 1) > 1 ? 's' : ''}`,
+        precio: `${booking.totalPrice}€`,
+        puntos: booking.pointsAwarded || 0,
+        estado: estado,
+        fechaCreacion: booking.createdAt,
+        fechaFinalizacion: booking.endAt,
+        verificationCode: booking.verificationCode,
+        isVerified: booking.isVerified,
+        startAt: booking.startAt,
+        endAt: booking.endAt
+      }
+    })
     
     // Fallback a localStorage para compatibilidad
     const userHistoryKey = `rentalHistory_${user.email}`
@@ -582,6 +608,29 @@ export default function PerfilPage() {
     return { type: 'finished', time: 0 }
   }
   
+  // Función para formatear countdown hasta el inicio del servicio
+  const formatCountdownToStart = (alquiler: any) => {
+    if (!alquiler.startAt) return null
+    
+    const now = new Date()
+    const startTime = new Date(alquiler.startAt)
+    const timeDiff = startTime.getTime() - now.getTime()
+    
+    if (timeDiff <= 0) return null // Ya comenzó o terminó
+    
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
+    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
+    
+    if (days > 0) {
+      return `${days}d ${hours}h ${minutes}min`
+    } else if (hours > 0) {
+      return `${hours}h ${minutes}min`
+    } else {
+      return `${minutes}min`
+    }
+  }
+  
   // Función para formatear tiempo
   const formatTime = (milliseconds: number) => {
     const totalSeconds = Math.floor(milliseconds / 1000)
@@ -660,6 +709,7 @@ export default function PerfilPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       const newCountdowns: {[key: string]: {time: number, type: string}} = {}
+      const newServiceCountdowns: {[key: string]: string} = {}
       let hasActiveRentals = false
       
       alquileres.forEach((alquiler: any) => {
@@ -674,9 +724,19 @@ export default function PerfilPage() {
             // No se entregan puntos automáticamente
           }
         }
+        
+        // Calcular countdown para servicios pendientes
+        if (alquiler.estado === 'pendiente') {
+          const countdown = formatCountdownToStart(alquiler)
+          if (countdown) {
+            newServiceCountdowns[alquiler.id] = countdown
+            hasActiveRentals = true
+          }
+        }
       })
       
       setCountdowns(newCountdowns)
+      setServiceCountdowns(newServiceCountdowns)
       
       if (!hasActiveRentals) {
         clearInterval(interval)
@@ -1338,21 +1398,24 @@ export default function PerfilPage() {
                                    <p className="text-gray-500 text-xs truncate">ID: {alquiler.id}</p>
                                  </div>
                                </div>
-                               {/* Badge centrado debajo del título */}
-                               <div className="flex justify-center">
-                                 <div className="bg-green-500 px-2 py-1 rounded-full">
-                                   {alquiler.estado === 'en_curso' && countdowns[alquiler.id]?.time > 0 ? (
+                               {/* Countdown solo para alquileres en curso */}
+                               {alquiler.estado === 'en_curso' && countdowns[alquiler.id]?.time > 0 && (
+                                 <div className="flex justify-center">
+                                   <div className="bg-green-500 px-2 py-1 rounded-full">
                                      <span className="text-white text-xs font-semibold">
                                        {countdowns[alquiler.id]?.type === 'waiting' ? '⏳ ' : ''}
                                        {formatTime(countdowns[alquiler.id]?.time || 0)}
                                      </span>
-                                   ) : alquiler.estado === 'completado' ? (
-                                     <span className="text-white text-xs font-semibold">Completado</span>
-                                   ) : (
-                                     <span className="text-white text-xs font-semibold">Tu Alquiler</span>
-                                   )}
+                                   </div>
                                  </div>
-                               </div>
+                               )}
+                               {alquiler.estado === 'completado' && (
+                                 <div className="flex justify-center">
+                                   <div className="bg-green-500 px-2 py-1 rounded-full">
+                                     <span className="text-white text-xs font-semibold">Completado</span>
+                                   </div>
+                                 </div>
+                               )}
                              </div>
                             
                             {/* Información principal */}
@@ -1415,6 +1478,28 @@ export default function PerfilPage() {
                                       <p className="text-blue-600 text-xs">
                                         {alquiler.isVerified ? '✅ Verificado por el administrador' : '⏳ Pendiente de verificación'}
                                       </p>
+                                      {/* Badge de estado del alquiler */}
+                                      <div className="mt-1">
+                                        <Badge 
+                                          variant={alquiler.estado === 'en_curso' ? 'default' : 'secondary'}
+                                          className={`text-xs px-2 py-0.5 ${
+                                            alquiler.estado === 'en_curso' 
+                                              ? 'bg-green-500 hover:bg-green-600 text-white' 
+                                              : alquiler.estado === 'pendiente'
+                                              ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                                              : 'bg-gray-500 hover:bg-gray-600 text-white'
+                                          }`}
+                                        >
+                                          {alquiler.estado === 'en_curso' 
+                                            ? '🔄 En Curso' 
+                                            : alquiler.estado === 'pendiente' && serviceCountdowns[alquiler.id]
+                                            ? `⏳ Inicia en ${serviceCountdowns[alquiler.id]}`
+                                            : alquiler.estado === 'pendiente'
+                                            ? '⏳ Programado'
+                                            : '✅ Completado'
+                                          }
+                                        </Badge>
+                                      </div>
                                     </div>
                                   </div>
                                   <div className="flex space-x-1">
