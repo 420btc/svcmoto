@@ -528,13 +528,20 @@ export default function PerfilPage() {
     
     setIsRefreshingVerification(true)
     try {
-      const response = await fetch(`/api/bookings?userId=${user.email}`)
-      if (response.ok) {
-        const updatedBookings = await response.json()
-        // Asegurar que siempre sea un array
-        const bookingsArray = Array.isArray(updatedBookings) ? updatedBookings : []
-        setApiBookings(bookingsArray)
-        setLastVerificationCheck(new Date())
+      // Primero obtener el usuario de la API para conseguir el ID correcto
+      const userResponse = await fetch(`/api/users?email=${encodeURIComponent(user.email)}`)
+      if (userResponse.ok) {
+        const userData = await userResponse.json()
+        
+        // Luego obtener las reservas del usuario usando el ID correcto
+        const response = await fetch(`/api/bookings?userId=${userData.user.id}`)
+        if (response.ok) {
+          const updatedBookings = await response.json()
+          // Asegurar que siempre sea un array y que tenga la estructura correcta
+          const bookingsArray = Array.isArray(updatedBookings.bookings) ? updatedBookings.bookings : []
+          setApiBookings(bookingsArray)
+          setLastVerificationCheck(new Date())
+        }
       }
     } catch (error) {
       console.error('Error checking verification status:', error)
