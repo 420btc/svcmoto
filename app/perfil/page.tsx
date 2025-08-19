@@ -1090,7 +1090,28 @@ export default function PerfilPage() {
                       <Trophy className="w-8 h-8 text-green-500 mx-auto mb-2" />
                       <div className="text-2xl font-bold text-green-600">{calcularCO2Ahorrado()} kg</div>
                       <div className="text-sm text-gray-600">{t('profile.co2Saved')}</div>
-                      <div className="text-xs text-green-600 mt-1">🌱 {t('profile.treesEquivalent').replace('{count}', (parseFloat(calcularCO2Ahorrado()) / 18.3).toFixed(1))}</div>
+                      <div className="text-xs text-green-600 mt-1">
+                        {(() => {
+                          const co2Amount = parseFloat(calcularCO2Ahorrado())
+                          const treesEquivalent = co2Amount / 20 // Un árbol absorbe ~20kg CO2/año
+                          
+                          if (treesEquivalent >= 1) {
+                            return `🌱 ${treesEquivalent.toFixed(1)} árbol${treesEquivalent > 1 ? 'es' : ''} plantado${treesEquivalent > 1 ? 's' : ''}`
+                          } else if (co2Amount >= 10) {
+                            const kmCoche = (co2Amount / 0.12).toFixed(0) // 120g CO2/km promedio coche
+                            return `🚗 ${kmCoche} km menos en coche`
+                          } else if (co2Amount >= 5) {
+                            const horasBombilla = (co2Amount / 0.5 * 1000).toFixed(0) // ~0.5kg CO2 por 1000h bombilla LED
+                            return `💡 ${horasBombilla}h de bombilla LED`
+                          } else if (co2Amount >= 1) {
+                             const minutosCarga = (co2Amount / 0.1 * 60).toFixed(0) // ~0.1kg CO2 por hora de carga
+                             return `🔋 ${minutosCarga} min de carga limpia`
+                          } else {
+                            return `🌿 Cada viaje cuenta para el planeta`
+                          }
+                        })()
+                        }
+                      </div>
                     </div>
                   </div>
                   
