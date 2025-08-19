@@ -468,25 +468,22 @@ export default function PerfilPage() {
     
     // Convertir bookings de API al formato esperado
     const apiHistory = apiBookings.map(booking => {
-      // Determinar el estado basado en la fecha/hora actual
+      // Determinar el estado basado ÚNICAMENTE en la fecha/hora actual, no en verificación
       const now = new Date()
       const startTime = new Date(booking.startAt)
       const endTime = new Date(booking.endAt)
       
       let estado = 'pendiente'
       
-      if (booking.status === 'COMPLETED') {
-        estado = 'completado'
-      } else if (booking.status === 'COMPLETED_NO_VERIFICATION') {
-        estado = 'completado'
-      } else if (booking.status === 'CANCELLED') {
+      // Solo cancelado se respeta del status de la API
+      if (booking.status === 'CANCELLED') {
         estado = 'cancelado'
       } else {
-        // Determinar si está en curso basándose en la fecha/hora
+        // Determinar estado basándose ÚNICAMENTE en tiempo transcurrido
         if (now >= startTime && now < endTime) {
           estado = 'en_curso'
         } else if (now >= endTime) {
-          estado = 'completado' // Alquiler finalizado
+          estado = 'completado' // Alquiler finalizado por tiempo
         } else {
           estado = 'pendiente' // Aún no ha comenzado
         }
@@ -725,7 +722,7 @@ export default function PerfilPage() {
           }
         }
         
-        // Calcular countdown para servicios pendientes
+        // Calcular countdown para servicios pendientes (independiente de verificación)
         if (alquiler.estado === 'pendiente') {
           const countdown = formatCountdownToStart(alquiler)
           if (countdown) {
@@ -1487,6 +1484,8 @@ export default function PerfilPage() {
                                               ? 'bg-green-500 hover:bg-green-600 text-white' 
                                               : alquiler.estado === 'pendiente'
                                               ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                                              : alquiler.estado === 'completado'
+                                              ? 'bg-green-500 hover:bg-green-600 text-white'
                                               : 'bg-gray-500 hover:bg-gray-600 text-white'
                                           }`}
                                         >
