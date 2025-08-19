@@ -55,6 +55,37 @@ export default function AlquilerPage() {
   const router = useRouter()
   const { t } = useTranslation()
   
+  // Función para calcular stock simulado
+  const calcularStockSimulado = () => {
+    // Fecha de referencia: 19 de agosto de 2025
+    const fechaInicio = new Date('2025-08-19T00:00:00') 
+    const fechaActual = new Date()
+    const diasTranscurridos = Math.floor((fechaActual.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24))
+    
+    const stockInicial = 35
+    const stockMinimo = 5
+    const diasBajada = 10 // Días para llegar al mínimo
+    const diasEspera = 7
+    const cicloCompleto = diasBajada + diasEspera
+    
+    // Si la fecha actual es anterior a la fecha de inicio, mostrar stock inicial
+    if (diasTranscurridos < 0) {
+      return stockInicial
+    }
+    
+    const posicionEnCiclo = diasTranscurridos % cicloCompleto
+    
+    if (posicionEnCiclo < diasBajada) {
+      // Fase de bajada gradual - cada día baja exactamente 3 motos
+      const reduccionPorDia = 3
+      const stockActual = Math.max(stockMinimo, stockInicial - (reduccionPorDia * posicionEnCiclo))
+      return stockActual
+    } else {
+      // Fase de espera en stock mínimo antes de reiniciar
+      return stockMinimo
+    }
+  }
+  
   const signIn = () => router.push('/handler/sign-in')
   const signOut = () => {
     if (typeof window !== 'undefined') {
@@ -324,22 +355,6 @@ export default function AlquilerPage() {
       },
       caracteristicas: [t('features.helmetsIncluded'), t('features.premiumInsurance'), t('features.battery72V'), t('features.motor9kW'), t('features.absBrakes')],
     },
-    {
-      id: 3,
-      nombre: "Eco Cruiser",
-      tipo: "Patinete Eléctrico",
-      imagen: "/placeholder.svg",
-      autonomia: "35 km",
-      velocidad: "25 km/h",
-      capacidad: "1 persona",
-      precios: {
-        hora: 5,
-        medio_dia: 20,
-        dia_completo: 35,
-        semanal: "200€",
-      },
-      caracteristicas: [t('features.helmetIncluded'), t('features.foldable'), t('features.ledLights'), t('features.discBrakes'), t('features.basicInsurance'), t('features.phoneSupport')],
-    },
   ]
 
   return (
@@ -540,7 +555,7 @@ export default function AlquilerPage() {
       {/* Motos Grid */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 gap-8 max-w-3xl mx-auto">
             {motos.map((moto) => (
               <Card key={moto.id} className="border-2 border-gray-200 hover:border-orange-500 transition-colors shadow-lg">
                 <CardHeader>
@@ -550,6 +565,17 @@ export default function AlquilerPage() {
                       <Badge variant="secondary" className="mt-2 bg-orange-100 text-orange-800">
                         {moto.tipo}
                       </Badge>
+                    </div>
+                    <div className="text-right">
+                      <div className={`px-3 py-1 rounded-full text-sm font-bold ${
+                        calcularStockSimulado() <= 10 
+                          ? 'bg-red-100 text-red-800' 
+                          : calcularStockSimulado() <= 20
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        📦 {calcularStockSimulado()} disponibles
+                      </div>
                     </div>
                   </div>
 
